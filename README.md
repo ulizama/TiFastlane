@@ -63,6 +63,7 @@ For default provisiong profiles will be generated for all platforms, but if you 
 
 ##  Thanks
 
+* [Felix Krause](https://github.com/KrauseFx) for creating the awesome fastlane.tools
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 
