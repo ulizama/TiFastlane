@@ -6,7 +6,7 @@ A wrapper to the awesome [fastlane.tools](https://fastlane.tools/) so you can us
 
 ## About fastlane.tools
 
-The [fastlane](https://fastlane.tools/) family is a collection of tools that enable Continuous Deployment of iOS Apps. It has 8 different tools that allow things like registering the app, creating provisioning profiles and even automatic delivery to the App Store and TestFlight.
+The [fastlane](https://fastlane.tools/) family is a collection of tools that enable Continuous Deployment of iOS Apps. It has 9 different tools that allow things like registering the app, creating provisioning profiles and even automatic delivery to the App Store and TestFlight.
 
 ## Install [![npm version](https://badge.fury.io/js/tifastlane.svg)](http://badge.fury.io/js/tifastlane)
 
