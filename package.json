@@ -1,0 +1,43 @@
+{
+  "name": "tifastlane",
+  "version": "0.0.3",
+  "description": "Integrating fastlane.tools into Titanium Development",
+  "main": "index.js",
+  "bin": {
+    "tifastlane": "./bin/tifastlane.js"
+  },
+  "scripts": {
+    "postinstall": "node install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "directories": {
+    "bin": "./bin"
+  },
+  "keywords": [
+    "titanium",
+    "alloy",
+    "fastlane",
+    "appcelerator",
+    "cli",
+    "TiApp",
+    "ios"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ulizama/TiFastlane.git"
+  },
+  "author": "Uriel Lizama",
+  "license": "Apache Public License v2",
+  "bugs": {
+    "url": "https://github.com/ulizama/TiFastlane/issues"
+  },
+  "homepage": "https://github.com/ulizama/TiFastlane",
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "commander": "^2.6.0",
+    "update-notifier": "^0.2.2",
+    "tiapp.xml": "^0.2.2",
+    "xpath": "^0.0.9",
+    "underscore": "^1.8.3"
+  }  
+}

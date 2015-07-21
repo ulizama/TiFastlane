@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+/*jslint node: true */
+'use strict';
+
+var path = require('path'),
+    exec = require('./lib/exec');
+
+console.log('--- Installing fastlane.tools ---');
+
+exec('ruby', ['-v'], null, function(e) {
+
+	console.log('--- Working on produce ---');
+
+	exec('sudo', ['gem','install', 'produce'], null, function(e) {
+
+		console.log('--- Working on sigh ---');
+
+		exec('sudo', ['gem','install', 'sigh'], null, function(e) {
+			console.info('All Done.');
+		});
+
+	});
+
+});
