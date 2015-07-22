@@ -17,7 +17,13 @@ exec('ruby', ['-v'], null, function(e) {
 		console.log('--- Working on sigh ---');
 
 		exec('sudo', ['gem','install', 'sigh'], null, function(e) {
-			console.info('All Done.');
+
+			console.log('--- Working on deliver ---');
+
+			exec('sudo', ['gem','install', 'deliver'], null, function(e) {
+				console.info('All Done.');
+			});
+			
 		});
 
 	});

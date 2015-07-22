@@ -1,6 +1,6 @@
 {
   "name": "tifastlane",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Integrating fastlane.tools into Titanium Development",
   "main": "index.js",
   "bin": {

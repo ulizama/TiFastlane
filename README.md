@@ -55,6 +55,54 @@ For default provisiong profiles will be generated for all platforms, but if you 
 * `--skip_install` - Skip installation of new provisioning profiles
 * `--skip_fetch_profiles` - Skips the verification of existing profiles which is useful if you have thousands of profiles
 
+## Update iTunes Connect (deliver)
+
+Now is possible to update your iTunes Connect metadata (Title, Description, Icon, etc) and screenshots using [deliver](https://github.com/KrauseFx/deliver). With this tool not only will you be able to update your app data from the command line, but you'll be able to keep track of it with version control.
+
+### Initializing Deliverfile
+
+You will need to initialize your app settings. If this is a new app with no information on iTunes Connect then do:
+
+	tifastlane init
+	
+If your app is already on iTunes Connect, then run the wizard which will download all your metadata and screenshots:
+
+	tifastlane initwizard
+
+After correct initialization you will see on the `TiFLDelivery` directory, a new directory with the name of your app.
+
+### Configuration Files
+
+All metadata and screenshots are easily maintaned from the `TiFLDelivery\APPID` directory, here you will find the following files:
+
+**Deliveryfile**
+
+You can configure Price, Copyright, Developer Notes, etc. You can read the full [documentation here](https://github.com/KrauseFx/deliver/blob/master/Deliverfile.md).
+
+**./metadata/[LANG]/*.txt**
+
+In this directory you will see several text files with the contents of the metadata that is language dependant. By default it's only created with the `EN_US` language, but if you run the wizard and you support more language, you'll see them listed here.
+
+**./screenshots/[LANG]/*.***
+
+As with metadata, screenshots support multi language. Based on the dimension of the images they will be correctly set to the appropiate device. The images are ordered alphabetically, so make sure to name them correctly to control the right display order.
+
+### Updating App on iTunes Connect
+
+Updating the App metadata and screenshots it's as easy as running:
+
+	tifastlane updatemeta
+	
+This will login to iTunes Connect and update your app information based on your configuration, as well as uploading all the App screenshots.
+
+By default, before submitting you will be shown a report file with all the changes that will be made which you'll need to confirm. To skip this confirmation, which might be really useful for automation, just use:
+
+* `--skip_verify` - Skips configuration verification before upload.
+
+### Uploading ipa to App Store
+
+Currently I'm working on the ability to upload your ipa to the App Store with an option to automatically submit for review.
+
 
 ##TODO
 
@@ -66,6 +114,11 @@ For default provisiong profiles will be generated for all platforms, but if you 
 * [Felix Krause](https://github.com/KrauseFx) for creating the awesome fastlane.tools
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
+## Changelog
+
+* 0.1.0 Now you can update your iTunes Connect metadata and screenshots (deliver)
+* 0.0.3 Added register - Register App (produce + sigh)
+* 0.0.1 Initial Commit
 
 ## License
 
