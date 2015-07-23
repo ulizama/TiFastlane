@@ -37,10 +37,6 @@ function tifastlane() {
             fs.mkdirSync(deliveryDir);
         }
 
-        var appDeliveryDir = deliveryDir + '/' + tiapp.id;
-        var appDeliveryMetaDir = appDeliveryDir + '/metadata/en-US';
-        var appDeliveryScreenDir = appDeliveryDir + '/screenshots/en-US';
-
         //Create delivery directory if it doesn't exist
         if (!fs.existsSync(appDeliveryDir)){
             fs.mkdirSync(appDeliveryDir);
@@ -98,8 +94,6 @@ function tifastlane() {
             fs.mkdirSync(deliveryDir);
         }
 
-        var appDeliveryDir = deliveryDir + '/' + tiapp.id;
-
         //Create delivery directory if it doesn't exist
         if (!fs.existsSync(appDeliveryDir)){
             fs.mkdirSync(appDeliveryDir);
@@ -126,8 +120,6 @@ function tifastlane() {
 
     function updatemeta(){
 
-        var appDeliveryDir = deliveryDir + '/' + tiapp.id;
-
         if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
             console.log(chalk.red('You need to initialize the "deliver" settings.'));
             program.help();
@@ -135,7 +127,8 @@ function tifastlane() {
         }
 
         var initArgs = [
-            'upload_metadata'
+            'upload_metadata',
+            '--skip-deploy'
         ];
 
         if( program.skip_verify ){
@@ -145,6 +138,78 @@ function tifastlane() {
         exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('Done'));
         });
+
+    }
+
+
+    function sendapp(){
+
+        if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
+            console.log(chalk.red('You need to initialize the "deliver" settings.'));
+            program.help();
+            return;
+        }
+
+        var newFileContents = "";
+        var _hasipa = false;
+
+        fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
+
+            if( /^ipa /.test(line) ){
+                _hasipa = true;
+                newFileContents = newFileContents + 'ipa "../../build/' + tiapp.name + '.ipa"' + "\n";
+            }
+            else{
+                newFileContents = newFileContents + line + "\n";
+            }
+            //fs.appendFileSync(deliverFile, line.toString() + "\n");
+        });
+
+        if( !_hasipa ){
+            newFileContents = newFileContents + 'ipa "../../build/' + tiapp.name + '.ipa"' + "\n";
+        }
+
+        fs.writeFileSync(deliverFile, newFileContents);
+
+        var buildArgs = [
+            'build',
+            '-p', 'ios',
+            '-T', 'dist-adhoc',
+            '-O', './build'
+        ];
+
+        function _deliver(){
+            
+            console.log("\n");
+            console.log(chalk.yellow('Starting deliver'));
+
+            var initArgs = [
+                'run'
+            ];
+
+            if( program.skip_verify ){
+                initArgs.push('--force');
+            }
+
+            exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+                console.log(chalk.green('Done'));
+            });            
+        }
+
+        if( program.skip_build ){
+            console.log(chalk.yellow('Skipping Titanium App Store Build'));
+            _deliver();
+        }
+        else{
+
+            console.log(chalk.yellow('Starting Titanium App Store Build'));
+            console.log("\n");
+
+            exec('titanium', buildArgs, null, function(e){
+                _deliver();
+            });
+
+        }
 
     }
 
@@ -243,11 +308,13 @@ function tifastlane() {
         .option('--init', 'Initialize the deliver configuration')
         .option('--initwizard', 'If your app is already on the App Store run the wizard')
         .option('--updatemeta', 'Update metadata and screenshots on iTunes Connect')
+        .option('--sendapp', 'Send new App version to iTunes Connect')
         .option('-f, --force', 'On register it forces the provisioning profiles to be renewed')
         .option('-i, --skip_itc', 'Skip the creation of the app on iTunes Connect')
         .option('--skip_install', 'Skip installation of new provisioning profiles')
         .option('--skip_fetch_profiles', 'Skips the verification of existing profiles which is useful if you have thousands of profiles')
         .option('--skip_verify', 'Skip verification of metadata on update')
+        .option('--skip_build', 'Skip build of App Store ipa')
 
     program.parse(process.argv);
 
@@ -275,6 +342,12 @@ function tifastlane() {
     // read in the app config
     var tiapp = tiappxml.load(infile);
 
+    //Path Dirs
+    var appDeliveryDir = deliveryDir + '/' + tiapp.id;
+    var deliverFile = appDeliveryDir + "/Deliverfile";
+    var appDeliveryMetaDir = appDeliveryDir + '/metadata/en-US';
+    var appDeliveryScreenDir = appDeliveryDir + '/screenshots/en-US';
+
     // check for a new version
     updateNotifier({
         packageName: pkg.name,
@@ -292,6 +365,9 @@ function tifastlane() {
     }
     else if( program.updatemeta ){
         updatemeta();
+    }
+    else if( program.sendapp ){
+        sendapp();
     }
     else if( program.register ){
         register(program.args[0]);
