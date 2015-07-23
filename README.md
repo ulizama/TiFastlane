@@ -1,4 +1,4 @@
-# TiFastlane [![Twitter: @ulizama](https://img.shields.io/badge/contact-@ulizama-blue.svg?style=flat)](https://twitter.com/ulizama)
+# TiFastlane
 
 Building apps for iOS it's all great until you have to deal with Certificates, Provisioning Profiles and sending iTunes Connect. Then came [fastlane.tools](https://fastlane.tools/) a collection of 9 tools that enable Continuous Deployment of iOS Apps.
 
