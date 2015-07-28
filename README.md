@@ -130,6 +130,7 @@ This will login to iTunes Connect and update your app information based on your 
 
 ## Changelog
 
+* 0.2.1 Send version on produce. Update SKU generator
 * 0.2.0 Now you can upload your app update.
 * 0.1.0 Now you can update your iTunes Connect metadata and screenshots (deliver)
 * 0.0.3 Added register - Register App (produce + sigh)

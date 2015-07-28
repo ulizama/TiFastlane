@@ -228,7 +228,8 @@ function tifastlane() {
             '--username', cfg.username,
             '--app_identifier', tiapp.id,
             '--app_name', tiapp.name,
-            '--sku', build_sku(tiapp.id)
+            '--sku', build_sku(tiapp.id),
+            '--version', tiapp.version
         ];
 
         if( program.skip_itc ){
@@ -377,6 +378,10 @@ function tifastlane() {
 
 function build_sku( appid ){
     //We are going to use the same id of the app, for the SKU
-    var sku = appid.toUpperCase().replace(/\./g, "_");
+    var sku = appid.toUpperCase().replace(/\./g, "_") + randomIntInc(100,999);
     return sku;
+}
+
+function randomIntInc (low, high) {
+    return Math.floor(Math.random() * (high - low + 1) + low);
 }
