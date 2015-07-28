@@ -228,8 +228,7 @@ function tifastlane() {
             '--username', cfg.username,
             '--app_identifier', tiapp.id,
             '--app_name', tiapp.name,
-            '--sku', build_sku(tiapp.id),
-            '--version', tiapp.version
+            '--sku', build_sku(tiapp.id)
         ];
 
         if( program.skip_itc ){
