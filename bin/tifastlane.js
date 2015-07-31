@@ -224,11 +224,17 @@ function tifastlane() {
         //First step is to register the application using fastlane.produce
         console.log( chalk.cyan('Creating app on Apple Developer Portal ' + ( program.skip_itc ? 'Skipping iTunes Connect' : '& iTunes Connect') ));
 
+        var sku = build_sku(tiapp.id);
+
+        console.log( chalk.white('APP ID: ' + tiapp.id) );
+        console.log( chalk.white('APP Name: ' + tiapp.name) );
+        console.log( chalk.white('Version: ' + tiapp.version) );
+
         var produceArgs = [
             '--username', cfg.username,
             '--app_identifier', tiapp.id,
-            '--app_name', tiapp.name,
-            '--sku', build_sku(tiapp.id)
+            '--app_version', tiapp.version,
+            '--app_name', tiapp.name
         ];
 
         if( program.skip_itc ){
@@ -377,7 +383,7 @@ function tifastlane() {
 
 function build_sku( appid ){
     //We are going to use the same id of the app, for the SKU
-    var sku = appid.toUpperCase().replace(/\./g, "_") + randomIntInc(100,999);
+    var sku = appid.toUpperCase().replace(/\./g, "") + randomIntInc(100,999);
     return sku;
 }
 
