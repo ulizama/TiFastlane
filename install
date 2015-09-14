@@ -10,21 +10,11 @@ console.log('--- Installing fastlane.tools ---');
 
 exec('ruby', ['-v'], null, function(e) {
 
-	console.log('--- Working on produce ---');
+	console.log('--- Working on FastLane Tools ---');
 
-	exec('sudo', ['gem','install', 'produce'], null, function(e) {
+	exec('sudo', ['gem','install', 'fastlane'], null, function(e) {
 
-		console.log('--- Working on sigh ---');
-
-		exec('sudo', ['gem','install', 'sigh'], null, function(e) {
-
-			console.log('--- Working on deliver ---');
-
-			exec('sudo', ['gem','install', 'deliver'], null, function(e) {
-				console.info('All Done.');
-			});
-			
-		});
+		console.log('--- All Tools Downloaded ---');
 
 	});
 

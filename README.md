@@ -4,7 +4,7 @@ Building apps for iOS it's all great until you have to deal with Certificates, P
 
 TiFastlane it's a way to use those tools for Titanium development. Now you'll be able to do real continous deployment of your Titanium app. Sending your app for review will be a breeze:
 
-	tifastlane sendapp
+	tifast send
 
 With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles.
 
@@ -23,54 +23,79 @@ Then install the CLI and all the required gems will be installed automatically.
 
 Create a `tifastlane.cfg` file in the Titanium project folder as follows:
 
+Available locales `"da", "de-DE", "el", "en-AU", "en-CA", "en-GB", "en-US", "es-ES", "es-MX", "fi", "fr-CA", "fr-FR", "id", "it", "ja", "ko", "ms", "nl", "no", "pt-BR", "pt-PT", "ru", "sv", "th", "tr", "vi", "zh-Hans", "zh-Hant"`
 ```json
 {
-	"username": "YOURAPPLEID@EMAIL"
+	"username": "YOURAPPLEID@EMAIL",
+	"locale": "pt-BR"
 }
 ```
 
 ## Usage
+`tifastlane` or `tifast` must be executed from your Titanium App directory. It will automatically read your `tiapp.xml` to determine your App configuration for all the tools.
 
-`tifastlane` must be executed from your Titanium App directory. It will automatically read your `tiapp.xml` to determine your App configuration for all the tools.
+# First Things First
+TiFastlane needs to initialize the configuration files needed to keep iTunes Connect updated with the correct information. If the app it's not in iTunes Connect then run to start fresh settings:
+```javascript
+tifast init
+```
 
+If your app is already on iTunes Connect, then run the wizard which will automatically download all your current metadata and screenshots:
+```javascript
+tifast init -s
+```
+
+### Status
 You can view the current settings that would be used by running:
 
-	tifastlane status
+	tifast status
 
-## App IDs and Provisioning Profiles
+You will see something like this:
+```javascript
+Apple ID Username: contact@universopositivo.com.br
+Name: Easy Ticket
+AppId: br.com.universopositivo.easyTicket
+Version: 1.0.0
+CFBundleVersion: 107
+GUID: "32cc538e-4fd3-4d6e-9999-870ce50ab039"
+SKU: "xxxxxxxxxxxxxx"
+```
 
+### Register
 Register your Titanium App ID on the Apple Developer Program and iTunes Connect, and then generate the Provisioning Profiles for App Store, Ad Hoc and Development.
 
-	tifastlane register
-	
+	tifast register
+
 Everything is done behing the scenes using [produce](https://github.com/fastlane/produce) and [sigh](https://github.com/KrauseFx/sigh). If the App ID already exists on the Developer Program or iTunes Connect it will be safely skipped.
 
 For default provisiong profiles will be generated for all platforms, but if you wish you can target a single platform: `appstore`, `adhoc` or `development`.
 
 	tifastlane register <platform>
-	
-### Advanced Options
 
-* `-i, --skip_itc` - Skips creating the app on iTunes Connect
-* `--force` - By default if the Provisioning Profiles exist, they will be skipped. User force to recreate and resign the profiles.
-* `--skip_install` - Skip installation of new provisioning profiles
-* `--skip_fetch_profiles` - Skips the verification of existing profiles which is useful if you have thousands of profiles
+### Send
 
-## Maintain iTunes Connect (deliver)
+When you have a new version of your App that you wish to push to iTunes Connect, all you have to do is:
 
-Update your app binary, your app metadata (Title, Description, Icon, etc) and your app screenshots using [deliver](https://github.com/KrauseFx/deliver).
+	tifast send
 
-### Initializing Deliverfile
+TiFastalane will get Appcelerator to build the ipa. It will build it as AdHoc so we get an ipa, so make sure to select your App Store certificate so it works when sending it to iTunes Connect.
 
-TiFastlane needs to initialize the configuration files needed to keep iTunes Connect updated with the correct information. If the app it's not in iTunes Connect then run to start fresh settings:
+#### Updating only metadata
 
-	tifastlane init
-	
-If your app is already on iTunes Connect, then run the wizard which will automatically download all your current metadata and screenshots:
+You might want to update only the metadata and/or screenshots of your App without having to submit a new version or binary. To do so use:
 
-	tifastlane initwizard
+	tifast send -m
 
-After correct initialization you will see on the `TiFLDelivery` directory, a new directory with the id of your app.
+This will login to iTunes Connect and update your app information based on your configuration, as well as uploading all the App screenshots.
+
+After the build, then using [Deliver](https://github.com/KrauseFx/deliver) TiFastlane will login to iTunes Connect. It will automatically read the new version of your ipa and create a new version if necessary, upload the metadata, screenshots and finally your binary.
+
+### TestFlight
+If you want to upload an Beta version of your app, you can do it by using:
+
+	tifast send -t
+
+It will use [Pilot](https://github.com/KrauseFx/pilot) to communicate with iTunes Connect and upload your App, already sending it to beta internal test and communicate your testers.
 
 ### Configuration Files
 
@@ -88,40 +113,9 @@ In this directory you will see several text files with the contents of the metad
 
 As with metadata, screenshots support multi language. Based on the dimension of the images they will be correctly set to the appropiate device. The images are ordered alphabetically, so make sure to name them correctly to control the right display order.
 
-## Sending App Updates
-
-When you have a new version of your App that you wish to push to iTunes Connect, all you have to do is:
-
-	tifastlane sendapp
-	
-TiFastalane will get Titanium to build the ipa. It will build it as AdHoc so we get an ipa, so make sure to select your App Store certificate so it works when sending it to iTunes Connect.
-
-After the build, then using [deliver](https://github.com/KrauseFx/deliver) TiFastlane will login to iTunes Connect. It will automatically read the new version of your ipa and create a new version if necessary, upload the metadata, screenshots and finally your binary.
-
-After the ipa has succesfully uploaded, it will wait and try to submit it for review automatically. Make sure that you set the `submit_further_information` section on your Deliverfile.
-
-### Advanced Options
-
-By default, before submitting you will be shown a report file with all the changes that will be made which you'll need to confirm. To skip this confirmation, which might be really useful for automation:
-
-* `--skip_verify` - Skips configuration prompt before upload.
-
-And if you want to send the binary without having to do a rebuild:
-
-* `--skip_build` - Skips ipa build
-
-### Updating only metadata
-
-You might want to update only the metadata and/or screenshots of your App without having to submit a new version or binary. To do so use:
-
-	tifastlane updatemeta
-	
-This will login to iTunes Connect and update your app information based on your configuration, as well as uploading all the App screenshots.
-
-##TODO
+## TODO
 
 * Allow configuration of team id, team name, and specification of the default certificate to use
-* Integrate the rest of the fastlane tools
 
 ##  Thanks
 
@@ -129,7 +123,7 @@ This will login to iTunes Connect and update your app information based on your 
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
-
+* 1.0.0 Add new tools [Snapshot](https://github.com/KrauseFx/snapshot), [PEM](https://github.com/fastlane/PEM), [Pilot](https://github.com/fastlane/pilot)
 * 0.2.3 Removed SKU delivery, automatic one will be generated by produce.
 * 0.2.1 Send version on produce. Update SKU generator
 * 0.2.0 Now you can upload your app update.
