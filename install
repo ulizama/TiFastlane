@@ -4,23 +4,25 @@
 'use strict';
 
 var path = require('path'),
-    exec = require('./lib/exec');
+	exec = require('./lib/exec'),
+    execsudo = require('./lib/execsudo');
 
-console.log('--- Installing fastlane.tools ---');
+console.log('--- Starting installation of fastlane.tools ---');
+console.log('--- This can take several minutes, may we suggest a cup of coffee :D ---');
 
 exec('ruby', ['-v'], null, function(e) {
 
 	console.log('--- Working on produce ---');
 
-	exec('sudo', ['gem','install', 'produce'], null, function(e) {
+	execsudo(['gem','install', 'produce'], null, function(e) {
 
 		console.log('--- Working on sigh ---');
 
-		exec('sudo', ['gem','install', 'sigh'], null, function(e) {
+		execsudo(['gem','install', 'sigh'], null, function(e) {
 
 			console.log('--- Working on deliver ---');
 
-			exec('sudo', ['gem','install', 'deliver'], null, function(e) {
+			execsudo(['gem','install', 'deliver'], null, function(e) {
 				console.info('All Done.');
 			});
 			

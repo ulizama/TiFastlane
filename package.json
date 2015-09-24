@@ -1,6 +1,6 @@
 {
   "name": "tifastlane",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
   "main": "index.js",
   "bin": {
@@ -35,9 +35,10 @@
   "dependencies": {
     "chalk": "^0.5.1",
     "commander": "^2.6.0",
-    "update-notifier": "^0.2.2",
+    "sudo": "^1.0.3",
     "tiapp.xml": "^0.2.2",
-    "xpath": "^0.0.9",
-    "underscore": "^1.8.3"
-  }  
+    "underscore": "^1.8.3",
+    "update-notifier": "^0.2.2",
+    "xpath": "^0.0.9"
+  }
 }

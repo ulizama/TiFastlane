@@ -155,6 +155,11 @@ function tifastlane() {
 
         fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
 
+            if( /^version /.test(line) ){
+                //Skip version
+                return;
+            }
+
             if( /^ipa /.test(line) ){
                 _hasipa = true;
                 newFileContents = newFileContents + 'ipa "../../build/' + tiapp.name + '.ipa"' + "\n";
@@ -321,6 +326,7 @@ function tifastlane() {
         .option('--skip_fetch_profiles', 'Skips the verification of existing profiles which is useful if you have thousands of profiles')
         .option('--skip_verify', 'Skip verification of metadata on update')
         .option('--skip_build', 'Skip build of App Store ipa')
+        .option('--default_language', 'Default language to use on initialization of the app')
 
     program.parse(process.argv);
 
@@ -348,11 +354,17 @@ function tifastlane() {
     // read in the app config
     var tiapp = tiappxml.load(infile);
 
+    var language = "en-US";
+
+    if( program.default_language ){
+        language = program.default_language;
+    }
+
     //Path Dirs
     var appDeliveryDir = deliveryDir + '/' + tiapp.id;
     var deliverFile = appDeliveryDir + "/Deliverfile";
-    var appDeliveryMetaDir = appDeliveryDir + '/metadata/en-US';
-    var appDeliveryScreenDir = appDeliveryDir + '/screenshots/en-US';
+    var appDeliveryMetaDir = appDeliveryDir + '/metadata/' + language;
+    var appDeliveryScreenDir = appDeliveryDir + '/screenshots/' + language;
 
     // check for a new version
     updateNotifier({

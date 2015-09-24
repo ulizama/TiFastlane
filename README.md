@@ -72,6 +72,12 @@ If your app is already on iTunes Connect, then run the wizard which will automat
 
 After correct initialization you will see on the `TiFLDelivery` directory, a new directory with the id of your app.
 
+#### Default Language
+
+By default the language used on initialization will be `en-US`. You can override this by using the `--default_language` argument.
+
+	tifastlane init --default_language es-MX
+
 ### Configuration Files
 
 All metadata and screenshots are easily maintained from the `TiFLDelivery\APPID` directory, here you will find the following files:
