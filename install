@@ -12,21 +12,9 @@ console.log('--- This can take several minutes, may we suggest a cup of coffee :
 
 exec('ruby', ['-v'], null, function(e) {
 
-	console.log('--- Working on produce ---');
-
-	execsudo(['gem','install', 'produce'], null, function(e) {
-
-		console.log('--- Working on sigh ---');
-
-		execsudo(['gem','install', 'sigh'], null, function(e) {
-
-			console.log('--- Working on deliver ---');
-
-			execsudo(['gem','install', 'deliver'], null, function(e) {
-				console.info('All Done.');
-			});
-			
-		});
+	execsudo(['gem','install', 'fastlane'], null, function(e) {
+		
+		console.log('--- All Tools Downloaded ---');
 
 	});
 
