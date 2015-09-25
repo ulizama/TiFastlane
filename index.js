@@ -15,33 +15,47 @@ var chalk = require('chalk')
   , pilotDir = './TiFLPilot'
   //\\
   , canLoad = true
+  , tiapp = null
+  , cfg = null
+  , appDeliveryDir = null
+  , deliverFile = null
+  , appDeliveryMetaDir = null
+  , appDeliveryScreenDir = null
   ;
 
-// check that all required input paths are good
-[cfgfile, infile].forEach(function (file) {
-  if (!fs.existsSync(file)) {
-      console.log(chalk.red('Cannot find ' + file));
-      console.log(chalk.yellow('tifast must be run on Root App folder. "./appName"'));
-      canLoad = false;
-  }
-});
-
-var tiapp = tiappxml.load(infile);
-
-// read in our config
-var cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
-if( !cfg.username ){
-    console.log(chalk.red('Cannot determine username from configuration'));
-}
 
 /*
-@ Path Directories
+@ Initialize and read configuration files
 */
-var appDeliveryDir = deliveryDir + '/' + tiapp.id
-  , deliverFile = appDeliveryDir + "/Deliverfile"
-  , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
-  , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
-  ;
+exports.initialize = function(){
+
+    // check that all required input paths are good
+    [cfgfile, infile].forEach(function (file) {
+      if (!fs.existsSync(file)) {
+          console.log(chalk.red('Cannot find ' + file));
+          console.log(chalk.yellow('tifast must be run on Root App folder. "./appName"'));
+          canLoad = false;
+      }
+    });
+
+    tiapp = tiappxml.load(infile);
+
+    // read in our config
+    cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
+    if( !cfg.username ){
+        console.log(chalk.red('Cannot determine username from configuration'));
+    }
+
+    /*
+    @ Path Directories
+    */
+    appDeliveryDir = deliveryDir + '/' + tiapp.id
+      , deliverFile = appDeliveryDir + "/Deliverfile"
+      , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
+      , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
+      ;
+
+}
 
 /*
 @ bumpBundleVersion
