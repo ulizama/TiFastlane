@@ -1,15 +1,10 @@
-# TiFastlane
-
-Building apps for iOS it's all great until you have to deal with Certificates, Provisioning Profiles and sending iTunes Connect. Then came [fastlane.tools](https://fastlane.tools/) a collection of 9 tools that enable Continuous Deployment of iOS Apps.
-
-
-* [Check out Documentation Folder](./docs/README.md)
+## [Check out Documentation Folder](./docs/README.md)
 
 
 ## TODO
 
+* Implement [Gym](https://github.com/fastlane/gym) Tool
 * Check `sudo` issue to have the fastlane gem installed automatically when installing TiFastlane
-* Finalize and document `snapshot`
 * Allow configuration of team id, team name, and specification of the default certificate to use
 
 ##  Collaborators
