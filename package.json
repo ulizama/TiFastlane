@@ -36,12 +36,34 @@
   },
   "homepage": "https://github.com/ulizama/TiFastlane",
   "dependencies": {
-    "chalk": "^0.5.1",
-    "commander": "^2.6.0",
-    "sudo": "^1.0.3",
-    "tiapp.xml": "^0.2.2",
-    "underscore": "^1.8.3",
-    "update-notifier": "^0.2.2",
-    "xpath": "^0.0.9"
-  }
+    "chalk": "*",
+    "commander": "*",
+    "sudo": "*",
+    "tiapp.xml": "*",
+    "underscore": "*",
+    "update-notifier": "*",
+    "xpath": "*",
+    "inquirer": "*"
+  },
+  "gitHead": "3667cbcb3fcbb00866a5265543d8d133e1f6e27e",
+  "_id": "tifastlane@0.3.0",
+  "_shasum": "362b2626ff068a070deee9d97e745e0697789413",
+  "_from": "tifastlane@0.3.0",
+  "_npmVersion": "2.11.3",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "name": "ulizama",
+    "email": "uriel@baboon.international"
+  },
+  "dist": {
+    "shasum": "362b2626ff068a070deee9d97e745e0697789413",
+    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "ulizama",
+      "email": "uriel@baboon.international"
+    }
+  ],
+  "_resolved": "https://registry.npmjs.org/tifastlane/-/tifastlane-0.3.0.tgz"
 }
