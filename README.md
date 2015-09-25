@@ -3,7 +3,7 @@
 Building apps for iOS it's all great until you have to deal with Certificates, Provisioning Profiles and sending iTunes Connect. Then came [fastlane.tools](https://fastlane.tools/) a collection of 9 tools that enable Continuous Deployment of iOS Apps.
 
 
-* [Check Documentation Folder](./documentation/README.md)
+* [Check out Documentation Folder](./docs/README.md)
 
 
 ## TODO
