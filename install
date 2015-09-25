@@ -3,19 +3,22 @@
 /*jslint node: true */
 'use strict';
 
-var path = require('path'),
-	exec = require('./lib/exec'),
-    execsudo = require('./lib/execsudo');
+// RIGHT NOW WE NEED TO INSTALL THE fastlane gem MANUALLY UNTILL WE FIGURE OUT HOW TO
+// GO OVER THE SUDO ISSUE
 
-console.log('--- Starting installation of fastlane.tools ---');
-console.log('--- This can take several minutes, may we suggest a cup of coffee :D ---');
+// var path = require('path'),
+// 	exec = require('./lib/exec'),
+//     execsudo = require('./lib/execsudo');
 
-exec('ruby', ['-v'], null, function(e) {
+// console.log('--- Starting installation of fastlane.tools ---');
+// console.log('--- This can take several minutes, may we suggest a cup of coffee :D ---');
 
-	execsudo(['gem','install', 'fastlane'], null, function(e) {
+// exec('ruby', ['-v'], null, function(e) {
+
+// 	execsudo(['gem','install', 'fastlane'], null, function(e) {
 		
-		console.log('--- All Tools Downloaded ---');
+// 		console.log('--- All Tools Downloaded ---');
 
-	});
+// 	});
 
-});
+// });
