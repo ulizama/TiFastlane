@@ -152,6 +152,7 @@ As with metadata, screenshots support multi language. Based on the dimension of 
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.3.3 Update app version on send
 * 0.3.2 Correct functionality of `tifast register [platform]`
 * 0.3.1 You can now setup TiFastlane from the command line and you can choose which CLI to use. More documentation.
 * 0.3.0 Added new tools [snapshot](https://github.com/KrauseFx/snapshot), [PEM](https://github.com/fastlane/PEM), [Pilot](https://github.com/fastlane/pilot)
