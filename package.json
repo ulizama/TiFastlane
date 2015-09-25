@@ -1,6 +1,6 @@
 {
   "name": "tifastlane",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
   "main": "index.js",
   "bin": {
@@ -36,33 +36,12 @@
   },
   "homepage": "https://github.com/ulizama/TiFastlane",
   "dependencies": {
-    "chalk": "*",
-    "commander": "*",
-    "update-notifier": "*",
-    "tiapp.xml": "*",
-    "xpath": "*",
-    "underscore": "*"
-  },
-  "gitHead": "045937f9abfa022ec8205dbe2b2cd23e1863ed77",
-  "_id": "tifastlane@0.2.3",
-  "_shasum": "e726ea2b2f3075e29ba86537d90e25559b24cd1a",
-  "_from": "lib/node_modules/tifastlane",
-  "_npmVersion": "1.4.28",
-  "_npmUser": {
-    "name": "ulizama",
-    "email": "uriel@baboon.international"
-  },
-  "maintainers": [
-    {
-      "name": "ulizama",
-      "email": "uriel@baboon.international"
-    }
-  ],
-  "dist": {
-    "shasum": "f20b2dfcc38548a847ff9e62cae6239b87c74360",
-    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.2.3.tgz"
-  },
-  "_resolved": "file:lib/node_modules/tifastlane",
-  "readme": "# TiFastlane\n\nBuilding apps for iOS it's all great until you have to deal with Certificates, Provisioning Profiles and sending iTunes Connect. Then came [fastlane.tools](https://fastlane.tools/) a collection of 9 tools that enable Continuous Deployment of iOS Apps.\n\nTiFastlane it's a way to use those tools for Titanium development. Now you'll be able to do real continous deployment of your Titanium app. Sending your app for review will be a breeze:\n\n\ttifastlane sendapp\n\nWith TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles.\n\n\n## Install [![npm version](https://badge.fury.io/js/tifastlane.svg)](http://badge.fury.io/js/tifastlane)\n\nMake sure, you have the latest version of the Xcode command line tools installed:\n\n\txcode-select --install\n\nThen install the CLI and all the required gems will be installed automatically.\n\n\t[sudo] npm install -g tifastlane\n\n### TiFastlane Configuration\n\nCreate a `tifastlane.cfg` file in the Titanium project folder as follows:\n\n```json\n{\n\t\"username\": \"YOURAPPLEID@EMAIL\"\n}\n```\n\n## Usage\n\n`tifastlane` must be executed from your Titanium App directory. It will automatically read your `tiapp.xml` to determine your App configuration for all the tools.\n\nYou can view the current settings that would be used by running:\n\n\ttifastlane status\n\n## App IDs and Provisioning Profiles\n\nRegister your Titanium App ID on the Apple Developer Program and iTunes Connect, and then generate the Provisioning Profiles for App Store, Ad Hoc and Development.\n\n\ttifastlane register\n\t\nEverything is done behing the scenes using [produce](https://github.com/fastlane/produce) and [sigh](https://github.com/KrauseFx/sigh). If the App ID already exists on the Developer Program or iTunes Connect it will be safely skipped.\n\nFor default provisiong profiles will be generated for all platforms, but if you wish you can target a single platform: `appstore`, `adhoc` or `development`.\n\n\ttifastlane register <platform>\n\t\n### Advanced Options\n\n* `-i, --skip_itc` - Skips creating the app on iTunes Connect\n* `--force` - By default if the Provisioning Profiles exist, they will be skipped. User force to recreate and resign the profiles.\n* `--skip_install` - Skip installation of new provisioning profiles\n* `--skip_fetch_profiles` - Skips the verification of existing profiles which is useful if you have thousands of profiles\n\n## Maintain iTunes Connect (deliver)\n\nUpdate your app binary, your app metadata (Title, Description, Icon, etc) and your app screenshots using [deliver](https://github.com/KrauseFx/deliver).\n\n### Initializing Deliverfile\n\nTiFastlane needs to initialize the configuration files needed to keep iTunes Connect updated with the correct information. If the app it's not in iTunes Connect then run to start fresh settings:\n\n\ttifastlane init\n\t\nIf your app is already on iTunes Connect, then run the wizard which will automatically download all your current metadata and screenshots:\n\n\ttifastlane initwizard\n\nAfter correct initialization you will see on the `TiFLDelivery` directory, a new directory with the id of your app.\n\n### Configuration Files\n\nAll metadata and screenshots are easily maintained from the `TiFLDelivery\\APPID` directory, here you will find the following files:\n\n**Deliveryfile**\n\nYou can configure Price, Copyright, Developer Notes, etc. You can read the full [documentation here](https://github.com/KrauseFx/deliver/blob/master/Deliverfile.md).\n\n**./metadata/[LANG]/*.txt**\n\nIn this directory you will see several text files with the contents of the metadata that is language dependant. By default it's only created with the `EN_US` language, but if you run the wizard and you support more language, you'll see them listed here.\n\n**./screenshots/[LANG]/*.***\n\nAs with metadata, screenshots support multi language. Based on the dimension of the images they will be correctly set to the appropiate device. The images are ordered alphabetically, so make sure to name them correctly to control the right display order.\n\n## Sending App Updates\n\nWhen you have a new version of your App that you wish to push to iTunes Connect, all you have to do is:\n\n\ttifastlane sendapp\n\t\nTiFastalane will get Titanium to build the ipa. It will build it as AdHoc so we get an ipa, so make sure to select your App Store certificate so it works when sending it to iTunes Connect.\n\nAfter the build, then using [deliver](https://github.com/KrauseFx/deliver) TiFastlane will login to iTunes Connect. It will automatically read the new version of your ipa and create a new version if necessary, upload the metadata, screenshots and finally your binary.\n\nAfter the ipa has succesfully uploaded, it will wait and try to submit it for review automatically. Make sure that you set the `submit_further_information` section on your Deliverfile.\n\n### Advanced Options\n\nBy default, before submitting you will be shown a report file with all the changes that will be made which you'll need to confirm. To skip this confirmation, which might be really useful for automation:\n\n* `--skip_verify` - Skips configuration prompt before upload.\n\nAnd if you want to send the binary without having to do a rebuild:\n\n* `--skip_build` - Skips ipa build\n\n### Updating only metadata\n\nYou might want to update only the metadata and/or screenshots of your App without having to submit a new version or binary. To do so use:\n\n\ttifastlane updatemeta\n\t\nThis will login to iTunes Connect and update your app information based on your configuration, as well as uploading all the App screenshots.\n\n##TODO\n\n* Allow configuration of team id, team name, and specification of the default certificate to use\n* Integrate the rest of the fastlane tools\n\n##  Thanks\n\n* [Felix Krause](https://github.com/KrauseFx) for creating the awesome fastlane.tools\n* [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one\n\n## Changelog\n\n* 0.2.3 Removed SKU delivery, automatic one will be generated by produce.\n* 0.2.1 Send version on produce. Update SKU generator\n* 0.2.0 Now you can upload your app update.\n* 0.1.0 Now you can update your iTunes Connect metadata and screenshots (deliver)\n* 0.0.3 Added register - Register App (produce + sigh)\n* 0.0.1 Initial Commit\n\n## License\n\n<pre>\nCopyright 2015 Uriel Lizama\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n</pre>\n",
-  "readmeFilename": "README.md"
+    "chalk": "^0.5.1",
+    "commander": "^2.6.0",
+    "sudo": "^1.0.3",
+    "tiapp.xml": "^0.2.2",
+    "underscore": "^1.8.3",
+    "update-notifier": "^0.2.2",
+    "xpath": "^0.0.9"
+  }
 }

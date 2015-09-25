@@ -357,6 +357,11 @@ exports.send = function(opts){
 
         fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
             // console.log('line: ', line);
+            if( /^version /.test(line) ){
+                //Skip version
+                return;
+            }
+            
             if( /^ipa /.test(line) ){
                 _hasipa = true;
                 newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
