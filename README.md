@@ -1,4 +1,16 @@
-## [Check out Documentation Folder](./docs/README.md)
+# TiFastlane [![npm version](https://badge.fury.io/js/tifastlane.svg)](http://badge.fury.io/js/tifastlane)
+
+Building apps for iOS it's all great until you have to deal with Certificates, Provisioning Profiles and sending iTunes Connect. Then came [fastlane.tools](https://fastlane.tools/) a collection of tools that enable Continuous Deployment of iOS Apps.
+
+TiFastlane it's a way to use those tools for Titanium development. Now you'll be able to do real continous deployment of your Titanium app. Sending your app for review will be a breeze:
+
+	tifast send
+
+With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles.
+
+## Documentation
+
+### You can look at complete usage instructions in the [Documentation](./docs/README.md)
 
 
 ## TODO
