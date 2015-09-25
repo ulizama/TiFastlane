@@ -25,39 +25,44 @@ var chalk = require('chalk')
   , appDeliveryMetaDir = null
   , appDeliveryScreenDir = null
   //\\
+  , canLoad = true
   ;
 
-// check that all required input paths are good
-if(!fs.existsSync(infile)){
-    console.log(chalk.red('Cannot find tiapp.xml'));
-    console.log(chalk.yellow('tifast must be run on Root App folder. "./appName"'));
 
-}else{
+/*
+@ Read configuration files
+*/
+exports.loadconfig = function(){
+
+    if (!fs.existsSync(infile)) {
+        console.log(chalk.red('Cannot find ' + infile));
+        console.log(chalk.yellow('tifast must be run on the root of your Titanium App'));
+        process.exit();
+    }
+
+    if (!fs.existsSync(cfgfile)) {
+        console.log(chalk.red('Cannot find ' + cfgfile));
+        console.log(chalk.yellow('Run ') + chalk.cyan('tifast setup') + chalk.yellow(' to initialize your tifast configuation.') );
+        process.exit();
+    }
+
     tiapp = tiappxml.load(infile);
 
-    if(fs.existsSync(cfgfile)){
-        cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
-
-        if( !cfg.username ){
-            console.log(chalk.red('Cannot determine username from configuration'));
-        }
-        if( !cfg.locale ){
-            console.log(chalk.red('Cannot determine locale from configuration'));
-        }
-        if( !cfg.cli ){
-            console.log(chalk.red('Cannot determine cli from configuration'));
-        }
+    // read in our config
+    cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
+    if( !cfg.username ){
+        console.log(chalk.red('Cannot determine username from configuration'));
     }
 
     /*
     @ Path Directories
     */
-    appDeliveryDir = deliveryDir + '/' + tiapp.id;
-    deliverFile = appDeliveryDir + "/Deliverfile";
+    appDeliveryDir = deliveryDir + '/' + tiapp.id
+      , deliverFile = appDeliveryDir + "/Deliverfile"
+      , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
+      , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
+      ;
 
-    appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale;
-
-    appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale;
 }
 
 /*
@@ -459,7 +464,12 @@ exports.send = function(opts){
 
         fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
             // console.log('line: ', line);
-            if( /^ipa /.test(line) ){
+
+            if( /^version /.test(line) ){
+                //Update Version
+                newFileContents = newFileContents + 'version "' + tiapp.version + '"' + "\n";
+            }
+            else if( /^ipa /.test(line) ){
                 _hasipa = true;
                 newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
             }else{

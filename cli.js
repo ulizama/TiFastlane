@@ -61,9 +61,8 @@ program.command('status')
 /*
 @ Register Functions
 */
-program.command('register')
-    .description('Register app and create provisioning profiles.')
-    .option('-p, --platform <platform>', 'Can be "appstore", "development", "adhoc" or "all"')
+program.command('register [platform]')
+    .description('Register app and create provisioning profiles. You can target a specific platform: "appstore", "development", "adhoc" or leave empty for all')
     .option('-f, --force', 'Force the provisioning profiles to be renewed')
     .option('-i, --skip_itc', 'Skip the creation of the app on iTunes Connect')
     .option('-si, --skip_install', 'Skip installation of new provisioning profiles')
@@ -141,6 +140,7 @@ function init(opts) {
 
 	var options = _filterOptions(opts);
 
+    tifastlane.loadconfig();
 	tifastlane.init(options);
 };
 
@@ -152,17 +152,21 @@ function send(opts) {
 
 	var options = _filterOptions(opts);
 
+    tifastlane.loadconfig();
 	tifastlane.send(options);
 };
 
 /*
 @ register
 */
-function register(opts) {
+function register(platform, opts) {
 	notifier.update && notifier.notify();
 
 	var options = _filterOptions(opts);
 
+    options.platform = platform || '';
+
+    tifastlane.loadconfig();
 	tifastlane.register(options);
 };
 
@@ -175,6 +179,7 @@ function pem(env, opts) {
 	var options = _filterOptions(opts);
     options.password = (!env) ? null : env;
 
+    tifastlane.loadconfig();
 	tifastlane.pem(options);
 };
 
@@ -204,6 +209,7 @@ function pilot(env, opts) {
         return;
     }
 
+    tifastlane.loadconfig();
 	tifastlane.pilot(options);
 };
 

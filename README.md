@@ -14,35 +14,37 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 Make sure, you have the latest version of the Xcode command line tools installed:
 
 	xcode-select --install
+	
+Then we need to download and install the [Fastlane](https://fastlane.tools/) toolset that TiFastlane uses for all the magic.
 
-Then install the CLI and all the required gems will be installed automatically.
+	sudo gem install fastlane
+
+Finally we can install the TiFastlane CLI.
 
 	[sudo] npm install -g tifastlane
 
-### TiFastlane Configuration
-
-Create a `tifastlane.cfg` file in the Titanium project folder as follows:
-
-```json
-{
-	"username": "YOURAPPLEID@EMAIL",
-	"locale": "pt-BR"
-}
-```
-Available locales
-
-`"da", "de-DE", "el", "en-AU", "en-CA", "en-GB", "en-US", "es-ES", "es-MX", "fi", "fr-CA", "fr-FR", "id", "it", "ja", "ko", "ms", "nl", "no", "pt-BR", "pt-PT", "ru", "sv", "th", "tr", "vi", "zh-Hans", "zh-Hant"`
 
 ## Usage
 `tifastlane` or `tifast` must be executed from your Titanium App directory. It will automatically read your `tiapp.xml` to determine your App configuration for all the tools.
 
-# First Things First
-TiFastlane needs to initialize the configuration files needed to keep iTunes Connect updated with the correct information. If the app it's not in iTunes Connect then run to start fresh settings:
+### Setup TiFastlane
+
+First we need to setup how TiFastlane will work on your app, run:
+
+	tifast setup
+
+This will take you to a list of simple prompts to configure language, Apple ID and CLI to use when building your app. At the end of the process a `tifastlane.cfg` file will be created in your app project directory.
+
+
+## Initializing Your App
+
+TiFastlane needs to initialize the configuration files needed to keep iTunes Connect updated with the correct information. If the app **it's not in iTunes Connect** then run to start fresh settings:
+
 ```javascript
 tifast init
 ```
 
-If your app is already on iTunes Connect, then run the wizard which will automatically download all your current metadata and screenshots:
+If your app **is already on iTunes Connect**, then run the wizard which will automatically download all your current metadata and screenshots:
 
 ```javascript
 tifast init -s
@@ -70,7 +72,7 @@ Register your Titanium App ID on the Apple Developer Program and iTunes Connect,
 
 	tifast register
 
-Everything is done behing the scenes using [produce](https://github.com/fastlane/produce) and [sigh](https://github.com/KrauseFx/sigh). If the App ID already exists on the Developer Program or iTunes Connect it will be safely skipped.
+Everything is done behind the scenes using [produce](https://github.com/fastlane/produce) and [sigh](https://github.com/KrauseFx/sigh). If the App ID already exists on the Developer Program or iTunes Connect it will be safely skipped.
 
 For default provisiong profiles will be generated for all platforms, but if you wish you can target a single platform: `appstore`, `adhoc` or `development`.
 
@@ -101,7 +103,23 @@ If you want to upload an Beta version of your app, you can do it by using:
 
 It will use [pilot](https://github.com/KrauseFx/pilot) to communicate with iTunes Connect and upload your App, already sending it to beta internal test and notifying your testers.
 
-### Configuration Files
+### Push Notification Profiles (PEM)
+
+Generate or rewnew your push certificates by using:
+
+	tifast pem [password]
+	
+For default certificates will be created for distribution using the password you define, if you want to target the development certificates then use:
+
+	tifast pem -d [password]
+	
+## CLI Usage
+
+Each of TiFastlane's commands has it's own set of arguments you can use to further control. You can easily look at each avaiable argument with `-h`, for example:
+
+	tifast setup -h
+
+## Configuration Files
 
 All metadata and screenshots are easily maintained from the `TiFLDelivery\APPID` directory, here you will find the following files:
 
@@ -119,7 +137,7 @@ As with metadata, screenshots support multi language. Based on the dimension of 
 
 ## TODO
 
-* Allow use of Titanium CLI
+* Check `sudo` issue to have the fastlane gem installed automatically when installing TiFastlane
 * Finalize and document `snapshot`
 * Allow configuration of team id, team name, and specification of the default certificate to use
 
@@ -134,6 +152,9 @@ As with metadata, screenshots support multi language. Based on the dimension of 
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.3.3 Update app version on send
+* 0.3.2 Correct functionality of `tifast register [platform]`
+* 0.3.1 You can now setup TiFastlane from the command line and you can choose which CLI to use. More documentation.
 * 0.3.0 Added new tools [snapshot](https://github.com/KrauseFx/snapshot), [PEM](https://github.com/fastlane/PEM), [Pilot](https://github.com/fastlane/pilot)
 * 0.2.3 Removed SKU delivery, automatic one will be generated by produce.
 * 0.2.1 Send version on produce. Update SKU generator
