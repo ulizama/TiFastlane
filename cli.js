@@ -17,8 +17,17 @@ var notifier = updateNotifier({
 */
 program
 	.version(pkg.version, '-v, --version')
-	.description(pkg.description)
 	.usage('command [options]')
+    ;
+
+/*
+@ Setup Function
+*/
+program.command('setup')
+    .description('Setup Tifastlane.cfg file')
+    .option('-id, --apple-id String', 'youapple@id.com')
+    .action(setup)
+    ;
 
 /*
 @ Init Function
@@ -113,6 +122,18 @@ if (program.args.length === 0 || typeof program.args[program.args.length - 1] ==
 
 
 /*
+@ setup
+*/
+function setup(opts){
+    notifier.update && notifier.notify();
+
+	var options = _filterOptions(opts);
+
+    tifastlane.setup(options);
+};
+
+
+/*
 @ init
 */
 function init(opts) {
@@ -200,3 +221,9 @@ function _filterOptions(o) {
 
 	return opts;
 };
+/*
+@
+*/
+/*
+@
+*/

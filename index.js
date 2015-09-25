@@ -7,41 +7,58 @@ var chalk = require('chalk')
   , exec = require('./lib/exec')
   , _exec = require('child_process').exec
   , templates = require('./lib/templates')
+  , inquirer = require('inquirer')
   //\\
   , cfgfile = 'tifastlane.cfg'
   , infile = 'tiapp.xml'
   , certDir = './TiFLCertificates'
   , deliveryDir = './TiFLDelivery'
   , pilotDir = './TiFLPilot'
+  , tiapp = {}
+  , cfg = {
+      cli : "appc"
+    , locale : "en-US"
+    , username : ""
+  }
+  , appDeliveryDir = null
+  , deliverFile = null
+  , appDeliveryMetaDir = null
+  , appDeliveryScreenDir = null
   //\\
-  , canLoad = true
   ;
 
 // check that all required input paths are good
-[cfgfile, infile].forEach(function (file) {
-  if (!fs.existsSync(file)) {
-      console.log(chalk.red('Cannot find ' + file));
-      console.log(chalk.yellow('tifast must be run on Root App folder. "./appName"'));
-      canLoad = false;
-  }
-});
+if(!fs.existsSync(infile)){
+    console.log(chalk.red('Cannot find tiapp.xml'));
+    console.log(chalk.yellow('tifast must be run on Root App folder. "./appName"'));
 
-var tiapp = tiappxml.load(infile);
+}else{
+    tiapp = tiappxml.load(infile);
 
-// read in our config
-var cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
-if( !cfg.username ){
-    console.log(chalk.red('Cannot determine username from configuration'));
+    if(fs.existsSync(cfgfile)){
+        cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
+
+        if( !cfg.username ){
+            console.log(chalk.red('Cannot determine username from configuration'));
+        }
+        if( !cfg.locale ){
+            console.log(chalk.red('Cannot determine locale from configuration'));
+        }
+        if( !cfg.cli ){
+            console.log(chalk.red('Cannot determine cli from configuration'));
+        }
+    }
+
+    /*
+    @ Path Directories
+    */
+    appDeliveryDir = deliveryDir + '/' + tiapp.id;
+    deliverFile = appDeliveryDir + "/Deliverfile";
+
+    appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale;
+
+    appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale;
 }
-
-/*
-@ Path Directories
-*/
-var appDeliveryDir = deliveryDir + '/' + tiapp.id
-  , deliverFile = appDeliveryDir + "/Deliverfile"
-  , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
-  , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
-  ;
 
 /*
 @ bumpBundleVersion
@@ -201,7 +218,7 @@ function uploadBetaTestIPA(_skip){
             '-p', 'ios'
         ];
 
-        exec('appc', cleanArgs, null, function(e){
+        exec(cfg.cli, cleanArgs, null, function(e){
             console.log(chalk.cyan('Starting Appcelerator App Store Build'));
             console.log("\n");
 
@@ -209,7 +226,9 @@ function uploadBetaTestIPA(_skip){
             console.log("\n");
 
             // Delete IPA from Dist folder
-            fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
+            if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
+                fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
+            }
 
             var buildArgs = [
                 'run',
@@ -218,7 +237,7 @@ function uploadBetaTestIPA(_skip){
                 '-O', './dist'
             ];
 
-            exec('appc', buildArgs, null, function(e){
+            exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
         });
@@ -260,9 +279,84 @@ function smartInit(){
 };
 
 /*
+@ dealWithResults
+*/
+function dealWithResults(json){
+    // console.log('json: ', json);
+
+    // Set CLI
+    cfg.cli = ( json.cli == "appcelerator" ) ? "appc" : "ti";
+    cfg.locale = json.locale;
+    cfg.username = json.username;
+
+
+    var cfgFile = templates.cfgFile;
+    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).replace('[USERNAME]', cfg.username);
+    fs.writeFileSync( "./tifastlane.cfg", cfgFile);
+
+    console.log('\n ');
+    console.log(chalk.yellow('tifastlane.cfg created'));
+    console.log(chalk.green('All Done!'));
+    console.log('\n ');
+};
+
+/*
+@ export setup function to CLI
+*/
+exports.setup = function(opts){
+
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "cli",
+            message: "Which CLI do you want to use?",
+            choices: [ "Appcelerator", "Titanium" ],
+            filter: function( val ) { return val.toLowerCase(); }
+        },
+
+        {
+            type: "list",
+            name: "locale",
+            message: "What locale do you want to use?",
+            choices: [ "da", "de-DE", "el", "en-AU", "en-CA", "en-GB", "en-US", "es-ES", "es-MX", "fi", "fr-CA", "fr-FR", "id", "it", "ja", "ko", "ms", "nl", "no", "pt-BR", "pt-PT", "ru", "sv", "th", "tr", "vi", "zh-Hans", "zh-Hant" ]
+        },
+
+        {
+            type: "input",
+            name: "username",
+            message: "What's your apple@id.com?",
+            validate: function( value ) {
+                var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
+                var pass = re.test( value );
+
+                if (pass) {
+                    return true;
+                } else {
+                    return "Please enter a valid email";
+                }
+            }
+        },
+
+    ], function( answers ) {
+            dealWithResults( answers );
+        }
+    );
+};
+
+/*
 @ export init function to CLI
 */
 exports.init = function(opts){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+
     if(opts.smart){
         console.log(chalk.cyan('Initializing TiFastLane Smart Mode'));
         smartInit();
@@ -333,6 +427,14 @@ exports.init = function(opts){
 @ export send function to CLI
 */
 exports.send = function(opts){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
     // console.log('opts: ', opts);
 
     if( opts.metadata ){
@@ -357,11 +459,6 @@ exports.send = function(opts){
 
         fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
             // console.log('line: ', line);
-            if( /^version /.test(line) ){
-                //Skip version
-                return;
-            }
-            
             if( /^ipa /.test(line) ){
                 _hasipa = true;
                 newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
@@ -384,9 +481,7 @@ exports.send = function(opts){
             console.log("\n");
             console.log(chalk.yellow('Starting Deliver'));
 
-            var initArgs = [
-                // 'run'
-            ];
+            var initArgs = [];
 
             if( opts.skip_verify ){
                 initArgs.push('--force');
@@ -412,27 +507,51 @@ exports.send = function(opts){
             console.log(chalk.yellow('First things first. Clean project to ensure build'));
             console.log("\n");
 
-            var cleanArgs = [
-                'ti',
-                'clean',
-                '-p', 'ios'
-            ];
+            var cleanArgs = [];
 
-            exec('appc', cleanArgs, null, function(e){
+            if(cfg.cli == "appc"){
+                cleanArgs.push('ti');
+                cleanArgs.push('clean');
+                cleanArgs.push('-p');
+                cleanArgs.push('ios');
+
+            }else{
+                cleanArgs.push('clean');
+                cleanArgs.push('-p');
+                cleanArgs.push('ios');
+            }
+
+            exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator App Store Build'));
                 console.log("\n");
 
                 // Delete IPA from Dist folder
-                fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
+                if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
+                    fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
+                }
 
-                var buildArgs = [
-                    'run',
-                    '-p', 'ios',
-                    '-T', 'dist-adhoc',
-                    '-O', './dist'
-                ];
+                var buildArgs = [];
 
-                exec('appc', buildArgs, null, function(e){
+                if(cfg.cli == "appc"){
+                    buildArgs.push('run');
+                    buildArgs.push('-p');
+                    buildArgs.push('ios');
+                    buildArgs.push('-T');
+                    buildArgs.push('dist-adhoc');
+                    buildArgs.push('-O');
+                    buildArgs.push('./dist');
+
+                }else{
+                    buildArgs.push('build');
+                    buildArgs.push('-p');
+                    buildArgs.push('ios');
+                    buildArgs.push('-T');
+                    buildArgs.push('dist-adhoc');
+                    buildArgs.push('-O');
+                    buildArgs.push('./dist');
+                }
+
+                exec(cfg.cli, buildArgs, null, function(e){
                     _deliver();
                 });
             });
@@ -444,14 +563,31 @@ exports.send = function(opts){
 @ export status function to CLI
 */
 exports.status = function(){
-    localStatus();
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }else{
+        localStatus();
+    }
 };
 
 /*
 @ export register function to CLI
 */
 exports.register = function(opts){
-    console.log('opts: ', opts);
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+    // console.log('opts: ', opts);
 
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Creating app on Apple Developer Portal ' + ( opts.skip_itc ? 'Skipping iTunes Connect' : '& iTunes Connect') ));
@@ -538,6 +674,15 @@ exports.register = function(opts){
 @ export snapshot function to CLI
 */
 exports.snapshot = function(){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+
     if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
         console.log(chalk.red('You need to run "tifast init" first'));
         return;
@@ -557,7 +702,14 @@ exports.snapshot = function(){
 @ export pem function to CLI
 */
 exports.pem = function(opts){
-    // console.log('opts: ', opts);
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
 
     //Create certificate directory if it doesn't exist
     if (!fs.existsSync(certDir)){
@@ -594,6 +746,15 @@ exports.pem = function(opts){
 @ export pilot function to CLI
 */
 exports.pilot = function(opts){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+
     if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
         console.log(chalk.red('You need to run "tifast init" first'));
         return;
@@ -666,3 +827,9 @@ exports.pilot = function(opts){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
     });
 };
+/*
+@
+*/
+/*
+@
+*/
