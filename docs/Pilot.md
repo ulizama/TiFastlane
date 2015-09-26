@@ -54,7 +54,14 @@ Exports all external testers to a CSV file
 Create external testers from a CSV file. The file **must** be at `appRoot/TiFLPilot/tester_import.csv`
 
     tifast pilot import
+    
+#### Import Tester CSV
+Here's an example of how the `tester_import.csv` should look:
 
+```javascript
+// Name, Lastname, Email
+John,Appleseed,appleseed_john@mac.com
+```
 
 ### Find
 Find a tester (internal or external) by their email address.
@@ -74,10 +81,4 @@ Remove an external tester by their email address
     tifast pilot remove <tester@email.com>
 
 
-## Import Tester CSV
-Here's an example of how `tester_import.csv` must be:
 
-```javascript
-// Name, Lastname, Email
-John,Appleseed,appleseed_john@mac.com
-```
