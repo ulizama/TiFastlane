@@ -55,7 +55,7 @@ program.command('send')
 */
 program.command('status')
 	.description('Display the App Information')
-    .action(tifastlane.status)
+    .action(status)
     ;
 
 /*
@@ -75,7 +75,7 @@ program.command('register [platform]')
 */
 program.command('snapshot')
 	.description('Take ScreenShot of Simulator to generate all images')
-    .action(tifastlane.snapshot)
+    .action(snapshot)
     ;
 
 /*
@@ -138,10 +138,17 @@ function setup(opts){
 function init(opts) {
 	notifier.update && notifier.notify();
 
-	var options = _filterOptions(opts);
-
     tifastlane.loadconfig();
 	tifastlane.init(options);
+};
+
+
+/*
+@ status
+*/
+function status(opts) {
+    tifastlane.loadconfig();
+    tifastlane.status();
 };
 
 /*
@@ -182,6 +189,15 @@ function pem(env, opts) {
     tifastlane.loadconfig();
 	tifastlane.pem(options);
 };
+
+/*
+@ snapshot
+*/
+function snapshot(opts) {
+    tifastlane.loadconfig();
+    tifastlane.snapshot();
+};
+
 
 /*
 @ pilot

@@ -1,6 +1,6 @@
 {
   "name": "tifastlane",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
   "main": "index.js",
   "bin": {
@@ -57,7 +57,7 @@
   },
   "dist": {
     "shasum": "362b2626ff068a070deee9d97e745e0697789413",
-    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.3.tgz"
+    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.4.tgz"
   },
   "maintainers": [
     {
@@ -65,5 +65,5 @@
       "email": "uriel@baboon.international"
     }
   ],
-  "_resolved": "https://registry.npmjs.org/tifastlane/-/tifastlane-0.3.3.tgz"
+  "_resolved": "https://registry.npmjs.org/tifastlane/-/tifastlane-0.3.4.tgz"
 }
