@@ -137,6 +137,8 @@ function setup(opts){
 */
 function init(opts) {
 	notifier.update && notifier.notify();
+    
+    var options = _filterOptions(opts);
 
     tifastlane.loadconfig();
 	tifastlane.init(options);
