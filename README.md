@@ -15,7 +15,6 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 
 ## TODO
 
-* Implement [Gym](https://github.com/fastlane/gym) Tool
 * Check `sudo` issue to have the fastlane gem installed automatically when installing TiFastlane
 * Allow configuration of team id, team name, and specification of the default certificate to use
 
@@ -30,6 +29,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.3.6 Update to use the latest tools provided by [@KrauseFx](https://github.com/KrauseFx/fastlane)
 * 0.3.4 Fix on status and snapshot call
 * 0.3.3 Update app version on send
 * 0.3.2 Correct functionality of `tifast register [platform]`

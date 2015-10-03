@@ -270,7 +270,8 @@ function smartInit(){
 
     var initArgs = [
         'init',
-        '--username', cfg.username
+        '--username', cfg.username,
+        '-a', tiapp.id
     ];
 
     exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
@@ -580,9 +581,9 @@ exports.status = function(){
         console.log(chalk.red("==================================="));
         console.log('\n ');
         return
-    }else{
-        localStatus();
     }
+
+    localStatus();
 };
 
 /*
@@ -647,15 +648,12 @@ exports.register = function(opts){
                 var sighArgs = [
                     '-u', cfg.username,
                     '-a', tiapp.id,
-                    '-o', certDir
+                    '-o', certDir,
+                    '--force'
                 ];
 
                 if( opts.skip_install ){
                     sighArgs.push('--skip_install');
-                }
-
-                if( opts.force ){
-                    sighArgs.push('--force');
                 }
 
                 if( opts.skip_fetch_profiles ){

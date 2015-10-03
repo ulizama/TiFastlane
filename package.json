@@ -1,69 +1,95 @@
 {
-  "name": "tifastlane",
-  "version": "0.3.4",
-  "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
-  "main": "index.js",
-  "bin": {
-    "tifastlane": "./cli.js",
-    "tifast": "./cli.js"
-  },
-  "scripts": {
-    "postinstall": "node install",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "directories": {
-    "lib": "./lib"
-  },
-  "keywords": [
-    "titanium",
-    "alloy",
-    "fastlane",
-    "appcelerator",
-    "cli",
-    "TiApp",
-    "ios"
+  "_args": [
+    [
+      "tifastlane",
+      ""
+    ]
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ulizama/TiFastlane.git"
+  "_from": "tifastlane@*",
+  "_id": "tifastlane@0.3.5",
+  "_inCache": true,
+  "_location": "/tifastlane",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "email": "uriel@baboon.international",
+    "name": "ulizama"
   },
+  "_npmVersion": "2.11.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "tifastlane",
+    "raw": "tifastlane",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "*",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/tifastlane/-/tifastlane-0.3.5.tgz",
+  "_shasum": "9425f9c0bb9c4b0829e3b805542a767b5b7ff8d3",
+  "_shrinkwrap": null,
+  "_spec": "tifastlane",
+  "_where": "",
   "author": {
     "name": "Uriel Lizama"
   },
-  "license": "Apache Public License v2",
+  "bin": {
+    "tifast": "./cli.js",
+    "tifastlane": "./cli.js"
+  },
   "bugs": {
     "url": "https://github.com/ulizama/TiFastlane/issues"
   },
-  "homepage": "https://github.com/ulizama/TiFastlane",
   "dependencies": {
     "chalk": "*",
     "commander": "*",
+    "inquirer": "*",
     "sudo": "*",
     "tiapp.xml": "*",
     "underscore": "*",
     "update-notifier": "*",
-    "xpath": "*",
-    "inquirer": "*"
+    "xpath": "*"
   },
-  "gitHead": "3667cbcb3fcbb00866a5265543d8d133e1f6e27e",
-  "_id": "tifastlane@0.3.0",
-  "_shasum": "362b2626ff068a070deee9d97e745e0697789413",
-  "_from": "tifastlane@0.3.0",
-  "_npmVersion": "2.11.3",
-  "_nodeVersion": "0.12.7",
-  "_npmUser": {
-    "name": "ulizama",
-    "email": "uriel@baboon.international"
+  "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
+  "devDependencies": {},
+  "directories": {
+    "lib": "./lib"
   },
   "dist": {
-    "shasum": "362b2626ff068a070deee9d97e745e0697789413",
-    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.4.tgz"
+    "shasum": "9425f9c0bb9c4b0829e3b805542a767b5b7ff8d3",
+    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.5.tgz"
   },
+  "gitHead": "3667cbcb3fcbb00866a5265543d8d133e1f6e27e",
+  "homepage": "https://github.com/ulizama/TiFastlane",
+  "installable": true,
+  "keywords": [
+    "TiApp",
+    "alloy",
+    "appcelerator",
+    "cli",
+    "fastlane",
+    "ios",
+    "titanium"
+  ],
+  "license": "Apache Public License v2",
+  "main": "index.js",
   "maintainers": [
     {
       "name": "ulizama",
       "email": "uriel@baboon.international"
     }
   ],
-  "_resolved": "https://registry.npmjs.org/tifastlane/-/tifastlane-0.3.4.tgz"
+  "name": "tifastlane",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ulizama/TiFastlane.git"
+  },
+  "scripts": {
+    "postinstall": "node install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.3.5"
 }
