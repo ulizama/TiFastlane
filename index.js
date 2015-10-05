@@ -82,18 +82,6 @@ function bumpBundleVersion(){
 };
 
 /*
-@ build SKU for app creating
-*/
-function build_sku( appid ){
-    //We are going to use the same id of the app, for the SKU
-    var sku = appid.toUpperCase().replace(/\./g, "") + randomIntInc(100,999);
-    return sku;
-};
-function randomIntInc (low, high) {
-    return Math.floor(Math.random() * (high - low + 1) + low);
-};
-
-/*
 @ extraFiles
 */
 function extraFiles(){
@@ -142,15 +130,14 @@ function localStatus() {
 
     console.log('\n');
     if( cfg.apple_id != "null" ) console.log('Apple ID: ' + chalk.cyan(cfg.apple_id));
-    else if( cfg.team_id != "null" ) console.log('Team ID: ' + chalk.cyan(cfg.team_id));
-    else if( cfg.team_name != "null" ) console.log('Team Name: ' + chalk.cyan(cfg.team_name));
+    if( cfg.team_id != "null" ) console.log('Team ID: ' + chalk.cyan(cfg.team_id));
+    if( cfg.team_name != "null" ) console.log('Team Name: ' + chalk.cyan(cfg.team_name));
 
     console.log('Name: ' + chalk.cyan(tiapp.name));
     console.log('AppId: ' + chalk.cyan(tiapp.id));
     console.log('Version: ' + chalk.yellow(tiapp.version));
     console.log('CFBundleVersion: ' + chalk.yellow(_bundleVersionIndex));
     console.log('GUID: ' + chalk.cyan(tiapp.guid));
-    console.log('SKU: ' + chalk.cyan( build_sku(tiapp.id) ));
     console.log('\n');
 };
 
@@ -615,8 +602,6 @@ exports.register = function(opts){
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Creating app on Apple Developer Portal ' + ( opts.skip_itc ? 'Skipping iTunes Connect' : '& iTunes Connect') ));
 
-    var sku = build_sku(tiapp.id);
-
     console.log( chalk.white('APP ID: ' + tiapp.id) );
     console.log( chalk.white('APP Name: ' + tiapp.name) );
     console.log( chalk.white('Version: ' + tiapp.version) );
@@ -668,7 +653,7 @@ exports.register = function(opts){
                 console.log( chalk.cyan('Creating Provision Profile on environment: ' + p) );
 
                 var sighArgs = [
-                    '-u', cfg.apple_id
+                    '-u', cfg.apple_id,
                     '-a', tiapp.id,
                     '-o', certDir,
                     '--force'
