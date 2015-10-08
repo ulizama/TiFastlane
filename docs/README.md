@@ -10,33 +10,42 @@ Additionally, to an Xcode installation, you also need the Xcode command line too
 
     xcode-select --install
 
-### [Fastlane](https://fastlane.tools/)
-Install the gem and all its dependencies (this might take a few minutes).
-
-    sudo gem install fastlane --verbose
-
-In case RubyGems has a hard time installing Nokogiri, check out their [official installation guide](http://www.nokogiri.org/tutorials/installing_nokogiri.html).
 
 ### Tifastlane
+
+**BEFORE** you download `tifastlane` you **MUST** do this trick to be able to download all `gems` dependencies.
+
+Edit your `.bashrc` or `.zshrc` file:
+
+    export GEM_HOME=~/.gems
+    export PATH="/Users/{Your-Username}/.gems/bin"
+
+* Save it
+* Close your terminal and open it again
+* `mkdir  $GEM_HOME`
+
+All done! no need for `sudo` anymore( on gems side ).
 
     [sudo] npm install -g tifastlane
 
 Now you are ready to get started :D
+
+In case RubyGems has a hard time installing Nokogiri, check out their [official installation guide](http://www.nokogiri.org/tutorials/installing_nokogiri.html).
 
 ## Get Started
 
 Inside your app directory, you first need to setup and configure TiFastlane:
 
 	tifast setup
-	
+
 Once your configuration is set, then you want to initialize your app:
 
 	tifast init
-	
+
 And then finally when you are ready, you'll want to send your app for review at the App Store:
 
 	tifast send
-	
+
 **It's that easy!**
 
 Below you will find full documentation on every step and other tools available to you.
@@ -62,7 +71,7 @@ Each of TiFastlane's commands has it's own set of arguments you can use to furth
 tifast setup -h
 
 ### Tifast Setup
-This will configure TiFastlane on your current project. 
+This will configure TiFastlane on your current project.
 
     tifast setup
 
@@ -100,13 +109,9 @@ Register your Titanium App ID on the Apple Developer Program and iTunes Connect,
 
 Everything is done behind the scenes using [produce](https://github.com/fastlane/produce) and [sigh](https://github.com/KrauseFx/sigh). If the App ID already exists on the Developer Program or iTunes Connect it will be safely skipped.
 
-For default provisiong profiles will be generated for all platforms, but if you wish you can target a single platform: `appstore`, `adhoc`, `development` or `all`.
+For default provisiong profiles will be generated for all platforms, but if you wish you can target a single platform: `appstore`, `adhoc`, `development` or leave empty for all.
 
     tifast register <platform>
-
-If you wish to overwrite exists provisionings
-
-    tifast register <platform> -f
 
 ### Tifast Send
 
@@ -156,7 +161,10 @@ You can configure Price, Copyright, Developer Notes, etc. You can read the full 
 
 **./metadata/[LANG]/*.txt**
 
-In this directory you will see several text files with the contents of the metadata that is language dependant. By default it's only created with the `EN_US` language, but if you run the wizard and you support more language, you'll see them listed here.
+In this directory you will see several text files with the contents of the metadata that is language dependant.
+
+#### Available languages
+`da`, `de-DE`, `el`, `en-AU`, `en-CA`, `en-GB`, `en-US`, `es-ES`, `es-MX`, `fi`, `fr-CA`, `fr-FR`, `id`, `it`, `ja`, `ko`, `ms`, `nl`, `no`, `pt-BR`, `pt-PT`, `ru`, `sv`, `th`, `tr`, `vi`, `zh-Hans`, `zh-Hant`
 
 **./screenshots/[LANG]/*.***
 

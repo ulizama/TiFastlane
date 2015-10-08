@@ -18,7 +18,7 @@ var chalk = require('chalk')
   , cfg = {
       cli : "appc"
     , locale : "en-US"
-    , username : ""
+    , apple_id : "null"
   }
   , appDeliveryDir = null
   , deliverFile = null
@@ -50,9 +50,6 @@ exports.loadconfig = function(){
 
     // read in our config
     cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
-    if( !cfg.username ){
-        console.log(chalk.red('Cannot determine username from configuration'));
-    }
 
     /*
     @ Path Directories
@@ -82,18 +79,6 @@ function bumpBundleVersion(){
   });
 
   fs.writeFileSync('tiapp.xml', tiapp);
-};
-
-/*
-@ build SKU for app creating
-*/
-function build_sku( appid ){
-    //We are going to use the same id of the app, for the SKU
-    var sku = appid.toUpperCase().replace(/\./g, "") + randomIntInc(100,999);
-    return sku;
-};
-function randomIntInc (low, high) {
-    return Math.floor(Math.random() * (high - low + 1) + low);
 };
 
 /*
@@ -144,13 +129,15 @@ function localStatus() {
 
 
     console.log('\n');
-    console.log('Apple ID Username: ' + chalk.cyan(cfg.username))
+    if( cfg.apple_id != "null" ) console.log('Apple ID: ' + chalk.cyan(cfg.apple_id));
+    if( cfg.team_id != "null" ) console.log('Team ID: ' + chalk.cyan(cfg.team_id));
+    if( cfg.team_name != "null" ) console.log('Team Name: ' + chalk.cyan(cfg.team_name));
+
     console.log('Name: ' + chalk.cyan(tiapp.name));
     console.log('AppId: ' + chalk.cyan(tiapp.id));
     console.log('Version: ' + chalk.yellow(tiapp.version));
     console.log('CFBundleVersion: ' + chalk.yellow(_bundleVersionIndex));
     console.log('GUID: ' + chalk.cyan(tiapp.guid));
-    console.log('SKU: ' + chalk.cyan( build_sku(tiapp.id) ));
     console.log('\n');
 };
 
@@ -190,7 +177,7 @@ function uploadBetaTestIPA(_skip){
 
         var pilotArgs = [
             'upload'
-          , '-u' , cfg.username
+          , '-u' , cfg.apple_id
           , '-i' , "../../dist/" + tiapp.name + ".ipa"
         ];
 
@@ -270,7 +257,8 @@ function smartInit(){
 
     var initArgs = [
         'init',
-        '--username', cfg.username
+        '--username', cfg.apple_id,
+        '-a', tiapp.id
     ];
 
     exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
@@ -288,15 +276,15 @@ function smartInit(){
 */
 function dealWithResults(json){
     // console.log('json: ', json);
-
     // Set CLI
     cfg.cli = ( json.cli == "appcelerator" ) ? "appc" : "ti";
     cfg.locale = json.locale;
-    cfg.username = json.username;
-
+    cfg.apple_id = json.apple_id;
+    cfg.team_id = ( json.team_id ) ? json.team_id : null;
+    cfg.team_name = ( json.team_name ) ? json.team_name : null;
 
     var cfgFile = templates.cfgFile;
-    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).replace('[USERNAME]', cfg.username);
+    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).replace('[TEAM_NAME]', cfg.team_name);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -328,7 +316,7 @@ exports.setup = function(opts){
 
         {
             type: "input",
-            name: "username",
+            name: "apple_id",
             message: "What's your apple@id.com?",
             validate: function( value ) {
                 var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -342,6 +330,18 @@ exports.setup = function(opts){
                 }
             }
         },
+
+        {
+            type: "input",
+            name: "team_id",
+            message: "What's your TEAM ID? Leave it if you don't want to use it"
+        },
+
+        {
+            type: "input",
+            name: "team_name",
+            message: "What's your TEAM NAME? Leave it if you don't want to use it"
+        }
 
     ], function( answers ) {
             dealWithResults( answers );
@@ -403,7 +403,7 @@ exports.init = function(opts){
 
         // Create DeliverFile
         var _deliverFile = templates.deliverFile;
-        _deliverFile = _deliverFile.replace("[APP_ID]", tiapp.id).replace("[EMAIL]", cfg.username);
+        _deliverFile = _deliverFile.replace("[APP_ID]", tiapp.id).replace("[EMAIL]", cfg.apple_id);
 
         fs.writeFileSync(appDeliveryDir + "/Deliverfile", _deliverFile);
 
@@ -580,9 +580,9 @@ exports.status = function(){
         console.log(chalk.red("==================================="));
         console.log('\n ');
         return
-    }else{
-        localStatus();
     }
+
+    localStatus();
 };
 
 /*
@@ -602,18 +602,26 @@ exports.register = function(opts){
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Creating app on Apple Developer Portal ' + ( opts.skip_itc ? 'Skipping iTunes Connect' : '& iTunes Connect') ));
 
-    var sku = build_sku(tiapp.id);
-
     console.log( chalk.white('APP ID: ' + tiapp.id) );
     console.log( chalk.white('APP Name: ' + tiapp.name) );
     console.log( chalk.white('Version: ' + tiapp.version) );
 
     var produceArgs = [
-        '--username', cfg.username,
+        '--username', cfg.apple_id,
         '--app_identifier', tiapp.id,
         '--app_version', tiapp.version,
         '--app_name', tiapp.name
     ];
+
+    if( cfg.team_id != "null" ){
+        produceArgs.push('--team_id');
+        produceArgs.push(cfg.team_id);
+    }
+
+    if( cfg.team_name != "null" ){
+        produceArgs.push('--team_name');
+        produceArgs.push(cfg.team_name);
+    }
 
     if( opts.skip_itc ){
         produceArgs.push('--skip_itc');
@@ -645,17 +653,24 @@ exports.register = function(opts){
                 console.log( chalk.cyan('Creating Provision Profile on environment: ' + p) );
 
                 var sighArgs = [
-                    '-u', cfg.username,
+                    '-u', cfg.apple_id,
                     '-a', tiapp.id,
-                    '-o', certDir
+                    '-o', certDir,
+                    '--force'
                 ];
+
+                if( cfg.team_id != "null" ){
+                    sighArgs.push('--team_id');
+                    sighArgs.push(cfg.team_id);
+                }
+
+                if( cfg.team_name != "null" ){
+                    sighArgs.push('--team_name');
+                    sighArgs.push(cfg.team_name);
+                }
 
                 if( opts.skip_install ){
                     sighArgs.push('--skip_install');
-                }
-
-                if( opts.force ){
-                    sighArgs.push('--force');
                 }
 
                 if( opts.skip_fetch_profiles ){
@@ -729,7 +744,7 @@ exports.pem = function(opts){
     var pemArgs = [
         '-l', certDir,
         '-a', tiapp.id,
-        '-u', cfg.username
+        '-u', cfg.apple_id
     ];
 
     if(opts.password != null){
@@ -829,7 +844,7 @@ exports.pilot = function(opts){
     };
 
     pilotArgs.push('-u');
-    pilotArgs.push(cfg.username);
+    pilotArgs.push(cfg.apple_id);
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
 

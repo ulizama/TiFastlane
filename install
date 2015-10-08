@@ -3,22 +3,12 @@
 /*jslint node: true */
 'use strict';
 
-// RIGHT NOW WE NEED TO INSTALL THE fastlane gem MANUALLY UNTILL WE FIGURE OUT HOW TO
-// GO OVER THE SUDO ISSUE
+var exec = require('./lib/exec');
 
-// var path = require('path'),
-// 	exec = require('./lib/exec'),
-//     execsudo = require('./lib/execsudo');
+console.log('--- Special Thanks to KrauseFx for make all this possible with Fastlane Tools ---');
+console.log('--- Installing Deliver, Sigh, Produce, Pem, Snapshot, Pilot ---\n');
+console.log('--- This can take several minutes, may we suggest a cup of coffee :D ---\n');
 
-// console.log('--- Starting installation of fastlane.tools ---');
-// console.log('--- This can take several minutes, may we suggest a cup of coffee :D ---');
-
-// exec('ruby', ['-v'], null, function(e) {
-
-// 	execsudo(['gem','install', 'fastlane'], null, function(e) {
-		
-// 		console.log('--- All Tools Downloaded ---');
-
-// 	});
-
-// });
+exec('gem',['install', 'deliver', 'sigh', 'produce', 'pem', 'snapshot', 'pilot'], null, function(e) {
+	console.log('--- All Tools Downloaded ---');
+});
