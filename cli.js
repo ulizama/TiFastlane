@@ -63,7 +63,6 @@ program.command('status')
 */
 program.command('register [platform]')
     .description('Register app and create provisioning profiles. You can target a specific platform: "appstore", "development", "adhoc" or leave empty for all')
-    .option('-f, --force', 'Force the provisioning profiles to be renewed')
     .option('-i, --skip_itc', 'Skip the creation of the app on iTunes Connect')
     .option('-si, --skip_install', 'Skip installation of new provisioning profiles')
     .option('-sf, --skip_fetch_profiles', 'Skips the verification of existing profiles which is useful if you have thousands of profiles')
@@ -137,7 +136,7 @@ function setup(opts){
 */
 function init(opts) {
 	notifier.update && notifier.notify();
-    
+
     var options = _filterOptions(opts);
 
     tifastlane.loadconfig();
