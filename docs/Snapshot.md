@@ -1,21 +1,21 @@
 ## Tifast Snapshot
-This command is used to create all Screenshots with multi-language for your app.
+Esse comando é usado para criar todas Fotos, com suporte a várias línguas, para o seu app.
 
-Before you run `tifast snapshot` you need to do some configuration.
+Antes de executar `tifast snapshot` você precisa configurar algumas coisas.
 
-* Profile your app in Xcode (`CMD + I`), choose `Automation` and click the Record button on the bottom of the window.
+* Abre seu app Xcode no modo "Profile"(`CMD + i`), Escolha `Automation` e clique no botão "Record".
 
 ![assets/snapshotAutomation.png](assets/snapshotAutomation.png)
 
-* This will get you started. Copy the generated code into `snapshot.js`. Make sure, you leave the import statement on the top.
+* O Xcode vai começar a gravar tudo o que você faz no app. Copie o código gerado para dentro do arquivo `snapshot.js`, certifique-se de deixar o "import" no início do código.
 
-* To take a screenshot, use `captureLocalizedScreenshot('0-name')` on script
+* Para tirar Fotos, use `captureLocalizedScreenshot('0-nome')` no código.
 
-Here's an example of `snapshot` working:
+Aqui está um exemplo do `snapshot` funcionando:
 ![assets/snapshot.gif](assets/snapshot.gif)
 
-#### This is the HTML generated from snapshot
+#### Esse é o HTML gerado pelo Snapshot
 ![assets/htmlPagePreviewFade.jpg](assets/htmlPagePreviewFade.jpg)
 
 ### Snapfile
-You can customize your `Snapfile` as you like it. For more options follow the [official documentation of Snapshot](https://github.com/KrauseFx/snapshot)
+Você pode customizar seu `Snapfile` do jeito que você quiser. Para mais opções, cheque a [documentação oficial do Snapshot](https://github.com/KrauseFx/snapshot)
