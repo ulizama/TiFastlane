@@ -1,5 +1,5 @@
 ## Tifast Pilot
-Essa ferramente permite você controlar todas características importantes do Apple TestFlight usando o seu terminal.
+This tool allows you to manage all important features of Apple TestFlight using your terminal.
 
 * [tifast pilot upload](#upload)
 
@@ -19,66 +19,66 @@ Essa ferramente permite você controlar todas características importantes do Ap
 
 
 
-`pilot` usa [spaceship.airforce](https://spaceship.airforce/) para interagir com o iTunes Connect.
+`pilot` uses [spaceship.airforce](https://spaceship.airforce/) to interact with iTunes Connect.
 
 ### Upload
 
-Isso vai procurar automaticamente o arquivo `ipa` dentro do diretório `dist` e vai usar as suas credências contidas no `tifastlane.cfg`.
+This will automatically look for an `ipa` in your `dist` directory and tries to fetch the login credentials from your `tifastlane.cfg`.
 
     tifast pilot upload
 
-
-Você também pode enviar seu binário `ipa`, sem distribuir para os seus "Testers".
+You can also skip the submission of the binary, which means, the `ipa` file will only be uploaded and not distributed to testers:
 
     tifast pilot upload -s
 
 
 ### Builds
-Para listar todas versões do app.
+To list all builds for specific application.
 
     tifast pilot builds
 
 
 ### Add
-Adiciona um novo "external tester". Esse comando também vai adicionar um "tester" existente ao seu app.
+Adds a new external tester. This will also add an existing tester to an app.
 
     tifast pilot add
 
 
 ### Export
-Exporta todos os "external testers" para um arquivo CSV.
+Exports all external testers to a CSV file
 
     tifast pilot export
 
 
 ### Import
-Importa "external testers" de um arquivo CSV. O arquivo **deve** estar em `appRoot/TiFLPilot/tester_import.csv`
+Create external testers from a CSV file. The file **must** be at `appRoot/TiFLPilot/tester_import.csv`
 
     tifast pilot import
-
-
-#### Importar Tester CSV
-Aqui está um exemplo de como o `tester_import.csv` deve ser:
+    
+#### Import Tester CSV
+Here's an example of how the `tester_import.csv` should look:
 
 ```javascript
-// Nome, Sobrenome, Email
+// Name, Lastname, Email
 John,Appleseed,appleseed_john@mac.com
 ```
 
-
 ### Find
-Acha um "tester" (interno ou externo) pelo seu email.
+Find a tester (internal or external) by their email address.
 
     tifast pilot find <tester@email.com>
 
 
 ### List
-Lista todos "testers" registrados, interno e externo.
+Lists all registered testers, both internal and external.
 
     tifast pilot list
 
 
 ### Remove
-Remove um "tester" externo pelo email.
+Remove an external tester by their email address
 
     tifast pilot remove <tester@email.com>
+
+
+

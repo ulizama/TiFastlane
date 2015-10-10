@@ -24,6 +24,8 @@ var chalk = require('chalk')
   , deliverFile = null
   , appDeliveryMetaDir = null
   , appDeliveryScreenDir = null
+  //\\
+  , canLoad = true
   ;
 
 
