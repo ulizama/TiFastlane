@@ -1,14 +1,15 @@
 # TiFastlane [![npm version](https://badge.fury.io/js/tifastlane.svg)](http://badge.fury.io/js/tifastlane)
 
-Building apps for iOS it's all great until you have to deal with Certificates, Provisioning Profiles and sending iTunes Connect. Then came [fastlane.tools](https://fastlane.tools/) a collection of tools that enable Continuous Deployment of iOS Apps.
+Construir apps para iOS é ótimo, até você ter que lidar com Certificados, "Provisioning" e enviar para o iTunes Connect. Então veio [fastlane.tools](https://fastlane.tools/), uma coleção de ferramentas que possibilita um desenvolvimento contínuo de apps para iOS.
 
-TiFastlane it's a way to use those tools for Titanium development. Now you'll be able to do real continous deployment of your Titanium app. Sending your app for review will be a breeze:
+TiFastlane é uma forma de usar essas ferramentas para o [Appcelerator/Titanium](http://www.appcelerator.com/). Agora você vai ser capaz de fazer apps continuamente. Enviar seu app para "review" vai ser uma molesa:
 
 	tifast send
 
-With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles.
+Com TiFastlane você vai ser capaz de otimizar completamente o seu jeito de enviar as informações, fotos e certificados.
 
-### Current tools from [Fastlane](https://github.com/KrauseFx/fastlane) available:
+
+### Ferramentas [Fastlane](https://github.com/KrauseFx/fastlane) disponíveis:
 <p align="center">
 
   &bull; <a href="https://github.com/KrauseFx/deliver">deliver</a> &bull;
@@ -20,30 +21,30 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
   <a href="https://github.com/fastlane/boarding">boarding</a>
 </p>
 
-## [Documentation](./docs/README.md)
+## [Documentação](./docs/README.md)
 
 
-## TODO
+## A Fazer
 
-* Add [Frameit](https://github.com/fastlane/frameit)
-* Specification of the default certificate to use.
+* Adicionar [Frameit](https://github.com/fastlane/frameit)
+* Especificar o certificado padrão para usar.
 
-##  Collaborators
+##  Colaboradores
 
 * [Uriel Lizama](https://github.com/ulizama)
 * [Douglas Hennrich](https://github.com/DouglasHennrich)
 
-##  Thanks
+##  Obrigado
 
-* [Felix Krause](https://github.com/KrauseFx) for creating the awesome fastlane.tools
-* [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
+* [Felix Krause](https://github.com/KrauseFx) por criar a incrível fastlane.tools
+* [Jason Kneen](https://github.com/jasonkneen) por criar algumas CLI maravilhosas na qual eu estou me baseando
 
 ## Changelog
-* 0.3.6 Update to use the latest tools provided by [@KrauseFx](https://github.com/KrauseFx/fastlane)
-* 0.3.4 Fix on status and snapshot call
-* 0.3.3 Update app version on send
+* 0.3.6 Atualização para usar as últimas ferramentas do fastlane do [@KrauseFx](https://github.com/KrauseFx/fastlane)
+* 0.3.4 Consertado `status` e `snapshot`
+* 0.3.3 Atualiza versão app quando envia
 
-## License
+## Licença
 
 <pre>
 Copyright 2015 Uriel Lizama
