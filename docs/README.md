@@ -17,8 +17,8 @@ Additionally, to an Xcode installation, you also need the Xcode command line too
 
 Edit your `.bashrc` or `.zshrc` file:
 
-    export GEM_HOME=~/.gems
-    export PATH="/Users/{Your-Username}/.gems/bin"
+    export GEM_HOME=/Users/{Your-Username}/.gems
+    export PATH=$PATH:/Users/{Your-Username}/.gems/bin
 
 * Save it
 * Close your terminal and open it again
