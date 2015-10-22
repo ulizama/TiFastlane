@@ -17,7 +17,6 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
   <a href="https://github.com/KrauseFx/sigh">sigh</a> &bull;
   <a href="https://github.com/KrauseFx/produce">produce</a> &bull;
   <a href="https://github.com/fastlane/pilot">pilot</a> &bull;
-  <a href="https://github.com/fastlane/boarding">boarding</a>
 </p>
 
 ## [Documentation](./docs/README.md)
