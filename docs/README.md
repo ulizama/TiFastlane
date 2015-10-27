@@ -17,8 +17,8 @@ Additionally, to an Xcode installation, you also need the Xcode command line too
 
 Edit your `.bashrc` or `.zshrc` file:
 
-    export GEM_HOME=/Users/{Your-Username}/.gems
-    export PATH=$PATH:/Users/{Your-Username}/.gems/bin
+    export GEM_HOME=~/.gems
+    export PATH="/Users/{Your-Username}/.gems/bin"
 
 * Save it
 * Close your terminal and open it again
@@ -62,7 +62,6 @@ Below you will find full documentation on every step and other tools available t
 * [tifast send](#tifast-send)
 * [tifast pem](#tifast-pem)
 * [tifast pilot](#tifast-pilot)
-* [tifast snapshot](#tifast-snapshot)
 
 #### CLI Help
 
@@ -146,9 +145,6 @@ To renew push certificate, even if the current one is active for 30 more days
 
 ### Tifast Pilot
 * [Documentation for Pilot](./Pilot.md)
-
-### Tifast Snapshot
-* [Documentation for Snapshot](./Snapshot.md)
 
 
 ## Configuration Files

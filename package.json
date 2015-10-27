@@ -1,14 +1,18 @@
-
 {
   "_args": [
+    [
+      "tifastlane",
+      ""
+    ],
     [
       "tifastlane",
       ""
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.3.5",
+  "_id": "tifastlane@0.3.6",
   "_inCache": true,
+  "_installable": true,
   "_location": "/tifastlane",
   "_nodeVersion": "0.12.7",
   "_npmUser": {
@@ -28,8 +32,6 @@
   "_requiredBy": [
     "#USER"
   ],
-  "_resolved": "https://registry.npmjs.org/tifastlane/-/tifastlane-0.3.5.tgz",
-  "_shasum": "9425f9c0bb9c4b0829e3b805542a767b5b7ff8d3",
   "_shrinkwrap": null,
   "_spec": "tifastlane",
   "_where": "",
@@ -59,8 +61,8 @@
     "lib": "./lib"
   },
   "dist": {
-    "shasum": "9425f9c0bb9c4b0829e3b805542a767b5b7ff8d3",
-    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.5.tgz"
+    "shasum": "9ab8c019d930125acbcb1f0ba133d8d0b6726820",
+    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.6.tgz"
   },
   "gitHead": "3667cbcb3fcbb00866a5265543d8d133e1f6e27e",
   "homepage": "https://github.com/ulizama/TiFastlane",
@@ -80,6 +82,10 @@
     {
       "name": "ulizama",
       "email": "uriel@baboon.international"
+    },
+    {
+      "name": "douglas",
+      "email": "douglas_b_h@hotmail.com"
     }
   ],
   "name": "tifastlane",

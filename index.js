@@ -90,6 +90,7 @@ function extraFiles(){
     fs.writeFileSync(appDeliveryDir + "/rating.json", _deliverRatingJson);
 
     // Create SnapShots Files
+    /*
     var _deliverSnapfile = templates.Snapfile;
     _deliverSnapfile = _deliverSnapfile.replace("[SCHEME]", tiapp.name).replace("[PATH]", "../../build/iphone/" + tiapp.name + ".xcodeproj");
     fs.writeFileSync(appDeliveryDir + "/Snapfile", _deliverSnapfile);
@@ -102,14 +103,14 @@ function extraFiles(){
 
     var _deliverSnapshotHelper = templates.SnapshotHelper;
     fs.writeFileSync(appDeliveryDir + "/SnapshotHelper.js", _deliverSnapshotHelper);
-
+    */
 
     // Pilot
-    if (!fs.existsSync(pilotDir)){
-        fs.mkdirSync(pilotDir);
-    }
-    var pilotImport = templates.pilotImport;
-    fs.writeFileSync(pilotDir + "/tester_import.csv", pilotImport);
+    // if (!fs.existsSync(pilotDir)){
+    //     fs.mkdirSync(pilotDir);
+    // }
+    // var pilotImport = templates.pilotImport;
+    // fs.writeFileSync(pilotDir + "/tester_import.csv", pilotImport);
 };
 
 /*
@@ -150,9 +151,7 @@ function uploadMetadata(){
         return;
     }
 
-    var initArgs = [
-        '--skip-deploy'
-    ];
+    var initArgs = [];
 
     exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
         console.log(chalk.green('\nDone\n'));
@@ -458,9 +457,7 @@ exports.send = function(opts){
 
         console.log(chalk.cyan('Sending App to AppStore'));
 
-        var newFileContents = ""
-          , _hasipa = false
-          ;
+        var newFileContents = "";
 
         fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
             // console.log('line: ', line);
@@ -469,18 +466,21 @@ exports.send = function(opts){
                 //Update Version
                 newFileContents = newFileContents + 'version "' + tiapp.version + '"' + "\n";
             }
+            /*
             else if( /^ipa /.test(line) ){
                 _hasipa = true;
                 newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
             }else{
                 newFileContents = newFileContents + line + "\n";
             }
+            */
+            newFileContents = newFileContents + line + "\n";
             //fs.appendFileSync(deliverFile, line.toString() + "\n");
         });
 
-        if( !_hasipa ){
-            newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
-        }
+        // if( !_hasipa ){
+        //     newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
+        // }
 
         fs.writeFileSync(deliverFile, newFileContents);
 
@@ -491,7 +491,9 @@ exports.send = function(opts){
             console.log("\n");
             console.log(chalk.yellow('Starting Deliver'));
 
-            var initArgs = [];
+            var initArgs = [
+                '-i', '../../dist/' + tiapp.name + '.ipa'
+            ];
 
             if( opts.skip_verify ){
                 initArgs.push('--force');
@@ -698,6 +700,7 @@ exports.register = function(opts){
 /*
 @ export snapshot function to CLI
 */
+/*
 exports.snapshot = function(){
     if(!fs.existsSync(cfgfile)){
         console.log(chalk.red("==================================="));
@@ -722,6 +725,7 @@ exports.snapshot = function(){
         console.log(chalk.green('\nSnapshot Done\n'));
     });
 };
+*/
 
 /*
 @ export pem function to CLI

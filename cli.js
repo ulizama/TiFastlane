@@ -72,10 +72,10 @@ program.command('register [platform]')
 /*
 @ Snapshot Function
 */
-program.command('snapshot')
-	.description('Take ScreenShot of Simulator to generate all images')
-    .action(snapshot)
-    ;
+// program.command('snapshot')
+// 	.description('Take ScreenShot of Simulator to generate all images')
+//     .action(snapshot)
+//     ;
 
 /*
 @ Pem Function
@@ -194,10 +194,10 @@ function pem(env, opts) {
 /*
 @ snapshot
 */
-function snapshot(opts) {
-    tifastlane.loadconfig();
-    tifastlane.snapshot();
-};
+// function snapshot(opts) {
+//     tifastlane.loadconfig();
+//     tifastlane.snapshot();
+// };
 
 
 /*
