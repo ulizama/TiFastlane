@@ -12,12 +12,10 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 <p align="center">
 
   &bull; <a href="https://github.com/KrauseFx/deliver">deliver</a> &bull;
-  <a href="https://github.com/KrauseFx/snapshot">snapshot</a> &bull;
   <a href="https://github.com/KrauseFx/PEM">PEM</a> &bull;
   <a href="https://github.com/KrauseFx/sigh">sigh</a> &bull;
   <a href="https://github.com/KrauseFx/produce">produce</a> &bull;
   <a href="https://github.com/fastlane/pilot">pilot</a> &bull;
-  <a href="https://github.com/fastlane/boarding">boarding</a>
 </p>
 
 ## [Documentation](./docs/README.md)
@@ -39,6 +37,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.3.7 Fix problem with uploading only metadata and screenshots
 * 0.3.6 Update to use the latest tools provided by [@KrauseFx](https://github.com/KrauseFx/fastlane)
 * 0.3.4 Fix on status and snapshot call
 * 0.3.3 Update app version on send
