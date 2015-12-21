@@ -37,6 +37,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.3.8 Changed name of deliver file from `title.txt` to `name.txt`
 * 0.3.7 Fix problem with uploading only metadata and screenshots
 * 0.3.6 Update to use the latest tools provided by [@KrauseFx](https://github.com/KrauseFx/fastlane)
 * 0.3.4 Fix on status and snapshot call

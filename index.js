@@ -411,11 +411,11 @@ exports.init = function(opts){
 
 
         //Create metadata files
-        var metafiles = ['description.txt','keywords.txt','privacy_url.txt','software_url.txt','support_url.txt','title.txt','version_whats_new.txt'];
+        var metafiles = ['description.txt','keywords.txt','privacy_url.txt','software_url.txt','support_url.txt','name.txt','version_whats_new.txt'];
 
         metafiles.forEach(function (file) {
             var data = "";
-            if( file == "title.txt" ){
+            if( file == "name.txt" ){
                 data = tiapp.name;
             }
             fs.writeFileSync(appDeliveryMetaDir + "/" + file, data);
