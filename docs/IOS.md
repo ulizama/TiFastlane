@@ -1,37 +1,3 @@
-## Installation
-
-Requirements:
-
-* Mac OS 10.9 or newer
-* Ruby 2.0 or newer (`ruby -v`)
-* Xcode
-
-Additionally, to an Xcode installation, you also need the Xcode command line tools set up.
-
-    xcode-select --install
-
-
-### Tifastlane
-
-**BEFORE** you download `tifastlane` you **MUST** do this trick to be able to download all `gems` dependencies.
-
-Edit your `.bashrc` or `.zshrc` file:
-
-    export GEM_HOME=/Users/{Your-Username}/.gems
-    export PATH=$PATH:/Users/{Your-Username}/.gems/bin
-
-* Save it
-* Close your terminal and open it again
-* `mkdir  $GEM_HOME`
-
-All done! no need for `sudo` anymore( on gems side ).
-
-    [sudo] npm install -g tifastlane
-
-Now you are ready to get started :D
-
-In case RubyGems has a hard time installing Nokogiri, check out their [official installation guide](http://www.nokogiri.org/tutorials/installing_nokogiri.html).
-
 ## Get Started
 
 Inside your app directory, you first need to setup and configure TiFastlane:
@@ -46,7 +12,7 @@ And then finally when you are ready, you'll want to send your app for review at 
 
 	tifast send
 
-**It's that easy!**
+**Is that easy!**
 
 Below you will find full documentation on every step and other tools available to you.
 
@@ -142,10 +108,8 @@ To renew push certificate, even if the current one is active for 30 more days
 
     tifast pem -f [password]
 
-
 ### Tifast Pilot
 * [Documentation for Pilot](./Pilot.md)
-
 
 ## Configuration Files
 

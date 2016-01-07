@@ -21,6 +21,7 @@ var chalk = require('chalk')
     , apple_id : "null"
   }
   , appDeliveryDir = null
+  , appAndroidDeliveryDir = null
   , deliverFile = null
   , appDeliveryMetaDir = null
   , appDeliveryScreenDir = null
@@ -55,6 +56,7 @@ exports.loadconfig = function(){
     @ Path Directories
     */
     appDeliveryDir = deliveryDir + '/' + tiapp.id
+      , appAndroidDeliveryDir = appDeliveryDir + "/PlayStore"
       , deliverFile = appDeliveryDir + "/Deliverfile"
       , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
       , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
@@ -281,9 +283,11 @@ function dealWithResults(json){
     cfg.apple_id = json.apple_id;
     cfg.team_id = ( json.team_id ) ? json.team_id : null;
     cfg.team_name = ( json.team_name ) ? json.team_name : null;
+    cfg.google_play_key = ( json.google_play_key ) ? json.google_play_key : null;
+    cfg.google_play_issuer = ( json.google_play_issuer ) ? json.google_play_issuer : null;
 
     var cfgFile = templates.cfgFile;
-    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).replace('[TEAM_NAME]', cfg.team_name);
+    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_KEY]', cfg.google_play_key).replace('[GOOGLE_PLAY_ISSUER]', cfg.google_play_issuer);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -310,7 +314,7 @@ exports.setup = function(opts){
             type: "list",
             name: "locale",
             message: "What locale do you want to use?",
-            choices: [ "da", "de-DE", "el", "en-AU", "en-CA", "en-GB", "en-US", "es-ES", "es-MX", "fi", "fr-CA", "fr-FR", "id", "it", "ja", "ko", "ms", "nl", "no", "pt-BR", "pt-PT", "ru", "sv", "th", "tr", "vi", "zh-Hans", "zh-Hant" ]
+            choices: [ "en-US", "da", "de-DE", "el", "en-AU", "en-CA", "en-GB", "es-ES", "es-MX", "fi", "fr-CA", "fr-FR", "id", "it", "ja", "ko", "ms", "nl", "no", "pt-BR", "pt-PT", "ru", "sv", "th", "tr", "vi", "zh-Hans", "zh-Hant" ]
         },
 
         {
@@ -340,6 +344,19 @@ exports.setup = function(opts){
             type: "input",
             name: "team_name",
             message: "What's your TEAM NAME? Leave it if you don't want to use it"
+        },
+
+        {
+            type: "input",
+            name: "google_play_key",
+            message: "What's your Google Play Key File? (leave empty for default)",
+            default: "GooglePlayKey.p12"
+        },
+
+        {
+            type: "input",
+            name: "google_play_issuer",
+            message: "What's the Google Play Issuer Email? Leave if you don't want to use it"
         }
 
     ], function( answers ) {
@@ -411,7 +428,7 @@ exports.init = function(opts){
 
 
         //Create metadata files
-        var metafiles = ['description.txt','keywords.txt','privacy_url.txt','software_url.txt','support_url.txt','name.txt','version_whats_new.txt'];
+        var metafiles = ['description.txt','keywords.txt','privacy_url.txt','marketing_url.txt','support_url.txt','name.txt','release_notes.txt'];
 
         metafiles.forEach(function (file) {
             var data = "";
@@ -855,6 +872,174 @@ exports.pilot = function(opts){
     exec('pilot', pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
     });
+};
+
+/*
+@ export playinit function to CLI
+*/
+exports.playinit = function(opts){
+
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+
+    console.log(chalk.cyan('Initializing TiFastLane for GooglePlay'));
+
+    //Create delivery directory if it doesn't exist
+    if (!fs.existsSync(deliveryDir)){
+        fs.mkdirSync(deliveryDir);
+    }
+
+    //Create delivery directory if it doesn't exist
+    if (!fs.existsSync(appDeliveryDir)){
+        fs.mkdirSync(appDeliveryDir);
+    }
+
+    //Create Google Play delivery directory if it doesn't exist
+    if (!fs.existsSync(appAndroidDeliveryDir)){
+        fs.mkdirSync(appAndroidDeliveryDir);
+    }
+    
+    var initArgs = [
+        'init',
+        '--key', "../../../" + cfg.google_play_key,
+        '--issuer', cfg.google_play_issuer,
+        '--package_name', tiapp.id
+    ];
+
+    exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+        console.log(chalk.green('Your app has been initialized.'));
+        console.log(chalk.green('You can find your configuration files for delivery on: ' + appAndroidDeliveryDir));
+        console.log(chalk.green('Now the fun starts!'));
+    });
+
+};
+
+/*
+@ export playsend function to CLI
+*/
+exports.playsend = function(opts){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+    // console.log('opts: ', opts);
+
+    if (!fs.existsSync(appAndroidDeliveryDir)){
+        console.log(chalk.red('You need to run "tifast playinit" first'));
+        return;
+    }
+
+    console.log(chalk.cyan('Updating Google Play Store'));
+
+    /*
+    @ Play Store
+    */
+    function _supply( sendapk ){
+        console.log("\n");
+        console.log(chalk.yellow('Starting Supply'));
+
+        var initArgs = [
+            '--key', "../../../" + cfg.google_play_key,
+            '--issuer', cfg.google_play_issuer,
+            '--package_name', tiapp.id
+        ];
+
+        if( sendapk ){
+
+            if( opts.track ){
+                initArgs.push(
+                    '--track', opts.track
+                );
+            }
+
+            if( opts.rollout ){
+                initArgs.push(
+                    '--rollout', opts.rollout
+                );
+            }
+
+            initArgs.push(
+                '--apk', '../../../build/android/bin/' + tiapp.name + '.apk'
+            );
+        }
+
+        exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+            console.log(chalk.green('\nSupply Done\n'));
+        });
+    }
+
+
+    if( opts.metadata ){
+        console.log(chalk.cyan('Sending only Metadata'));
+        _supply();
+
+    }
+    else{
+
+        /*
+        @ status app
+        */
+        localStatus();
+
+
+        if( opts.skip_build ){
+            console.log(chalk.yellow('Skipping App Build'));
+            _supply();
+
+        }else{
+
+            console.log(chalk.yellow('First things first. Clean project to ensure build'));
+            console.log("\n");
+
+            var cleanArgs = [];
+
+            if(cfg.cli == "appc"){
+                cleanArgs.push('ti');
+                cleanArgs.push('clean');
+                cleanArgs.push('-p');
+                cleanArgs.push('android');
+
+            }else{
+                cleanArgs.push('clean');
+                cleanArgs.push('-p');
+                cleanArgs.push('android');
+            }
+
+            exec(cfg.cli, cleanArgs, null, function(e){
+                console.log(chalk.cyan('Starting Appcelerator Build'));
+                console.log("\n");
+
+                var buildArgs = [];
+
+                if(cfg.cli == "appc"){
+                    buildArgs.push('run');
+                    buildArgs.push('-p');
+                    buildArgs.push('android');
+                    buildArgs.push('--build-only');
+                }else{
+                    buildArgs.push('build');
+                    buildArgs.push('-p');
+                    buildArgs.push('android');
+                    buildArgs.push('--build-only');
+                }
+
+                exec(cfg.cli, buildArgs, null, function(e){
+                    _supply(1);
+                });
+            });
+        }
+    }
+
 };
 /*
 @

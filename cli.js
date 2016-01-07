@@ -111,7 +111,30 @@ program.command('pilot [Command]')
 	.action(pilot)
     ;
 
+
+/*
+@ Google Play Init Function
+*/
+program.command('playinit')
+    .description('Initalize the Google Play components')
+    .action(playinit)
+    ;
+
+
+/*
+@ Google Play Send Function
+*/
+program.command('playsend')
+    .description('Send all available resources of App to Google Play Store')
+    .option('-m, --metadata', 'Send only metadata update to Google Play')
+    .option('--skip_build', 'Skip build of APK')
+    .option('-a, --track', 'The Track to upload the Application to: production, beta, alpha or rollout')
+    .option('-r, --rollout', 'The percentage of the rollout')
+    .action(playsend)
+    ;
+
 program.parse(process.argv);
+
 
 if (program.args.length === 0 || typeof program.args[program.args.length - 1] === 'string') {
 	notifier.update && notifier.notify();
@@ -229,6 +252,29 @@ function pilot(env, opts) {
     tifastlane.loadconfig();
 	tifastlane.pilot(options);
 };
+
+
+/*
+@ playinit
+*/
+function playinit(opts) {
+    tifastlane.loadconfig();
+    tifastlane.playinit(opts);
+};
+
+
+/*
+@ playsend
+*/
+function playsend(opts) {
+    notifier.update && notifier.notify();
+
+    var options = _filterOptions(opts);
+
+    tifastlane.loadconfig();
+    tifastlane.playsend(options);
+};
+
 
 /*
 @ filterOptions
