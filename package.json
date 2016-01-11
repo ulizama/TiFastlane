@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.4.0",
+  "_id": "tifastlane@0.4.1",
   "_inCache": true,
   "_installable": true,
   "_location": "/tifastlane",
@@ -98,5 +98,5 @@
     "postinstall": "node install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "0.4.0"
+  "version": "0.4.1"
 }
