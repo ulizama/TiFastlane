@@ -166,7 +166,7 @@ function init(opts) {
 
     var options = _filterOptions(opts);
 
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
 	tifastlane.init(options);
 };
 
@@ -191,7 +191,7 @@ function send(opts) {
 
 	var options = _filterOptions(opts);
 
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
 	tifastlane.send(options);
 };
 
@@ -205,7 +205,7 @@ function register(platform, opts) {
 
     options.platform = platform || '';
 
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
 	tifastlane.register(options);
 };
 
@@ -218,7 +218,7 @@ function pem(env, opts) {
 	var options = _filterOptions(opts);
     options.password = (!env) ? null : env;
 
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
 	tifastlane.pem(options);
 };
 
@@ -226,7 +226,7 @@ function pem(env, opts) {
 @ snapshot
 */
 // function snapshot(opts) {
-//     tifastlane.loadconfig(opts.config_file);
+//     tifastlane.loadconfig(opts.config);
 //     tifastlane.snapshot();
 // };
 
@@ -257,7 +257,7 @@ function pilot(env, opts) {
         return;
     }
 
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
 	tifastlane.pilot(options);
 };
 
@@ -266,7 +266,7 @@ function pilot(env, opts) {
 @ playinit
 */
 function playinit(opts) {
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
     tifastlane.playinit(opts);
 };
 
@@ -279,7 +279,7 @@ function playsend(opts) {
 
     var options = _filterOptions(opts);
 
-    tifastlane.loadconfig(opts.config_file);
+    tifastlane.loadconfig(opts.config);
     tifastlane.playsend(options);
 };
 
