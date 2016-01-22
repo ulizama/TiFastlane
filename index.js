@@ -33,7 +33,12 @@ var chalk = require('chalk')
 /*
 @ Read configuration files
 */
-exports.loadconfig = function(){
+exports.loadconfig = function( cfg_file ){
+
+    if( cfg_file ){
+        cfgfile = cfg_file;
+        console.log(chalk.white('Using config file: ' + cfgfile));
+    }
 
     if (!fs.existsSync(infile)) {
         console.log(chalk.red('Cannot find ' + infile));

@@ -25,7 +25,8 @@ program
 */
 program.command('setup')
     .description('Setup Tifastlane.cfg file')
-    .option('-id, --apple-id String', 'youapple@id.com')
+    .option('--config_file [value]', "Use another config file found in the root")
+    .option('-id, --apple-id [value]', 'youapple@id.com')
     .action(setup)
     ;
 
@@ -34,6 +35,7 @@ program.command('setup')
 */
 program.command('init')
 	.description('Initialize of all components needed to work')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .option('-s, --smart', 'If your app is already on the App Store run init with -s')
 	.action(init)
     ;
@@ -43,6 +45,7 @@ program.command('init')
 */
 program.command('send')
 	.description('Send all available resources of App to iTunes Connect. Only one of those options are allowed')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .option('-m, --metadata', 'Send only metadata to update on iTunes Connect')
 	.option('-t, --testflight', 'Send App to be Beta Test on TestFlight')
     .option('--skip_build', 'Skip build of App Store IPA')
@@ -55,6 +58,7 @@ program.command('send')
 */
 program.command('status')
 	.description('Display the App Information')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .action(status)
     ;
 
@@ -63,6 +67,7 @@ program.command('status')
 */
 program.command('register [platform]')
     .description('Register app and create provisioning profiles. You can target a specific platform: "appstore", "development", "adhoc" or leave empty for all')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .option('-i, --skip_itc', 'Skip the creation of the app on iTunes Connect')
     .option('-si, --skip_install', 'Skip installation of new provisioning profiles')
     .option('-sf, --skip_fetch_profiles', 'Skips the verification of existing profiles which is useful if you have thousands of profiles')
@@ -82,15 +87,11 @@ program.command('register [platform]')
 */
 program.command('pem [password]')
 	.description('Automatically generate and renew your push notification profiles')
-
+    .option('-c, --config [value]', "Use another config file found in the root")
     .option('-d, --development', 'Renew the development push certificate instead of the production one (PEM_DEVELOPMENT)')
-
 	.option('-g, --generate_p12', 'Generate a p12 file additionally to a PEM file (PEM_GENERATE_P12_FILE)')
-
     .option('-s, --save_private_key', 'Set to save the private RSA key (PEM_SAVE_PRIVATEKEY)')
-
     .option('-f, --force', 'Create a new push certificate, even if the current one is active for 30 more days (PEM_FORCE)')
-
 	.action(pem)
     ;
 
@@ -99,6 +100,7 @@ program.command('pem [password]')
 */
 program.command('pilot [Command]')
 	.description('The best way to manage your TestFlight testers and builds from your terminal. Default command is "upload"')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .option('[add]', 'Adds a new external tester. This will also add an existing tester to an app.')
     .option('[builds]', 'Lists all builds for given application')
     .option('[export]', 'Exports all external testers to a CSV file')
@@ -117,6 +119,7 @@ program.command('pilot [Command]')
 */
 program.command('playinit')
     .description('Initalize the Google Play components')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .action(playinit)
     ;
 
@@ -126,6 +129,7 @@ program.command('playinit')
 */
 program.command('playsend')
     .description('Send all available resources of App to Google Play Store')
+    .option('-c, --config [value]', "Use another config file found in the root")
     .option('-m, --metadata', 'Send only metadata update to Google Play')
     .option('--skip_build', 'Skip build of APK')
     .option('-a, --track', 'The Track to upload the Application to: production, beta, alpha or rollout')
@@ -162,7 +166,7 @@ function init(opts) {
 
     var options = _filterOptions(opts);
 
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
 	tifastlane.init(options);
 };
 
@@ -171,7 +175,11 @@ function init(opts) {
 @ status
 */
 function status(opts) {
-    tifastlane.loadconfig();
+    notifier.update && notifier.notify();
+
+    var options = _filterOptions(opts);
+
+    tifastlane.loadconfig(opts.config);
     tifastlane.status();
 };
 
@@ -183,7 +191,7 @@ function send(opts) {
 
 	var options = _filterOptions(opts);
 
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
 	tifastlane.send(options);
 };
 
@@ -197,7 +205,7 @@ function register(platform, opts) {
 
     options.platform = platform || '';
 
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
 	tifastlane.register(options);
 };
 
@@ -210,7 +218,7 @@ function pem(env, opts) {
 	var options = _filterOptions(opts);
     options.password = (!env) ? null : env;
 
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
 	tifastlane.pem(options);
 };
 
@@ -218,7 +226,7 @@ function pem(env, opts) {
 @ snapshot
 */
 // function snapshot(opts) {
-//     tifastlane.loadconfig();
+//     tifastlane.loadconfig(opts.config_file);
 //     tifastlane.snapshot();
 // };
 
@@ -249,7 +257,7 @@ function pilot(env, opts) {
         return;
     }
 
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
 	tifastlane.pilot(options);
 };
 
@@ -258,7 +266,7 @@ function pilot(env, opts) {
 @ playinit
 */
 function playinit(opts) {
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
     tifastlane.playinit(opts);
 };
 
@@ -271,7 +279,7 @@ function playsend(opts) {
 
     var options = _filterOptions(opts);
 
-    tifastlane.loadconfig();
+    tifastlane.loadconfig(opts.config_file);
     tifastlane.playsend(options);
 };
 
