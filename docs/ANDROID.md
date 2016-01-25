@@ -95,7 +95,7 @@ You can choose the Track to upload the App to (production, beta, alpha or rollou
 	tifast send --track beta
 
 
-## Configuration Files
+## Metadata/Screenshot Files
 
 All metadata and screenshots are easily maintained from the `TiFLDelivery\APPID\PlayStore` directory.
 
@@ -125,3 +125,14 @@ And you can supply screenshots by creating directories with the following names,
 
 **Note that these will replace the current images and screenshots on the play store listing, not add to them.**
 
+## TiFast Configuration
+
+By default the main configuration settings are stored in a file called `tifastlane.cfg` in your app project root.
+
+If you want to be able to have multiple configuration files, for example, to login with other credentials, you can override the configuration file to be loaded by using the `-c` param.
+
+For example:
+
+	tifast send -c otherconfig.cfg
+	
+This will make TiFastlane use the `otherconfig.cfg` file instead of the default `tifastlane.cfg`. All methods accept the configuration override.

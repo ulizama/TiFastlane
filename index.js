@@ -778,13 +778,13 @@ exports.pem = function(opts){
         pemArgs.push(opts.password);
     }
 
-    if(opts.development) pemArgs.push('-d');
+    if(opts.development) pemArgs.push('--development');
 
     if(opts.generate_p12) pemArgs.push('-g');
 
     if(opts.save_private_key) pemArgs.push('-s');
 
-    if(opts.force) pemArgs.push('-f');
+    if(opts.force) pemArgs.push('--force');
 
     console.log( chalk.cyan('Starting Pem'));
 
@@ -977,6 +977,23 @@ exports.playsend = function(opts){
                 '--apk', '../../../build/android/bin/' + tiapp.name + '.apk'
             );
         }
+        else{
+            initArgs.push(
+                '--skip_upload_apk'
+            );            
+        }
+
+        if( opts.skip_upload_images ){
+            initArgs.push(
+                '--skip_upload_images'
+            );
+        }
+
+        if( opts.skip_upload_screenshots ){
+            initArgs.push(
+                '--skip_upload_screenshots'
+            );
+        }
 
         exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
             console.log(chalk.green('\nSupply Done\n'));
@@ -999,7 +1016,7 @@ exports.playsend = function(opts){
 
         if( opts.skip_build ){
             console.log(chalk.yellow('Skipping App Build'));
-            _supply();
+            _supply(1);
 
         }else{
 

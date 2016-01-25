@@ -111,7 +111,7 @@ To renew push certificate, even if the current one is active for 30 more days
 ### Tifast Pilot
 * [Documentation for Pilot](./Pilot.md)
 
-## Configuration Files
+## Metadata/Screenshot Files
 
 All metadata and screenshots are easily maintained from the `TiFLDelivery\APPID` directory, here you will find the following files:
 
@@ -129,3 +129,15 @@ In this directory you will see several text files with the contents of the metad
 **./screenshots/[LANG]/*.***
 
 As with metadata, screenshots support multi language. Based on the dimension of the images they will be correctly set to the appropiate device. The images are ordered alphabetically, so make sure to name them correctly to control the right display order.
+
+## TiFast Configuration
+
+By default the main configuration settings are stored in a file called `tifastlane.cfg` in your app project root.
+
+If you want to be able to have multiple configuration files, for example, to login with other credentials, you can override the configuration file to be loaded by using the `-c` param.
+
+For example:
+
+	tifast send -c otherconfig.cfg
+	
+This will make TiFastlane use the `otherconfig.cfg` file instead of the default `tifastlane.cfg`. All methods accept the configuration override.

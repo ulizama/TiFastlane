@@ -131,9 +131,11 @@ program.command('playsend')
     .description('Send all available resources of App to Google Play Store')
     .option('-c, --config [value]', "Use another config file found in the root")
     .option('-m, --metadata', 'Send only metadata update to Google Play')
+    .option('--skip_upload_images', 'Whether to skip uploading images, screenshots not included (SUPPLY_SKIP_UPLOAD_IMAGES)')
+    .option('--skip_upload_screenshots', 'Whether to skip uploading SCREENSHOTS (SUPPLY_SKIP_UPLOAD_SCREENSHOTS)')
     .option('--skip_build', 'Skip build of APK')
-    .option('-a, --track', 'The Track to upload the Application to: production, beta, alpha or rollout')
-    .option('-r, --rollout', 'The percentage of the rollout')
+    .option('-a, --track [value]', 'The Track to upload the Application to: production, beta, alpha or rollout')
+    .option('-r, --rollout [value]', 'The percentage of the rollout')
     .action(playsend)
     ;
 
