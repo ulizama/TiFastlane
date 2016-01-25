@@ -895,6 +895,16 @@ exports.pilot = function(opts){
     pilotArgs.push(cfg.apple_id);
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
+    
+    if(cfg.team_name){
+      pilotArgs.push('-r');
+      pilotArgs.push(cfg.team_name);
+    }
+    
+    if(cfg.team_id){
+      pilotArgs.push('-q');
+      pilotArgs.push(cfg.team_id);
+    }
 
     exec('pilot', pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
