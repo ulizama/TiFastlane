@@ -210,11 +210,16 @@ function uploadBetaTestIPA(_skip){
         console.log(chalk.yellow('First things first. Clean project to ensure build'));
         console.log("\n");
 
-        var cleanArgs = [
-            'ti',
-            'clean',
-            '-p', 'ios'
-        ];
+        var cleanArgs = [];
+
+        if(cfg.cli == "appc"){
+            cleanArgs.push('ti');
+        }
+        
+        cleanArgs.push('clean');
+        cleanArgs.push('-p');
+        cleanArgs.push('ios');
+        
 
         exec(cfg.cli, cleanArgs, null, function(e){
             console.log(chalk.cyan('Starting Appcelerator App Store Build'));
@@ -227,14 +232,11 @@ function uploadBetaTestIPA(_skip){
             if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
                 fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
             }
-
-            var buildArgs = [
-                'run',
-                '-p', 'ios',
-                '-T', 'dist-adhoc',
-                '-O', './dist'
-            ];
-
+            
+            var buildArgs = [cfg.cli == "appc"?'run':'build'];
+            var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
+            buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+            
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -545,15 +547,11 @@ exports.send = function(opts){
 
             if(cfg.cli == "appc"){
                 cleanArgs.push('ti');
-                cleanArgs.push('clean');
-                cleanArgs.push('-p');
-                cleanArgs.push('ios');
-
-            }else{
-                cleanArgs.push('clean');
-                cleanArgs.push('-p');
-                cleanArgs.push('ios');
             }
+            
+            cleanArgs.push('clean');
+            cleanArgs.push('-p');
+            cleanArgs.push('ios');
 
             exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator App Store Build'));
@@ -564,26 +562,9 @@ exports.send = function(opts){
                     fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
                 }
 
-                var buildArgs = [];
-
-                if(cfg.cli == "appc"){
-                    buildArgs.push('run');
-                    buildArgs.push('-p');
-                    buildArgs.push('ios');
-                    buildArgs.push('-T');
-                    buildArgs.push('dist-adhoc');
-                    buildArgs.push('-O');
-                    buildArgs.push('./dist');
-
-                }else{
-                    buildArgs.push('build');
-                    buildArgs.push('-p');
-                    buildArgs.push('ios');
-                    buildArgs.push('-T');
-                    buildArgs.push('dist-adhoc');
-                    buildArgs.push('-O');
-                    buildArgs.push('./dist');
-                }
+                var buildArgs = [cfg.cli == "appc"?'run':'build'];
+                var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
+                buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
 
                 exec(cfg.cli, buildArgs, null, function(e){
                     _deliver();
@@ -873,6 +854,16 @@ exports.pilot = function(opts){
     pilotArgs.push(cfg.apple_id);
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
+    
+    if(cfg.team_name){
+      pilotArgs.push('-r');
+      pilotArgs.push(cfg.team_name);
+    }
+    
+    if(cfg.team_id){
+      pilotArgs.push('-q');
+      pilotArgs.push(cfg.team_id);
+    }
 
     exec('pilot', pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
@@ -1027,33 +1018,19 @@ exports.playsend = function(opts){
 
             if(cfg.cli == "appc"){
                 cleanArgs.push('ti');
-                cleanArgs.push('clean');
-                cleanArgs.push('-p');
-                cleanArgs.push('android');
-
-            }else{
-                cleanArgs.push('clean');
-                cleanArgs.push('-p');
-                cleanArgs.push('android');
             }
-
+            
+            cleanArgs.push('clean');
+            cleanArgs.push('-p');
+            cleanArgs.push('android');
+            
             exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator Build'));
                 console.log("\n");
 
-                var buildArgs = [];
-
-                if(cfg.cli == "appc"){
-                    buildArgs.push('run');
-                    buildArgs.push('-p');
-                    buildArgs.push('android');
-                    buildArgs.push('--build-only');
-                }else{
-                    buildArgs.push('build');
-                    buildArgs.push('-p');
-                    buildArgs.push('android');
-                    buildArgs.push('--build-only');
-                }
+                var buildArgs = [cfg.cli == "appc"?'run':'build'];
+                var buildArgsDetail = '-p android --build-only';
+                buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
 
                 exec(cfg.cli, buildArgs, null, function(e){
                     _supply(1);
