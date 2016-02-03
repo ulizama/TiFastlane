@@ -90,7 +90,7 @@
     "url": "git+https://github.com/ulizama/TiFastlane.git"
   },
   "scripts": {
-    "postinstall": "sudo gem install deliver sigh produce pem pilot supply",
+    "postinstall": "sudo gem install deliver sigh produce pem pilot supply"
   },
   "version": "0.5.0"
 }
