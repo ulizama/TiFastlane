@@ -7,6 +7,5 @@ var exec = require('./lib/exec');
 
 console.log('--- We hope you enjoy TiFastlane as much as we do! ---');
 console.log('--- Special Thanks to KrauseFx for make all this possible with Fastlane Tools ---');
-console.log('--- We will try to automatically install Deliver, Sigh, Produce, Pem, Pilot, Supply ---\n');
-console.log('--- If it fails, please manually run ---\n');
-console.log('--- sudo gem install deliver sigh produce pem pilot supply ---\n');
+console.log('--- Remember to follow the installation guide to make sure you have all the requirements ---\n');
+

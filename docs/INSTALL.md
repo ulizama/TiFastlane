@@ -1,33 +1,36 @@
 ## Installation
 
+Before you install make sure you follow the instructions on this guide to make sure you have all the requirements.
+
 Requirements:
 
 * Mac OS 10.9 or newer
 * Ruby 2.0 or newer (`ruby -v`)
 * Xcode
+* Fastlane Tools
 
-Additionally, to an Xcode installation, you also need the Xcode command line tools set up.
+**Xcode**
+
+Additionally to your Xcode installation, you also need the Xcode command line tools set up.
 
     xcode-select --install
 
+**Fastlane**
 
-### Tifastlane
+You need to install the Fastlane tools which are Ruby Gems. You can install all the toolset by running:
 
-**BEFORE** you download `tifastlane` you **MUST** do this trick to be able to download all `gems` dependencies.
+	[sudo] gem install fastlane
+	
+Or you can only install those tools that **TiFastlane** uses:
 
-Edit your `.bashrc` or `.zshrc` file:
+	[sudo] gem install deliver sigh produce pem pilot supply
 
-    export GEM_HOME=/Users/{Your-Username}/.gems
-    export PATH=$PATH:/Users/{Your-Username}/.gems/bin
-
-* Save it
-* Close your terminal and open it again
-* `mkdir  $GEM_HOME`
-
-All done! no need for `sudo` anymore( on gems side ).
-
-    [sudo] npm install -g tifastlane
+### TiFastlane
 
 Now you are ready to get started :D
 
-In case RubyGems has a hard time installing Nokogiri, check out their [official installation guide](http://www.nokogiri.org/tutorials/installing_nokogiri.html).
+    [sudo] npm install -g tifastlane
+    
+Make sure to read the rest of the guides which explain what you can do with TiFastlane.
+
+We hope you enjoy it as much as we do!
