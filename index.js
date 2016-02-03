@@ -292,9 +292,16 @@ function dealWithResults(json){
     cfg.team_name = ( json.team_name ) ? json.team_name : null;
     cfg.google_play_key = ( json.google_play_key ) ? json.google_play_key : null;
     cfg.google_play_issuer = ( json.google_play_issuer ) ? json.google_play_issuer : null;
+    cfg.google_keystore_file = ( json.google_keystore_file ) ? json.google_keystore_file : null;
+    cfg.google_keystore_password = ( json.google_keystore_password ) ? json.google_keystore_password : null;
+    cfg.google_keystore_alias = ( json.google_keystore_alias ) ? json.google_keystore_alias : null;
 
     var cfgFile = templates.cfgFile;
-    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_KEY]', cfg.google_play_key).replace('[GOOGLE_PLAY_ISSUER]', cfg.google_play_issuer);
+    cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
+    replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).
+    replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_KEY]', cfg.google_play_key).
+    replace('[GOOGLE_PLAY_ISSUER]', cfg.google_play_issuer).replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
+    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -364,6 +371,24 @@ exports.setup = function(opts){
             type: "input",
             name: "google_play_issuer",
             message: "What's the Google Play Issuer Email? Leave if you don't want to use it"
+        },
+
+        {
+            type: "input",
+            name: "google_keystore_file",
+            message: "Keystore Location. Path to your keystore file that is used to sign your application."
+        },
+
+        {
+            type: "input",
+            name: "google_keystore_password",
+            message: "Keystore Password. Password to your keystore."
+        },
+
+        {
+            type: "input",
+            name: "google_keystore_alias",
+            message: "Key Alias. Alias associated with your application's certificate."
         }
 
     ], function( answers ) {
@@ -461,82 +486,90 @@ exports.send = function(opts){
         console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
         console.log(chalk.red("==================================="));
         console.log('\n ');
-        return
+        return;
     }
     // console.log('opts: ', opts);
 
-    if( opts.metadata ){
-        console.log(chalk.cyan('Sending only Metadata'));
-        uploadMetadata();
-
-    }else if( opts.testflight ){
+    if( opts.testflight ){
         console.log(chalk.cyan('Sending App to Beta Test'));
-        uploadBetaTestIPA(opts.skip_build);
+        return uploadBetaTestIPA(opts.skip_build);
+    }
 
-    }else{
+    /*
+    @ App Store
+    */
+    function _deliver( sendipa ){
+
+        console.log("\n");
+        console.log(chalk.yellow('Starting Deliver'));
+
+        var initArgs = [];
+
+        if( sendipa ){
+            initArgs.push('-i', '../../dist/' + tiapp.name + '.ipa');
+        }
+        else{
+            initArgs.push(
+                '--skip_binary_upload'
+            );
+        }
+
+        if( opts.skip_verify ){
+            initArgs.push('--force');
+        }
+
+        if( opts.skip_screenshots ){
+            initArgs.push(
+                '--skip_screenshots'
+            );
+        }
+
+        if( opts.skip_metadata ){
+            initArgs.push(
+                '--skip_metadata'
+            );
+        }
+
+
+        exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+            console.log(chalk.green('\nDeliver Done\n'));
+        });
+
+    }
+
+    if( opts.skip_binary_upload ){
+        console.log(chalk.cyan('Skipping Binary Upload'));
+        _deliver(0);
+    }
+    else{
+
         if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
             console.log(chalk.red('You need to run "tifast init" first'));
             return;
         }
 
-        console.log(chalk.cyan('Sending App to AppStore'));
+        console.log(chalk.cyan('Updating iTunesConnect'));
 
         var newFileContents = "";
 
         fs.readFileSync(deliverFile).toString().split('\n').forEach(function (line) {
-            // console.log('line: ', line);
-
             if( /^version /.test(line) ){
                 //Update Version
                 newFileContents = newFileContents + 'version "' + tiapp.version + '"' + "\n";
             }
-            /*
-            else if( /^ipa /.test(line) ){
-                _hasipa = true;
-                newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
-            }else{
-                newFileContents = newFileContents + line + "\n";
-            }
-            */
             newFileContents = newFileContents + line + "\n";
-            //fs.appendFileSync(deliverFile, line.toString() + "\n");
         });
 
-        // if( !_hasipa ){
-        //     newFileContents = newFileContents + 'ipa "../../dist/' + tiapp.name + '.ipa"' + "\n";
-        // }
-
         fs.writeFileSync(deliverFile, newFileContents);
-
-        /*
-        @ App Store
-        */
-        function _deliver(){
-            console.log("\n");
-            console.log(chalk.yellow('Starting Deliver'));
-
-            var initArgs = [
-                '-i', '../../dist/' + tiapp.name + '.ipa'
-            ];
-
-            if( opts.skip_verify ){
-                initArgs.push('--force');
-            }
-
-            exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
-                console.log(chalk.green('\nDeliver Done\n'));
-            });
-        }
 
         /*
         @ status app
         */
         localStatus();
 
-
         if( opts.skip_build ){
             console.log(chalk.yellow('Skipping Appcelerator App Store Build'));
-            _deliver();
+            _deliver(1);
 
         }else{
 
@@ -550,8 +583,6 @@ exports.send = function(opts){
             }
             
             cleanArgs.push('clean');
-            cleanArgs.push('-p');
-            cleanArgs.push('ios');
 
             exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator App Store Build'));
@@ -567,11 +598,13 @@ exports.send = function(opts){
                 buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
 
                 exec(cfg.cli, buildArgs, null, function(e){
-                    _deliver();
+                    _deliver(1);
                 });
             });
         }
+
     }
+
 };
 
 /*
@@ -920,6 +953,7 @@ exports.playinit = function(opts){
 @ export playsend function to CLI
 */
 exports.playsend = function(opts){
+    
     if(!fs.existsSync(cfgfile)){
         console.log(chalk.red("==================================="));
         console.log(chalk.red('Cannot find ', cfgfile));
@@ -928,7 +962,16 @@ exports.playsend = function(opts){
         console.log('\n ');
         return
     }
-    // console.log('opts: ', opts);
+
+    if(!cfg.google_keystore_file || !fs.existsSync(cfg.google_keystore_file)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Unable to find Android Keystore file'));
+        console.log(chalk.yellow('Please run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+
 
     if (!fs.existsSync(appAndroidDeliveryDir)){
         console.log(chalk.red('You need to run "tifast playinit" first'));
@@ -965,13 +1008,20 @@ exports.playsend = function(opts){
             }
 
             initArgs.push(
-                '--apk', '../../../build/android/bin/' + tiapp.name + '.apk'
+                '--apk', '../../../dist/' + tiapp.name + '.apk'
             );
         }
         else{
             initArgs.push(
                 '--skip_upload_apk'
             );            
+        }
+
+        if( opts.skip_upload_graphic_assets ){
+            initArgs.push(
+                '--skip_upload_images',
+                '--skip_upload_screenshots'
+            );
         }
 
         if( opts.skip_upload_images ){
@@ -986,15 +1036,21 @@ exports.playsend = function(opts){
             );
         }
 
+        if( opts.skip_upload_metadata ){
+            initArgs.push(
+                '--skip_upload_metadata'
+            );
+        }
+
         exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
             console.log(chalk.green('\nSupply Done\n'));
         });
     }
 
 
-    if( opts.metadata ){
-        console.log(chalk.cyan('Sending only Metadata'));
-        _supply();
+    if( opts.skip_upload_apk ){
+        console.log(chalk.cyan('Skipping APK upload'));
+        _supply(0);
 
     }
     else{
@@ -1021,16 +1077,26 @@ exports.playsend = function(opts){
             }
             
             cleanArgs.push('clean');
-            cleanArgs.push('-p');
-            cleanArgs.push('android');
             
             exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator Build'));
                 console.log("\n");
 
+                // Delete APK from Dist folder
+                if(fs.existsSync("./dist/" + tiapp.name + ".apk")){
+                    fs.unlinkSync("./dist/" + tiapp.name + ".apk");
+                }
+
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
-                var buildArgsDetail = '-p android --build-only';
+                var buildArgsDetail = '-p android -T dist-playstore -O ./dist';
+
                 buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+
+                buildArgs.push(
+                    '-K', cfg.google_keystore_file,
+                    '-P', cfg.google_keystore_password,
+                    '-L', cfg.google_keystore_alias
+                );
 
                 exec(cfg.cli, buildArgs, null, function(e){
                     _supply(1);

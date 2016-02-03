@@ -84,14 +84,14 @@ When you have a new version of your App that you wish to push to iTunes Connect,
 
 	tifast send
 
-
-If you want to **Update only Medata and Screenshots**  of your App without having to submit a new version or binary.
-
-    tifast send -m
-
 If you want to **Upload an Beta version** of your app.
 
     tifast send -t
+
+You can decide what you want to send to iTunes Connect (binary, screenshots, metadata, etc). For full listing of options run:
+
+    tifast send -h
+
 
 
 ### Tifast PEM

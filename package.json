@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.4.5",
+  "_id": "tifastlane@0.5.0",
   "_inCache": true,
   "_installable": true,
   "_location": "/tifastlane",
@@ -60,11 +60,6 @@
   "directories": {
     "lib": "./lib"
   },
-  "dist": {
-    "shasum": "9ab8c019d930125acbcb1f0ba133d8d0b6726820",
-    "tarball": "http://registry.npmjs.org/tifastlane/-/tifastlane-0.3.6.tgz"
-  },
-  "gitHead": "3667cbcb3fcbb00866a5265543d8d133e1f6e27e",
   "homepage": "https://github.com/ulizama/TiFastlane",
   "installable": true,
   "keywords": [
@@ -95,8 +90,7 @@
     "url": "git+https://github.com/ulizama/TiFastlane.git"
   },
   "scripts": {
-    "postinstall": "node install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "sudo gem install deliver sigh produce pem pilot supply",
   },
-  "version": "0.4.5"
+  "version": "0.5.0"
 }

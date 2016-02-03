@@ -85,14 +85,13 @@ When you have a new version of your App that you wish to push to the Play Store,
 
 	tifast playsend
 
-
-If you want to **Update only Medata and Screenshots**  of your App without having to submit a new APK.
-
-    tifast send -m
-
 You can choose the Track to upload the App to (production, beta, alpha or rollout):
 
-	tifast send --track beta
+	tifast playsend --track beta
+
+You can decide what you want to send to Google Play (apk, screenshots, metadata, etc). For full listing of options run:
+
+    tifast playsend -h
 
 
 ## Metadata/Screenshot Files
@@ -133,6 +132,6 @@ If you want to be able to have multiple configuration files, for example, to log
 
 For example:
 
-	tifast send -c otherconfig.cfg
+	tifast playsend -c otherconfig.cfg
 	
 This will make TiFastlane use the `otherconfig.cfg` file instead of the default `tifastlane.cfg`. All methods accept the configuration override.
