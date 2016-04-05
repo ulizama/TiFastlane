@@ -290,7 +290,7 @@ function dealWithResults(json){
     cfg.apple_id = json.apple_id;
     cfg.team_id = ( json.team_id ) ? json.team_id : null;
     cfg.team_name = ( json.team_name ) ? json.team_name : null;
-    cfg.google_play_key = ( json.google_play_key ) ? json.google_play_key : null;
+    cfg.google_play_json_key = ( json.google_play_json_key ) ? json.google_play_json_key : null;
     cfg.google_play_issuer = ( json.google_play_issuer ) ? json.google_play_issuer : null;
     cfg.google_keystore_file = ( json.google_keystore_file ) ? json.google_keystore_file : null;
     cfg.google_keystore_password = ( json.google_keystore_password ) ? json.google_keystore_password : null;
@@ -299,8 +299,8 @@ function dealWithResults(json){
     var cfgFile = templates.cfgFile;
     cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
     replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).
-    replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_KEY]', cfg.google_play_key).
-    replace('[GOOGLE_PLAY_ISSUER]', cfg.google_play_issuer).replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
+    replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_JSON_KEY]', cfg.google_play_json_key).
+    replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
     replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
@@ -362,15 +362,9 @@ exports.setup = function(opts){
 
         {
             type: "input",
-            name: "google_play_key",
+            name: "google_play_json_key",
             message: "What's your Google Play Key File? (leave empty for default)",
-            default: "GooglePlayKey.p12"
-        },
-
-        {
-            type: "input",
-            name: "google_play_issuer",
-            message: "What's the Google Play Issuer Email? Leave if you don't want to use it"
+            default: "GooglePlayKey.json"
         },
 
         {
@@ -936,8 +930,7 @@ exports.playinit = function(opts){
     
     var initArgs = [
         'init',
-        '--key', "../../../" + cfg.google_play_key,
-        '--issuer', cfg.google_play_issuer,
+        '--json_key', "../../../" + cfg.google_play_json_key,
         '--package_name', tiapp.id
     ];
 
@@ -988,8 +981,7 @@ exports.playsend = function(opts){
         console.log(chalk.yellow('Starting Supply'));
 
         var initArgs = [
-            '--key', "../../../" + cfg.google_play_key,
-            '--issuer', cfg.google_play_issuer,
+            '--json_key', "../../../" + cfg.google_play_json_key,
             '--package_name', tiapp.id
         ];
 

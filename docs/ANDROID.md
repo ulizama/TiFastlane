@@ -4,13 +4,15 @@
 - Select **Settings** tab, followed by the **API access** tab
 - Click the **Create Service Account** button and follow the **Google Developers Console** link in the dialog
 - Click **Add credentials** and select **Service account**
-- Select **P12** as the Key type and click **Create**
-- Save the P12 file into **the root of your Titanium App project directory** and name it `GooglePlayKey.p12` (you can choose to name it differently), and close the dialog
-- Make a note of the **Email address** under **Service accounts** - this is the issuer which you will need later
+- Select **JSON** as the Key type and click **Create**
+- Save the JSON file into **the root of your Titanium App project directory** and name it `GooglePlayKey.json` (you can choose to name it differently), and close the dialog
 - Back on the Google Play developer console, click **Done** to close the dialog
 - Click on **Grant Access** for the newly added service account
-- In the **Invite a New User** dialog, paste the service account email address you noted earlier into the **Email address** field
 - Choose **Release Manager** from the **Role** dropdown and click **Send Invitation** to close the dialog
+
+### Migrating Google credential format (from .p12 key file to .json)
+
+In previous versions of supply and tifast, credentials to your Play Console were stored as `.p12` files. We now are using the recommended `.json` key Service Account credential files. To upgrade please follow the *Setup* procedure once again to make sure you create the appropriate JSON file, and run the `tifast setup` again.
 
 ## Get Started
 
