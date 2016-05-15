@@ -12,15 +12,15 @@ And publishing your new version to the Play Store will be as easy:
 
 With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles.
 
-### Current tools from [Fastlane](https://github.com/KrauseFx/fastlane) available:
+### Current tools from [Fastlane](https://github.com/fastlane/fastlane) available:
 <p align="center">
 
-  &bull; <a href="https://github.com/KrauseFx/deliver">deliver</a> &bull;
-  <a href="https://github.com/KrauseFx/PEM">PEM</a> &bull;
-  <a href="https://github.com/KrauseFx/sigh">sigh</a> &bull;
-  <a href="https://github.com/KrauseFx/produce">produce</a> &bull;
-  <a href="https://github.com/fastlane/pilot">pilot</a> &bull;
-    <a href="https://github.com/fastlane/supply">supply</a> &bull;
+  &bull; <a href="https://github.com/fastlane/fastlane/tree/master/deliver">deliver</a> &bull;
+  <a href="https://github.com/fastlane/fastlane/tree/master/pem">pem</a> &bull;
+  <a href="https://github.com/fastlane/fastlane/tree/master/sigh">sigh</a> &bull;
+  <a href="https://github.com/fastlane/fastlane/tree/master/produce">produce</a> &bull;
+  <a href="https://github.com/fastlane/fastlane/tree/master/pilot">pilot</a> &bull;
+  <a href="https://github.com/fastlane/fastlane/tree/master/supply">supply</a> &bull;
 </p>
 
 ## Documentation
@@ -33,7 +33,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 ## TODO
 
 * Support for installr
-* Add [Frameit](https://github.com/fastlane/frameit)
+* Add [Frameit](https://github.com/fastlane/fastlane/tree/master/frameit)
 * Specification of the default certificate to use.
 
 
