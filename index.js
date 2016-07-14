@@ -193,7 +193,7 @@ function uploadBetaTestIPA(opts){
                 '--skip_waiting_for_build_processing'
             );
         }
-        
+
         exec('pilot', pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
         });
@@ -394,7 +394,7 @@ exports.setup = function(opts){
             message: "Key Alias. Alias associated with your application's certificate."
         }
 
-    ], function( answers ) {
+    ]).then( function( answers ) {
             dealWithResults( answers );
         }
     );
