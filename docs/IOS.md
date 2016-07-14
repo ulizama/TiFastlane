@@ -25,6 +25,8 @@ Below you will find full documentation on every step and other tools available t
 * [tifast init](#tifast-init)
 * [tifast status](#tifast-status)
 * [tifast register](#tifast-register)
+* [tifast repairprofiles](#tifast-repair-profiles)
+* [tifast downloadprofiles](#tifast-download-profiles)
 * [tifast send](#tifast-send)
 * [tifast pem](#tifast-pem)
 * [tifast pilot](#tifast-pilot)
@@ -78,6 +80,18 @@ For default provisiong profiles will be generated for all platforms, but if you 
 
     tifast register <platform>
 
+### Tifast Repair Profiles
+
+Fix ALL invalid or expired Provisioning Profiles on the account.
+
+    tifast repairprofiles
+
+### Tifast Download Profiles
+
+Download and install ALL valid Provisioning Profiles on the account.
+
+    tifast downloadprofiles
+        
 ### Tifast Send
 
 When you have a new version of your App that you wish to push to iTunes Connect, all you have to do is:

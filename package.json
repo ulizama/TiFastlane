@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.6.0",
+  "_id": "tifastlane@0.7.0",
   "_inCache": true,
   "_installable": true,
   "_location": "/tifastlane",
@@ -92,5 +92,5 @@
   "scripts": {
     
   },
-  "version": "0.6.0"
+  "version": "0.7.0"
 }

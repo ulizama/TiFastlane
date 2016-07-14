@@ -48,12 +48,12 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.7.0 Bug fixes. Added new `repairprofiles` and `downloadprofiles`
 * 0.6.0 `playsend` now uses a JSON key instead of a P12 key. This is a breaking change and the setup needs to be done again.
 * 0.5.1 Removed automatic Fastlane installation, updated Install Guide.
 * 0.5.0 Revamped the way `send` works, you now can choose to skip uploading binary, screenshots, etc. Reworked `playsend` so that it builds the APK for distribution using the [recommended unique keystore](http://docs.appcelerator.com/platform/latest/#!/guide/Distributing_Android_apps).
 * 0.4.5 Added support for multiple config files. `playsend` params update.
 * 0.4.1 Minor bug fixes
-* 0.4.0 Added `supply` to support Google Play Store. Updated to the latest `fastlane` tools.
 
 
 ## License

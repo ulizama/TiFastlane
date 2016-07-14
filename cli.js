@@ -54,6 +54,8 @@ program.command('send')
     .option('--skip_verify', 'Skip verification of metadata on send command')
     .option('--submit_for_review', 'Submit the new version for Review after uploading everything (DELIVER_SUBMIT_FOR_REVIEW)')
     .option('--skip_waiting_for_build_processing',"Don't wait for the build to process. If set to true, the changelog won't be set (PILOT_SKIP_WAITING_FOR_BUILD_PROCESSING)")
+    .option('--distribution_name [value]','iOS Distribution Certificate to use')
+    .option('--pp_uuid [value]','Provisioning profile uuid')
 	.action(send)
     ;
 
@@ -76,6 +78,25 @@ program.command('register [platform]')
     .option('-si, --skip_install', 'Skip installation of new provisioning profiles')
     .option('-sf, --skip_fetch_profiles', 'Skips the verification of existing profiles which is useful if you have thousands of profiles')
     .action(register)
+    ;
+
+
+/*
+@ Repair Profiles
+*/
+program.command('repairprofiles')
+    .description('Repairs all expired or invalid provisioning profiles')
+    .option('-c, --config [value]', "Use another config file found in the root")
+    .action(repairprofiles)
+    ;
+
+/*
+@ Download Profiles
+*/
+program.command('downloadprofiles')
+    .description('Downloads all valid provisioning profiles')
+    .option('-c, --config [value]', "Use another config file found in the root")
+    .action(downloadprofiles)
     ;
 
 /*
@@ -215,6 +236,30 @@ function register(platform, opts) {
 
     tifastlane.loadconfig(opts.config);
 	tifastlane.register(options);
+};
+
+/*
+@ repairprofiles
+*/
+function repairprofiles(opts) {
+    notifier.update && notifier.notify();
+
+    var options = _filterOptions(opts);
+
+    tifastlane.loadconfig(opts.config);
+    tifastlane.repairprofiles(options);
+};
+
+/*
+@ downloadprofiles
+*/
+function downloadprofiles(opts) {
+    notifier.update && notifier.notify();
+
+    var options = _filterOptions(opts);
+
+    tifastlane.loadconfig(opts.config);
+    tifastlane.downloadprofiles(options);
 };
 
 /*

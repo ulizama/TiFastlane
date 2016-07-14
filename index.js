@@ -600,6 +600,20 @@ exports.send = function(opts){
                 var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
                 buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
 
+                if( opts.distribution_name ){
+                    buildArgs.push(
+                        '-R',
+                        opts.distribution_name
+                    );
+                }
+
+                if( opts.pp_uuid ){
+                    buildArgs.push(
+                        '-P',
+                        opts.pp_uuid
+                    );
+                }
+
                 exec(cfg.cli, buildArgs, null, function(e){
                     _deliver(1);
                 });
@@ -696,8 +710,7 @@ exports.register = function(opts){
                 var sighArgs = [
                     '-u', cfg.apple_id,
                     '-a', tiapp.id,
-                    '-o', certDir,
-                    '--force'
+                    '-o', certDir
                 ];
 
                 if( cfg.team_id != "null" ){
@@ -732,6 +745,86 @@ exports.register = function(opts){
                 );
             });
 
+        }
+    );
+};
+
+
+/*
+@ export repairprofiles function to CLI
+*/
+exports.repairprofiles = function(opts){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+    
+    //First step is to register the application using fastlane.produce
+    console.log( chalk.cyan('Repairing all provisioning profiles on account') );
+
+    var sighArgs = [
+        'repair',
+        '--username', cfg.apple_id,
+        '--app_identifier', tiapp.id
+    ];
+
+    if( cfg.team_id != "null" ){
+        sighArgs.push('--team_id');
+        sighArgs.push(cfg.team_id);
+    }
+
+    if( cfg.team_name != "null" ){
+        sighArgs.push('--team_name');
+        sighArgs.push(cfg.team_name);
+    }
+
+    exec('sigh', sighArgs, null,
+        function(e) {
+            //Done
+        }
+    );
+};
+
+
+/*
+@ export downloadprofiles function to CLI
+*/
+exports.downloadprofiles = function(opts){
+    if(!fs.existsSync(cfgfile)){
+        console.log(chalk.red("==================================="));
+        console.log(chalk.red('Cannot find ', cfgfile));
+        console.log(chalk.yellow('You must run ') + chalk.cyan('tifast setup'));
+        console.log(chalk.red("==================================="));
+        console.log('\n ');
+        return
+    }
+    
+    //First step is to register the application using fastlane.produce
+    console.log( chalk.cyan('Downloading all provisioning profiles on account') );
+
+    var sighArgs = [
+        'download_all',
+        '--username', cfg.apple_id,
+        '--app_identifier', tiapp.id
+    ];
+
+    if( cfg.team_id != "null" ){
+        sighArgs.push('--team_id');
+        sighArgs.push(cfg.team_id);
+    }
+
+    if( cfg.team_name != "null" ){
+        sighArgs.push('--team_name');
+        sighArgs.push(cfg.team_name);
+    }
+
+    exec('sigh', sighArgs, null,
+        function(e) {
+            //Done
         }
     );
 };
