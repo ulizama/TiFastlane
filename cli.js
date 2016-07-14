@@ -52,6 +52,9 @@ program.command('send')
     .option('--skip_metadata', "Don't upload the metadata (e.g. title, description), this will still upload screenshots")
     .option('--skip_build', 'Skip build of App Store IPA')
     .option('--skip_verify', 'Skip verification of metadata on send command')
+    .option('--submit_for_review', 'Submit the new version for Review after uploading everything (DELIVER_SUBMIT_FOR_REVIEW)')
+    .option('--skip_waiting_for_build_processing',"Don't wait for the build to process. If set to true, the changelog won't be set
+(PILOT_SKIP_WAITING_FOR_BUILD_PROCESSING)")
 	.action(send)
     ;
 

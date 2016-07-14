@@ -168,7 +168,8 @@ function uploadMetadata(){
 /*
 @ upload Beta Test IPA
 */
-function uploadBetaTestIPA(_skip){
+function uploadBetaTestIPA(opts){
+    
     if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
         console.log(chalk.red('You need to run "tifast init" first'));
         return;
@@ -187,6 +188,12 @@ function uploadBetaTestIPA(_skip){
           , '-i' , "../../dist/" + tiapp.name + ".ipa"
         ];
 
+        if( opts.skip_waiting_for_build_processing ){
+            initArgs.push(
+                '--skip_waiting_for_build_processing'
+            );
+        }
+        
         exec('pilot', pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
         });
@@ -197,7 +204,9 @@ function uploadBetaTestIPA(_skip){
     */
     localStatus();
 
-    if(_skip){
+    if( opts.skip_build ){
+
+        console.log(chalk.yellow('Skipping Appcelerator App Store Build'));
         _pilot();
 
     }else{
@@ -486,7 +495,7 @@ exports.send = function(opts){
 
     if( opts.testflight ){
         console.log(chalk.cyan('Sending App to Beta Test'));
-        return uploadBetaTestIPA(opts.skip_build);
+        return uploadBetaTestIPA(opts);
     }
 
     /*
