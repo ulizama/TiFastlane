@@ -158,9 +158,11 @@ function uploadMetadata(){
         return;
     }
 
-    var initArgs = [];
+    var initArgs = [
+        'deliver'
+    ];
 
-    exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+    exec('fastlane', initArgs, { cwd: appDeliveryDir }, function(e){
         console.log(chalk.green('\nDone\n'));
     });
 };
@@ -183,6 +185,7 @@ function uploadBetaTestIPA(opts){
         console.log(chalk.yellow('Starting Pilot'));
 
         var pilotArgs = [
+            'pilot',
             'upload'
           , '-u' , cfg.apple_id
           , '-i' , "../../dist/" + tiapp.name + ".ipa"
@@ -194,7 +197,7 @@ function uploadBetaTestIPA(opts){
             );
         }
 
-        exec('pilot', pilotArgs, { cwd: appDeliveryDir }, function(e){
+        exec('fastlane', pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
         });
     };
@@ -273,12 +276,13 @@ function smartInit(){
     }
 
     var initArgs = [
+        'deliver',
         'init',
         '--username', cfg.apple_id,
         '-a', tiapp.id
     ];
 
-    exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+    exec('fastlane', initArgs, { cwd: appDeliveryDir }, function(e){
         // Create Extra Files
         extraFiles();
 
@@ -506,7 +510,9 @@ exports.send = function(opts){
         console.log("\n");
         console.log(chalk.yellow('Starting Deliver'));
 
-        var initArgs = [];
+        var initArgs = [
+            'deliver'
+        ];
 
         if( sendipa ){
             initArgs.push('-i', '../../dist/' + tiapp.name + '.ipa');
@@ -534,7 +540,7 @@ exports.send = function(opts){
         }
 
 
-        exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+        exec('fastlane', initArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDeliver Done\n'));
         });
 
@@ -662,6 +668,7 @@ exports.register = function(opts){
     console.log( chalk.white('Version: ' + tiapp.version) );
 
     var produceArgs = [
+        'produce',
         '--username', cfg.apple_id,
         '--app_identifier', tiapp.id,
         '--app_version', tiapp.version,
@@ -682,7 +689,7 @@ exports.register = function(opts){
         produceArgs.push('--skip_itc');
     }
 
-    exec('produce', produceArgs, null,
+    exec('fastlane', produceArgs, null,
         function(e) {
 
             //We have the app created, now let's build the provisioning profiles with fastlane.sigh
@@ -708,6 +715,7 @@ exports.register = function(opts){
                 console.log( chalk.cyan('Creating Provision Profile on environment: ' + p) );
 
                 var sighArgs = [
+                    'sigh',
                     '-u', cfg.apple_id,
                     '-a', tiapp.id,
                     '-o', certDir
@@ -738,7 +746,7 @@ exports.register = function(opts){
                     sighArgs.push('--adhoc');
                 }
 
-                exec('sigh', sighArgs, null,
+                exec('fastlane', sighArgs, null,
                     function(e) {
                         //Done
                     }
@@ -767,6 +775,7 @@ exports.repairprofiles = function(opts){
     console.log( chalk.cyan('Repairing all provisioning profiles on account') );
 
     var sighArgs = [
+        'sigh',
         'repair',
         '--username', cfg.apple_id,
         '--app_identifier', tiapp.id
@@ -782,7 +791,7 @@ exports.repairprofiles = function(opts){
         sighArgs.push(cfg.team_name);
     }
 
-    exec('sigh', sighArgs, null,
+    exec('fastlane', sighArgs, null,
         function(e) {
             //Done
         }
@@ -807,6 +816,7 @@ exports.downloadprofiles = function(opts){
     console.log( chalk.cyan('Downloading all provisioning profiles on account') );
 
     var sighArgs = [
+        'sigh',
         'download_all',
         '--username', cfg.apple_id,
         '--app_identifier', tiapp.id
@@ -822,7 +832,7 @@ exports.downloadprofiles = function(opts){
         sighArgs.push(cfg.team_name);
     }
 
-    exec('sigh', sighArgs, null,
+    exec('fastlane', sighArgs, null,
         function(e) {
             //Done
         }
@@ -878,6 +888,7 @@ exports.pem = function(opts){
     }
 
     var pemArgs = [
+        'pem',
         '-l', certDir,
         '-a', tiapp.id,
         '-u', cfg.apple_id
@@ -898,7 +909,7 @@ exports.pem = function(opts){
 
     console.log( chalk.cyan('Starting Pem'));
 
-    exec('pem', pemArgs,null, function(e){
+    exec('fastlane', pemArgs,null, function(e){
         console.log(chalk.green('\nPem Done\n'));
     });
 };
@@ -924,7 +935,9 @@ exports.pilot = function(opts){
     console.log( chalk.cyan('Starting Pilot ' + opts.command));
     console.log('\n');
 
-    var pilotArgs = [];
+    var pilotArgs = [
+        'pilot'
+    ];
 
     switch(opts.command){
         case "add":
@@ -983,18 +996,18 @@ exports.pilot = function(opts){
     pilotArgs.push(cfg.apple_id);
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
-    
+
     if(cfg.team_name){
       pilotArgs.push('-r');
       pilotArgs.push(cfg.team_name);
     }
-    
+
     if(cfg.team_id){
       pilotArgs.push('-q');
       pilotArgs.push(cfg.team_id);
     }
 
-    exec('pilot', pilotArgs, null, function(e){
+    exec('fastlane', pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
     });
 };
@@ -1031,12 +1044,13 @@ exports.playinit = function(opts){
     }
     
     var initArgs = [
+        'supply',
         'init',
         '--json_key', "../../../" + cfg.google_play_json_key,
         '--package_name', tiapp.id
     ];
 
-    exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+    exec('fastlane', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
         console.log(chalk.green('Your app has been initialized.'));
         console.log(chalk.green('You can find your configuration files for delivery on: ' + appAndroidDeliveryDir));
         console.log(chalk.green('Now the fun starts!'));
@@ -1083,6 +1097,7 @@ exports.playsend = function(opts){
         console.log(chalk.yellow('Starting Supply'));
 
         var initArgs = [
+            'supply',
             '--json_key', "../../../" + cfg.google_play_json_key,
             '--package_name', tiapp.id
         ];
@@ -1136,7 +1151,7 @@ exports.playsend = function(opts){
             );
         }
 
-        exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+        exec('fastlane', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
             console.log(chalk.green('\nSupply Done\n'));
         });
     }
