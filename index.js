@@ -1,5 +1,6 @@
 var chalk = require('chalk')
   , fs = require("fs")
+  , path = require("path")
   , tiappxml = require('tiapp.xml')
   , pkg = require('./package.json')
   , xpath = require('xpath')
@@ -25,6 +26,7 @@ var chalk = require('chalk')
   , deliverFile = null
   , appDeliveryMetaDir = null
   , appDeliveryScreenDir = null
+  , fastlaneBinary = 'fastlane'
   //\\
   , canLoad = true
   ;
@@ -65,6 +67,11 @@ exports.loadconfig = function( cfg_file ){
       , deliverFile = appDeliveryDir + "/Deliverfile"
       , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
       , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
+      , fastlaneBinary = (cfg.fastlane_binary)
+      		? (path.isAbsolute(cfg.fastlane_binary)
+      			? cfg.fastlane_binary
+      			: fs.realpathSync(path.dirname(cfgfile) + "/" + cfg.fastlane_binary))
+      		: 'fastlane'
       ;
 
 }
@@ -162,7 +169,7 @@ function uploadMetadata(){
         'deliver'
     ];
 
-    exec('fastlane', initArgs, { cwd: appDeliveryDir }, function(e){
+    exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
         console.log(chalk.green('\nDone\n'));
     });
 };
@@ -197,7 +204,7 @@ function uploadBetaTestIPA(opts){
             );
         }
 
-        exec('fastlane', pilotArgs, { cwd: appDeliveryDir }, function(e){
+        exec(fastlaneBinary, pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
         });
     };
@@ -282,7 +289,7 @@ function smartInit(){
         '-a', tiapp.id
     ];
 
-    exec('fastlane', initArgs, { cwd: appDeliveryDir }, function(e){
+    exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
         // Create Extra Files
         extraFiles();
 
@@ -308,13 +315,14 @@ function dealWithResults(json){
     cfg.google_keystore_file = ( json.google_keystore_file ) ? json.google_keystore_file : null;
     cfg.google_keystore_password = ( json.google_keystore_password ) ? json.google_keystore_password : null;
     cfg.google_keystore_alias = ( json.google_keystore_alias ) ? json.google_keystore_alias : null;
+    cfg.fastlane_binary = ( json.fastlane_binary ) ? json.fastlane_binary : 'fastlane';
 
     var cfgFile = templates.cfgFile;
     cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
     replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).
     replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_JSON_KEY]', cfg.google_play_json_key).
     replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
-    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias);
+    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias).replace('[FASTLANE_BINARY]', cfg.fastlane_binary);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -396,6 +404,13 @@ exports.setup = function(opts){
             type: "input",
             name: "google_keystore_alias",
             message: "Key Alias. Alias associated with your application's certificate."
+        },
+
+        {
+            type: "input",
+            name: "fastlane_binary",
+            message: "Optional absolute path or relative to this config, to the Fastlane binary",
+            default: "fastlane"
         }
 
     ]).then( function( answers ) {
@@ -540,7 +555,7 @@ exports.send = function(opts){
         }
 
 
-        exec('fastlane', initArgs, { cwd: appDeliveryDir }, function(e){
+        exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDeliver Done\n'));
         });
 
@@ -689,7 +704,7 @@ exports.register = function(opts){
         produceArgs.push('--skip_itc');
     }
 
-    exec('fastlane', produceArgs, null,
+    exec(fastlaneBinary, produceArgs, null,
         function(e) {
 
             //We have the app created, now let's build the provisioning profiles with fastlane.sigh
@@ -746,7 +761,7 @@ exports.register = function(opts){
                     sighArgs.push('--adhoc');
                 }
 
-                exec('fastlane', sighArgs, null,
+                exec(fastlaneBinary, sighArgs, null,
                     function(e) {
                         //Done
                     }
@@ -791,7 +806,7 @@ exports.repairprofiles = function(opts){
         sighArgs.push(cfg.team_name);
     }
 
-    exec('fastlane', sighArgs, null,
+    exec(fastlaneBinary, sighArgs, null,
         function(e) {
             //Done
         }
@@ -832,7 +847,7 @@ exports.downloadprofiles = function(opts){
         sighArgs.push(cfg.team_name);
     }
 
-    exec('fastlane', sighArgs, null,
+    exec(fastlaneBinary, sighArgs, null,
         function(e) {
             //Done
         }
@@ -909,7 +924,7 @@ exports.pem = function(opts){
 
     console.log( chalk.cyan('Starting Pem'));
 
-    exec('fastlane', pemArgs,null, function(e){
+    exec(fastlaneBinary, pemArgs,null, function(e){
         console.log(chalk.green('\nPem Done\n'));
     });
 };
@@ -1007,7 +1022,7 @@ exports.pilot = function(opts){
       pilotArgs.push(cfg.team_id);
     }
 
-    exec('fastlane', pilotArgs, null, function(e){
+    exec(fastlaneBinary, pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
     });
 };
@@ -1050,7 +1065,7 @@ exports.playinit = function(opts){
         '--package_name', tiapp.id
     ];
 
-    exec('fastlane', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+    exec(fastlaneBinary, initArgs, { cwd: appAndroidDeliveryDir }, function(e){
         console.log(chalk.green('Your app has been initialized.'));
         console.log(chalk.green('You can find your configuration files for delivery on: ' + appAndroidDeliveryDir));
         console.log(chalk.green('Now the fun starts!'));
@@ -1151,7 +1166,7 @@ exports.playsend = function(opts){
             );
         }
 
-        exec('fastlane', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+        exec(fastlaneBinary, initArgs, { cwd: appAndroidDeliveryDir }, function(e){
             console.log(chalk.green('\nSupply Done\n'));
         });
     }
