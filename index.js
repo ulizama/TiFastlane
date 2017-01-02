@@ -171,7 +171,7 @@ function uploadMetadata(){
 @ upload Beta Test IPA
 */
 function uploadBetaTestIPA(opts){
-    
+
     if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
         console.log(chalk.red('You need to run "tifast init" first'));
         return;
@@ -227,11 +227,11 @@ function uploadBetaTestIPA(opts){
         if(cfg.cli == "appc"){
             cleanArgs.push('ti');
         }
-        
+
         cleanArgs.push('clean');
         cleanArgs.push('-p');
         cleanArgs.push('ios');
-        
+
 
         exec(cfg.cli, cleanArgs, null, function(e){
             console.log(chalk.cyan('Starting Appcelerator App Store Build'));
@@ -244,11 +244,11 @@ function uploadBetaTestIPA(opts){
             if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
                 fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
             }
-            
+
             var buildArgs = [cfg.cli == "appc"?'run':'build'];
             var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
             buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
-            
+
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -590,7 +590,7 @@ exports.send = function(opts){
             if(cfg.cli == "appc"){
                 cleanArgs.push('ti');
             }
-            
+
             cleanArgs.push('clean');
 
             exec(cfg.cli, cleanArgs, null, function(e){
@@ -770,7 +770,7 @@ exports.repairprofiles = function(opts){
         console.log('\n ');
         return
     }
-    
+
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Repairing all provisioning profiles on account') );
 
@@ -811,7 +811,7 @@ exports.downloadprofiles = function(opts){
         console.log('\n ');
         return
     }
-    
+
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Downloading all provisioning profiles on account') );
 
@@ -1042,7 +1042,7 @@ exports.playinit = function(opts){
     if (!fs.existsSync(appAndroidDeliveryDir)){
         fs.mkdirSync(appAndroidDeliveryDir);
     }
-    
+
     var initArgs = [
         'supply',
         'init',
@@ -1062,7 +1062,7 @@ exports.playinit = function(opts){
 @ export playsend function to CLI
 */
 exports.playsend = function(opts){
-    
+
     if(!fs.existsSync(cfgfile)){
         console.log(chalk.red("==================================="));
         console.log(chalk.red('Cannot find ', cfgfile));
@@ -1123,7 +1123,7 @@ exports.playsend = function(opts){
         else{
             initArgs.push(
                 '--skip_upload_apk'
-            );            
+            );
         }
 
         if( opts.skip_upload_graphic_assets ){
@@ -1184,9 +1184,9 @@ exports.playsend = function(opts){
             if(cfg.cli == "appc"){
                 cleanArgs.push('ti');
             }
-            
+
             cleanArgs.push('clean');
-            
+
             exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator Build'));
                 console.log("\n");
