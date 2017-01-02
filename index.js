@@ -904,7 +904,7 @@ exports.pem = function(opts){
 
     var pemArgs = [
         'pem',
-        '-l', certDir,
+        '-e', certDir,
         '-a', tiapp.id,
         '-u', cfg.apple_id
     ];
@@ -916,7 +916,7 @@ exports.pem = function(opts){
 
     if(opts.development) pemArgs.push('--development');
 
-    if(opts.generate_p12) pemArgs.push('-g');
+    if(opts.generate_p12) pemArgs.push('--generate_p12');
 
     if(opts.save_private_key) pemArgs.push('-s');
 
