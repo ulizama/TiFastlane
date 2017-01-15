@@ -68,7 +68,7 @@ exports.loadconfig = function( cfg_file ){
       , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
       , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
       , fastlaneBinary = (cfg.fastlane_binary)
-      		? (path.isAbsolute(cfg.fastlane_binary)
+      		? (path.isAbsolute(cfg.fastlane_binary) || cfg.fastlane_binary === 'fastlane'
       			? cfg.fastlane_binary
       			: fs.realpathSync(path.dirname(cfgfile) + "/" + cfg.fastlane_binary))
       		: 'fastlane'
