@@ -5,7 +5,7 @@ Building apps for iOS and Android it's all great until you have to deal with Cer
 TiFastlane is a way to use those tools for Titanium development. Now you'll be able to do real continous deployment of your Titanium app. Sending your app for review will be a breeze:
 
 	tifast send
-	
+
 And publishing your new version to the Play Store will be as easy:
 
 	tifast playsend
@@ -48,6 +48,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.8.0 BC BREAK to support Fastlane 2.
 * 0.7.0 Bug fixes. Added new `repairprofiles` and `downloadprofiles`
 * 0.6.0 `playsend` now uses a JSON key instead of a P12 key. This is a breaking change and the setup needs to be done again.
 * 0.5.1 Removed automatic Fastlane installation, updated Install Guide.
