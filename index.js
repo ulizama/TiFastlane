@@ -1,5 +1,6 @@
 var chalk = require('chalk')
   , fs = require("fs")
+  , path = require("path")
   , tiappxml = require('tiapp.xml')
   , pkg = require('./package.json')
   , xpath = require('xpath')
@@ -25,6 +26,7 @@ var chalk = require('chalk')
   , deliverFile = null
   , appDeliveryMetaDir = null
   , appDeliveryScreenDir = null
+  , fastlaneBinary = 'fastlane'
   //\\
   , canLoad = true
   ;
@@ -65,6 +67,11 @@ exports.loadconfig = function( cfg_file ){
       , deliverFile = appDeliveryDir + "/Deliverfile"
       , appDeliveryMetaDir = (!cfg.locale) ? appDeliveryDir + '/metadata/en-US' : appDeliveryDir + '/metadata/' + cfg.locale
       , appDeliveryScreenDir = (!cfg.locale) ? appDeliveryDir + '/screenshots/en-US' : appDeliveryDir + '/screenshots/' + cfg.locale
+      , fastlaneBinary = (cfg.fastlane_binary)
+      		? (path.isAbsolute(cfg.fastlane_binary) || cfg.fastlane_binary === 'fastlane'
+      			? cfg.fastlane_binary
+      			: fs.realpathSync(path.dirname(cfgfile) + "/" + cfg.fastlane_binary))
+      		: 'fastlane'
       ;
 
 }
@@ -158,9 +165,11 @@ function uploadMetadata(){
         return;
     }
 
-    var initArgs = [];
+    var initArgs = [
+        'deliver'
+    ];
 
-    exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+    exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
         console.log(chalk.green('\nDone\n'));
     });
 };
@@ -169,7 +178,7 @@ function uploadMetadata(){
 @ upload Beta Test IPA
 */
 function uploadBetaTestIPA(opts){
-    
+
     if (!fs.existsSync(appDeliveryDir + "/Deliverfile")){
         console.log(chalk.red('You need to run "tifast init" first'));
         return;
@@ -183,6 +192,7 @@ function uploadBetaTestIPA(opts){
         console.log(chalk.yellow('Starting Pilot'));
 
         var pilotArgs = [
+            'pilot',
             'upload'
           , '-u' , cfg.apple_id
           , '-i' , "../../dist/" + tiapp.name + ".ipa"
@@ -194,7 +204,7 @@ function uploadBetaTestIPA(opts){
             );
         }
 
-        exec('pilot', pilotArgs, { cwd: appDeliveryDir }, function(e){
+        exec(fastlaneBinary, pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
         });
     };
@@ -224,11 +234,11 @@ function uploadBetaTestIPA(opts){
         if(cfg.cli == "appc"){
             cleanArgs.push('ti');
         }
-        
+
         cleanArgs.push('clean');
         cleanArgs.push('-p');
         cleanArgs.push('ios');
-        
+
 
         exec(cfg.cli, cleanArgs, null, function(e){
             console.log(chalk.cyan('Starting Appcelerator App Store Build'));
@@ -241,11 +251,11 @@ function uploadBetaTestIPA(opts){
             if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
                 fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
             }
-            
+
             var buildArgs = [cfg.cli == "appc"?'run':'build'];
             var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
             buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
-            
+
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -273,12 +283,13 @@ function smartInit(){
     }
 
     var initArgs = [
+        'deliver',
         'init',
         '--username', cfg.apple_id,
         '-a', tiapp.id
     ];
 
-    exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+    exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
         // Create Extra Files
         extraFiles();
 
@@ -304,13 +315,14 @@ function dealWithResults(json){
     cfg.google_keystore_file = ( json.google_keystore_file ) ? json.google_keystore_file : null;
     cfg.google_keystore_password = ( json.google_keystore_password ) ? json.google_keystore_password : null;
     cfg.google_keystore_alias = ( json.google_keystore_alias ) ? json.google_keystore_alias : null;
+    cfg.fastlane_binary = ( json.fastlane_binary ) ? json.fastlane_binary : 'fastlane';
 
     var cfgFile = templates.cfgFile;
     cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
     replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).
     replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_JSON_KEY]', cfg.google_play_json_key).
     replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
-    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias);
+    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias).replace('[FASTLANE_BINARY]', cfg.fastlane_binary);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -392,6 +404,13 @@ exports.setup = function(opts){
             type: "input",
             name: "google_keystore_alias",
             message: "Key Alias. Alias associated with your application's certificate."
+        },
+
+        {
+            type: "input",
+            name: "fastlane_binary",
+            message: "Optional absolute path or relative to this config, to the Fastlane binary",
+            default: "fastlane"
         }
 
     ]).then( function( answers ) {
@@ -506,7 +525,9 @@ exports.send = function(opts){
         console.log("\n");
         console.log(chalk.yellow('Starting Deliver'));
 
-        var initArgs = [];
+        var initArgs = [
+            'deliver'
+        ];
 
         if( sendipa ){
             initArgs.push('-i', '../../dist/' + tiapp.name + '.ipa');
@@ -534,7 +555,7 @@ exports.send = function(opts){
         }
 
 
-        exec('deliver', initArgs, { cwd: appDeliveryDir }, function(e){
+        exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDeliver Done\n'));
         });
 
@@ -584,7 +605,7 @@ exports.send = function(opts){
             if(cfg.cli == "appc"){
                 cleanArgs.push('ti');
             }
-            
+
             cleanArgs.push('clean');
 
             exec(cfg.cli, cleanArgs, null, function(e){
@@ -662,6 +683,7 @@ exports.register = function(opts){
     console.log( chalk.white('Version: ' + tiapp.version) );
 
     var produceArgs = [
+        'produce',
         '--username', cfg.apple_id,
         '--app_identifier', tiapp.id,
         '--app_version', tiapp.version,
@@ -682,7 +704,7 @@ exports.register = function(opts){
         produceArgs.push('--skip_itc');
     }
 
-    exec('produce', produceArgs, null,
+    exec(fastlaneBinary, produceArgs, null,
         function(e) {
 
             //We have the app created, now let's build the provisioning profiles with fastlane.sigh
@@ -708,6 +730,7 @@ exports.register = function(opts){
                 console.log( chalk.cyan('Creating Provision Profile on environment: ' + p) );
 
                 var sighArgs = [
+                    'sigh',
                     '-u', cfg.apple_id,
                     '-a', tiapp.id,
                     '-o', certDir
@@ -738,7 +761,7 @@ exports.register = function(opts){
                     sighArgs.push('--adhoc');
                 }
 
-                exec('sigh', sighArgs, null,
+                exec(fastlaneBinary, sighArgs, null,
                     function(e) {
                         //Done
                     }
@@ -762,11 +785,12 @@ exports.repairprofiles = function(opts){
         console.log('\n ');
         return
     }
-    
+
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Repairing all provisioning profiles on account') );
 
     var sighArgs = [
+        'sigh',
         'repair',
         '--username', cfg.apple_id,
         '--app_identifier', tiapp.id
@@ -782,7 +806,7 @@ exports.repairprofiles = function(opts){
         sighArgs.push(cfg.team_name);
     }
 
-    exec('sigh', sighArgs, null,
+    exec(fastlaneBinary, sighArgs, null,
         function(e) {
             //Done
         }
@@ -802,11 +826,12 @@ exports.downloadprofiles = function(opts){
         console.log('\n ');
         return
     }
-    
+
     //First step is to register the application using fastlane.produce
     console.log( chalk.cyan('Downloading all provisioning profiles on account') );
 
     var sighArgs = [
+        'sigh',
         'download_all',
         '--username', cfg.apple_id,
         '--app_identifier', tiapp.id
@@ -822,7 +847,7 @@ exports.downloadprofiles = function(opts){
         sighArgs.push(cfg.team_name);
     }
 
-    exec('sigh', sighArgs, null,
+    exec(fastlaneBinary, sighArgs, null,
         function(e) {
             //Done
         }
@@ -878,7 +903,8 @@ exports.pem = function(opts){
     }
 
     var pemArgs = [
-        '-l', certDir,
+        'pem',
+        '-e', certDir,
         '-a', tiapp.id,
         '-u', cfg.apple_id
     ];
@@ -890,7 +916,7 @@ exports.pem = function(opts){
 
     if(opts.development) pemArgs.push('--development');
 
-    if(opts.generate_p12) pemArgs.push('-g');
+    if(opts.generate_p12) pemArgs.push('--generate_p12');
 
     if(opts.save_private_key) pemArgs.push('-s');
 
@@ -898,7 +924,7 @@ exports.pem = function(opts){
 
     console.log( chalk.cyan('Starting Pem'));
 
-    exec('pem', pemArgs,null, function(e){
+    exec(fastlaneBinary, pemArgs,null, function(e){
         console.log(chalk.green('\nPem Done\n'));
     });
 };
@@ -924,7 +950,9 @@ exports.pilot = function(opts){
     console.log( chalk.cyan('Starting Pilot ' + opts.command));
     console.log('\n');
 
-    var pilotArgs = [];
+    var pilotArgs = [
+        'pilot'
+    ];
 
     switch(opts.command){
         case "add":
@@ -983,18 +1011,18 @@ exports.pilot = function(opts){
     pilotArgs.push(cfg.apple_id);
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
-    
+
     if(cfg.team_name){
       pilotArgs.push('-r');
       pilotArgs.push(cfg.team_name);
     }
-    
+
     if(cfg.team_id){
       pilotArgs.push('-q');
       pilotArgs.push(cfg.team_id);
     }
 
-    exec('pilot', pilotArgs, null, function(e){
+    exec(fastlaneBinary, pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
     });
 };
@@ -1029,14 +1057,15 @@ exports.playinit = function(opts){
     if (!fs.existsSync(appAndroidDeliveryDir)){
         fs.mkdirSync(appAndroidDeliveryDir);
     }
-    
+
     var initArgs = [
+        'supply',
         'init',
         '--json_key', "../../../" + cfg.google_play_json_key,
         '--package_name', tiapp.id
     ];
 
-    exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+    exec(fastlaneBinary, initArgs, { cwd: appAndroidDeliveryDir }, function(e){
         console.log(chalk.green('Your app has been initialized.'));
         console.log(chalk.green('You can find your configuration files for delivery on: ' + appAndroidDeliveryDir));
         console.log(chalk.green('Now the fun starts!'));
@@ -1048,7 +1077,7 @@ exports.playinit = function(opts){
 @ export playsend function to CLI
 */
 exports.playsend = function(opts){
-    
+
     if(!fs.existsSync(cfgfile)){
         console.log(chalk.red("==================================="));
         console.log(chalk.red('Cannot find ', cfgfile));
@@ -1083,6 +1112,7 @@ exports.playsend = function(opts){
         console.log(chalk.yellow('Starting Supply'));
 
         var initArgs = [
+            'supply',
             '--json_key', "../../../" + cfg.google_play_json_key,
             '--package_name', tiapp.id
         ];
@@ -1108,7 +1138,7 @@ exports.playsend = function(opts){
         else{
             initArgs.push(
                 '--skip_upload_apk'
-            );            
+            );
         }
 
         if( opts.skip_upload_graphic_assets ){
@@ -1136,7 +1166,7 @@ exports.playsend = function(opts){
             );
         }
 
-        exec('supply', initArgs, { cwd: appAndroidDeliveryDir }, function(e){
+        exec(fastlaneBinary, initArgs, { cwd: appAndroidDeliveryDir }, function(e){
             console.log(chalk.green('\nSupply Done\n'));
         });
     }
@@ -1169,9 +1199,9 @@ exports.playsend = function(opts){
             if(cfg.cli == "appc"){
                 cleanArgs.push('ti');
             }
-            
+
             cleanArgs.push('clean');
-            
+
             exec(cfg.cli, cleanArgs, null, function(e){
                 console.log(chalk.cyan('Starting Appcelerator Build'));
                 console.log("\n");
