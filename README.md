@@ -41,6 +41,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 
 * [Uriel Lizama](https://github.com/ulizama)
 * [Douglas Hennrich](https://github.com/DouglasHennrich)
+* [Jeroen van Dijk](https://github.com/jvandijk)
 
 ##  Thanks
 
