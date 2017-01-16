@@ -554,6 +554,23 @@ exports.send = function(opts){
             );
         }
 
+        if( opts.submit_for_review ){
+            initArgs.push(
+                '--submit_for_review'
+            );
+        }
+
+        if( opts.skip_waiting_for_build_processing ){
+            initArgs.push(
+                '--skip_waiting_for_build_processing'
+            );
+        }
+
+        if( opts.automatic_release ){
+            initArgs.push(
+                '--automatic_release'
+            );
+        }
 
         exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDeliver Done\n'));
