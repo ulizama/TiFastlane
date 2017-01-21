@@ -254,8 +254,10 @@ function uploadBetaTestIPA(opts){
 
             var buildArgs = [cfg.cli == "appc"?'run':'build'];
             var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
+            if(cfg.ios_pp_uuid){
+              buildArgsDetail+=" --pp-uuid "+cfg.ios_pp_uuid
+            }
             buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
-
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -310,6 +312,7 @@ function dealWithResults(json){
     cfg.apple_id = json.apple_id;
     cfg.team_id = ( json.team_id ) ? json.team_id : null;
     cfg.team_name = ( json.team_name ) ? json.team_name : null;
+    cfg.ios_pp_uuid = (json.ios_pp_uuid) ? json.ios_pp_uuid : null;
     cfg.google_play_json_key = ( json.google_play_json_key ) ? json.google_play_json_key : null;
     cfg.google_play_issuer = ( json.google_play_issuer ) ? json.google_play_issuer : null;
     cfg.google_keystore_file = ( json.google_keystore_file ) ? json.google_keystore_file : null;
@@ -320,6 +323,7 @@ function dealWithResults(json){
     var cfgFile = templates.cfgFile;
     cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
     replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).
+    replace('[IOS_PP_UUID]',cfg.ios_pp_uuid).
     replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_JSON_KEY]', cfg.google_play_json_key).
     replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
     replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias).replace('[FASTLANE_BINARY]', cfg.fastlane_binary);
@@ -379,6 +383,12 @@ exports.setup = function(opts){
             type: "input",
             name: "team_name",
             message: "What's your TEAM NAME? Leave it if you don't want to use it"
+        },
+
+        {
+          type: "input",
+          name: "ios_pp_uuid",
+          message: "What's your provisioning UUID for ios? Leave it if you don't want to use it"
         },
 
         {
@@ -636,8 +646,10 @@ exports.send = function(opts){
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
                 var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
+                if(cfg.ios_pp_uuid){
+                  buildArgsDetail+=" --pp-uuid "+cfg.ios_pp_uuid
+                }
                 buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
-
                 if( opts.distribution_name ){
                     buildArgs.push(
                         '-R',
