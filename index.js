@@ -926,6 +926,16 @@ exports.pem = function(opts){
         '-u', cfg.apple_id
     ];
 
+    if( cfg.team_id != "null" ){
+        pemArgs.push('--team_id');
+        pemArgs.push(cfg.team_id);
+    }
+
+    if( cfg.team_name != "null" ){
+        pemArgs.push('--team_name');
+        pemArgs.push(cfg.team_name);
+    }
+
     if(opts.password != null){
         pemArgs.push('-p');
         pemArgs.push(opts.password);
