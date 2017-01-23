@@ -49,6 +49,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.8.2 Fix on PEM. Node dependencies
 * 0.8.0 BC BREAK to support Fastlane 2. Minor changes on tifast send
 * 0.7.0 Bug fixes. Added new `repairprofiles` and `downloadprofiles`
 * 0.6.0 `playsend` now uses a JSON key instead of a P12 key. This is a breaking change and the setup needs to be done again.
