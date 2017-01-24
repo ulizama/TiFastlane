@@ -204,12 +204,12 @@ function uploadBetaTestIPA(opts){
             );
         }
         
-        if(cfg.team_name){
+        if(cfg.team_name != "null"){
           pilotArgs.push('-r');
           pilotArgs.push(cfg.team_name);
         }
 
-        if(cfg.team_id){
+        if(cfg.team_id != "null"){
           pilotArgs.push('-q');
           pilotArgs.push(cfg.team_id);
         }
@@ -582,12 +582,12 @@ exports.send = function(opts){
             );
         }
         
-        if(cfg.team_name){
+        if(cfg.team_name != "null"){
           pilotArgs.push('-r');
           pilotArgs.push(cfg.team_name);
         }
 
-        if(cfg.team_id){
+        if(cfg.team_id != "null"){
           pilotArgs.push('-q');
           pilotArgs.push(cfg.team_id);
         }
@@ -1059,12 +1059,12 @@ exports.pilot = function(opts){
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
 
-    if(cfg.team_name){
+    if(cfg.team_name != "null"){
       pilotArgs.push('-r');
       pilotArgs.push(cfg.team_name);
     }
 
-    if(cfg.team_id){
+    if(cfg.team_id != "null"){
       pilotArgs.push('-q');
       pilotArgs.push(cfg.team_id);
     }
