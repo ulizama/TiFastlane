@@ -203,7 +203,17 @@ function uploadBetaTestIPA(opts){
                 '--skip_waiting_for_build_processing'
             );
         }
+        
+        if(cfg.team_name != "null"){
+          pilotArgs.push('-r');
+          pilotArgs.push(cfg.team_name);
+        }
 
+        if(cfg.team_id != "null"){
+          pilotArgs.push('-q');
+          pilotArgs.push(cfg.team_id);
+        }
+        
         exec(fastlaneBinary, pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
         });
@@ -570,6 +580,16 @@ exports.send = function(opts){
             initArgs.push(
                 '--automatic_release'
             );
+        }
+        
+        if(cfg.team_name != "null"){
+          pilotArgs.push('-r');
+          pilotArgs.push(cfg.team_name);
+        }
+
+        if(cfg.team_id != "null"){
+          pilotArgs.push('-q');
+          pilotArgs.push(cfg.team_id);
         }
 
         exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
@@ -1039,12 +1059,12 @@ exports.pilot = function(opts){
     pilotArgs.push('-a');
     pilotArgs.push(tiapp.id);
 
-    if(cfg.team_name){
+    if(cfg.team_name != "null"){
       pilotArgs.push('-r');
       pilotArgs.push(cfg.team_name);
     }
 
-    if(cfg.team_id){
+    if(cfg.team_id != "null"){
       pilotArgs.push('-q');
       pilotArgs.push(cfg.team_id);
     }
