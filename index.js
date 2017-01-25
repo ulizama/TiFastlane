@@ -263,9 +263,8 @@ function uploadBetaTestIPA(opts){
             }
 
             var buildArgs = [cfg.cli == "appc"?'run':'build'];
-            var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
+            var buildArgsDetail = cfg.ios_build_args;
             buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
-
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -326,13 +325,19 @@ function dealWithResults(json){
     cfg.google_keystore_password = ( json.google_keystore_password ) ? json.google_keystore_password : null;
     cfg.google_keystore_alias = ( json.google_keystore_alias ) ? json.google_keystore_alias : null;
     cfg.fastlane_binary = ( json.fastlane_binary ) ? json.fastlane_binary : 'fastlane';
+    cfg.ios_build_args = (json.ios_build_args) ? json.ios_build_args : null;
+    cfg.android_build_args = (json.android_build_args) ? json.android_build_args : null;
 
     var cfgFile = templates.cfgFile;
     cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
     replace('[APPLE_ID]', cfg.apple_id).replace('[TEAM_ID]', cfg.team_id).
     replace('[TEAM_NAME]', cfg.team_name).replace('[GOOGLE_PLAY_JSON_KEY]', cfg.google_play_json_key).
     replace('[GOOGLE_KEYSTORE_FILE]', cfg.google_keystore_file).
-    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias).replace('[FASTLANE_BINARY]', cfg.fastlane_binary);
+    replace('[GOOGLE_KEYSTORE_PASSWORD]', cfg.google_keystore_password).
+    replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias).
+    replace('[FASTLANE_BINARY]', cfg.fastlane_binary).
+    replace('[IOS_BUILD_ARGS]',cfg.ios_build_args).
+    replace('[ANDROID_BUILD_ARGS]',cfg.android_build_args);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -392,6 +397,13 @@ exports.setup = function(opts){
         },
 
         {
+          type: "input",
+          name: "ios_build_args",
+          message: "Titanium build arguments for ios. (leave empty for default)",
+          default: "-p ios -T dist-adhoc -O ./dist"
+        },
+
+        {
             type: "input",
             name: "google_play_json_key",
             message: "What's your Google Play Key File? (leave empty for default)",
@@ -414,6 +426,13 @@ exports.setup = function(opts){
             type: "input",
             name: "google_keystore_alias",
             message: "Key Alias. Alias associated with your application's certificate."
+        },
+        
+        {
+          type: "input",
+          name: "android_build_args",
+          message: "Titanium build arguments for android. (leave empty for default)",
+          default: "-p android -T dist-playstore -O ./dist"
         },
 
         {
@@ -655,9 +674,8 @@ exports.send = function(opts){
                 }
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
-                var buildArgsDetail = '-p ios -T dist-adhoc -O ./dist';
+                var buildArgsDetail = cfg.ios_build_args;
                 buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
-
                 if( opts.distribution_name ){
                     buildArgs.push(
                         '-R',
@@ -1259,8 +1277,7 @@ exports.playsend = function(opts){
                 }
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
-                var buildArgsDetail = '-p android -T dist-playstore -O ./dist';
-
+                var buildArgsDetail = cfg.android_build_args;
                 buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
 
                 buildArgs.push(
