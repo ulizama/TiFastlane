@@ -674,8 +674,15 @@ exports.send = function(opts){
                 }
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
-                var buildArgsDetail = cfg.ios_build_args;
-                buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                
+                if( cfg.ios_build_args ){
+                    var buildArgsDetail = cfg.ios_build_args;
+                    buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                }
+                else{
+                    buildArgs.push('-p', 'ios', '-T', 'dist-adhoc', '-O', './dist');
+                }
+
                 if( opts.distribution_name ){
                     buildArgs.push(
                         '-R',
@@ -1277,8 +1284,14 @@ exports.playsend = function(opts){
                 }
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
-                var buildArgsDetail = cfg.android_build_args;
-                buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+
+                if( cfg.android_build_args ){
+                    var buildArgsDetail = cfg.android_build_args;
+                    buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                }
+                else{
+                    buildArgs.push('-p', 'android', '-T', 'dist-playstore', '-O', './dist');
+                }
 
                 buildArgs.push(
                     '-K', cfg.google_keystore_file,
