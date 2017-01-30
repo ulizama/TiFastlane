@@ -1099,6 +1099,26 @@ exports.pilot = function(opts){
     });
 };
 
+
+/*
+@ bumpBundleVersionAndroid
+*/
+function bumpBundleVersionAndroid(){
+  var tiapp = fs.readFileSync('tiapp.xml', {
+      encoding: 'utf-8'
+  });
+
+  tiapp = tiapp.replace(/(versionCode=\")([^< ]+)(")/mg, function (match, before, versionCode, after) {
+      versionCode = parseInt(versionCode, 10) + 1;
+
+      console.log(chalk.green('Bumped versionCode to: ' + versionCode));
+
+      return before + versionCode + after;
+  });
+
+  fs.writeFileSync('tiapp.xml', tiapp);
+};
+
 /*
 @ export playinit function to CLI
 */
@@ -1265,6 +1285,9 @@ exports.playsend = function(opts){
 
             console.log(chalk.yellow('First things first. Clean project to ensure build'));
             console.log("\n");
+
+            // Bump version code
+            bumpBundleVersionAndroid();
 
             var cleanArgs = [];
 
