@@ -130,29 +130,45 @@ function extraFiles(){
 /*
 @ localStatus( To send function be able to use it too )
 */
-function localStatus() {
-    // Trick to get Bundle Version since tiapp.xml doesn't expose it
-    var _bundleVersion = fs.readFileSync('tiapp.xml', {
-        encoding: 'utf-8'
-    });
-    _bundleVersionIndex = 0;
-    _bundleVersion.replace(/(<key>CFBundleVersion<\/key>\s*<string>)([^< ]+)(<\/string>)/mg, function (match, before, CFBundleVersion, after) {
-        CFBundleVersion = parseInt(CFBundleVersion, 10);
+function localStatus(e) {
 
-        _bundleVersionIndex = CFBundleVersion;
+    e = e || {};
+
+    // Trick to get Bundle Version since tiapp.xml doesn't expose it
+    var _tiappFile = fs.readFileSync('tiapp.xml', {
+            encoding: 'utf-8'
+        }),
+        CFBundleVersion = 0,
+        versionCode = 0;
+
+    _tiappFile.replace(/(versionCode=\")([^< ]+)(")/mg, function(match, before, _versionCode, after) {
+        versionCode = parseInt(_versionCode, 10);
+    });
+
+    _tiappFile.replace(/(<key>CFBundleVersion<\/key>\s*<string>)([^< ]+)(<\/string>)/mg, function(match, before, _CFBundleVersion, after) {
+        CFBundleVersion = parseInt(_CFBundleVersion, 10);
     });
 
 
     console.log('\n');
-    if( cfg.apple_id != "null" ) console.log('Apple ID: ' + chalk.cyan(cfg.apple_id));
-    if( cfg.team_id != "null" ) console.log('Team ID: ' + chalk.cyan(cfg.team_id));
-    if( cfg.team_name != "null" ) console.log('Team Name: ' + chalk.cyan(cfg.team_name));
+    console.log('Name:', chalk.cyan(tiapp.name));
+    console.log('Version:', chalk.yellow(tiapp.version));
+    console.log('GUID:', chalk.cyan(tiapp.guid));
+    console.log('AppId:', chalk.cyan(tiapp.id));
 
-    console.log('Name: ' + chalk.cyan(tiapp.name));
-    console.log('AppId: ' + chalk.cyan(tiapp.id));
-    console.log('Version: ' + chalk.yellow(tiapp.version));
-    console.log('CFBundleVersion: ' + chalk.yellow(_bundleVersionIndex));
-    console.log('GUID: ' + chalk.cyan(tiapp.guid));
+    if (e.type !== 'Android') {
+        console.log(chalk.cyan("iOS:"));
+        if (cfg.apple_id != "null") console.log('\t', 'Apple ID:', chalk.cyan(cfg.apple_id));
+        if (cfg.team_id != "null") console.log('\t', 'Team ID:', chalk.cyan(cfg.team_id));
+        if (cfg.team_name != "null") console.log('\t', 'Team Name:', chalk.cyan(cfg.team_name));
+        console.log('\t', 'CFBundleVersion:', chalk.yellow(CFBundleVersion));
+    }
+
+    if (e.type !== 'iOS') {
+        console.log(chalk.cyan("Android:"));
+        console.log('\t', 'android:versionCode:', chalk.yellow(versionCode));
+    }
+
     console.log('\n');
 };
 
@@ -222,7 +238,9 @@ function uploadBetaTestIPA(opts){
     /*
     @ status app
     */
-    localStatus();
+    localStatus({
+        type: 'iOS'
+    });
 
     if( opts.skip_build ){
 
@@ -264,7 +282,7 @@ function uploadBetaTestIPA(opts){
 
             var buildArgs = [cfg.cli == "appc"?'run':'build'];
             var buildArgsDetail = cfg.ios_build_args;
-            buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+            buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -645,7 +663,9 @@ exports.send = function(opts){
         /*
         @ status app
         */
-        localStatus();
+        localStatus({
+            type: 'iOS'
+        });
 
         if( opts.skip_build ){
             console.log(chalk.yellow('Skipping Appcelerator App Store Build'));
@@ -677,7 +697,7 @@ exports.send = function(opts){
                 
                 if( cfg.ios_build_args ){
                     var buildArgsDetail = cfg.ios_build_args;
-                    buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                    buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
                 }
                 else{
                     buildArgs.push('-p', 'ios', '-T', 'dist-adhoc', '-O', './dist');
@@ -1099,6 +1119,26 @@ exports.pilot = function(opts){
     });
 };
 
+
+/*
+@ bumpBundleVersionAndroid
+*/
+function bumpBundleVersionAndroid(){
+  var tiapp = fs.readFileSync('tiapp.xml', {
+      encoding: 'utf-8'
+  });
+
+  tiapp = tiapp.replace(/(versionCode=\")([^< ]+)(")/mg, function (match, before, versionCode, after) {
+      versionCode = parseInt(versionCode, 10) + 1;
+
+      console.log(chalk.green('Bumped versionCode to: ' + versionCode));
+
+      return before + versionCode + after;
+  });
+
+  fs.writeFileSync('tiapp.xml', tiapp);
+};
+
 /*
 @ export playinit function to CLI
 */
@@ -1254,7 +1294,9 @@ exports.playsend = function(opts){
         /*
         @ status app
         */
-        localStatus();
+        localStatus({
+            type: 'Android'
+        });
 
 
         if( opts.skip_build ){
@@ -1265,6 +1307,9 @@ exports.playsend = function(opts){
 
             console.log(chalk.yellow('First things first. Clean project to ensure build'));
             console.log("\n");
+
+            // Bump version code
+            bumpBundleVersionAndroid();
 
             var cleanArgs = [];
 
@@ -1287,7 +1332,7 @@ exports.playsend = function(opts){
 
                 if( cfg.android_build_args ){
                     var buildArgsDetail = cfg.android_build_args;
-                    buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                    buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
                 }
                 else{
                     buildArgs.push('-p', 'android', '-T', 'dist-playstore', '-O', './dist');
@@ -1307,6 +1352,31 @@ exports.playsend = function(opts){
     }
 
 };
+
+/**
+ * Split cli params to array
+ * @param  {String} str CLI paramaters
+ * @return {Array}
+ */
+function cliToArray(str) {
+    var args = [];
+    var readingPart = false;
+    var part = '';
+    for (var i = 0; i <= str.length; i++) {
+        if (str.charAt(i) === ' ' && !readingPart) {
+            args.push(part);
+            part = '';
+        } else {
+            if (str.charAt(i) === '"') {
+                readingPart = !readingPart;
+            } else {
+                part += str.charAt(i);
+            }
+        }
+    }
+    args.push(part);
+    return args;
+}
 /*
 @
 */
