@@ -130,29 +130,45 @@ function extraFiles(){
 /*
 @ localStatus( To send function be able to use it too )
 */
-function localStatus() {
-    // Trick to get Bundle Version since tiapp.xml doesn't expose it
-    var _bundleVersion = fs.readFileSync('tiapp.xml', {
-        encoding: 'utf-8'
-    });
-    _bundleVersionIndex = 0;
-    _bundleVersion.replace(/(<key>CFBundleVersion<\/key>\s*<string>)([^< ]+)(<\/string>)/mg, function (match, before, CFBundleVersion, after) {
-        CFBundleVersion = parseInt(CFBundleVersion, 10);
+function localStatus(e) {
 
-        _bundleVersionIndex = CFBundleVersion;
+    e = e || {};
+
+    // Trick to get Bundle Version since tiapp.xml doesn't expose it
+    var _tiappFile = fs.readFileSync('tiapp.xml', {
+            encoding: 'utf-8'
+        }),
+        CFBundleVersion = 0,
+        versionCode = 0;
+
+    _tiappFile.replace(/(versionCode=\")([^< ]+)(")/mg, function(match, before, _versionCode, after) {
+        versionCode = parseInt(_versionCode, 10);
+    });
+
+    _tiappFile.replace(/(<key>CFBundleVersion<\/key>\s*<string>)([^< ]+)(<\/string>)/mg, function(match, before, _CFBundleVersion, after) {
+        CFBundleVersion = parseInt(_CFBundleVersion, 10);
     });
 
 
     console.log('\n');
-    if( cfg.apple_id != "null" ) console.log('Apple ID: ' + chalk.cyan(cfg.apple_id));
-    if( cfg.team_id != "null" ) console.log('Team ID: ' + chalk.cyan(cfg.team_id));
-    if( cfg.team_name != "null" ) console.log('Team Name: ' + chalk.cyan(cfg.team_name));
+    console.log('Name:', chalk.cyan(tiapp.name));
+    console.log('Version:', chalk.yellow(tiapp.version));
+    console.log('GUID:', chalk.cyan(tiapp.guid));
+    console.log('AppId:', chalk.cyan(tiapp.id));
 
-    console.log('Name: ' + chalk.cyan(tiapp.name));
-    console.log('AppId: ' + chalk.cyan(tiapp.id));
-    console.log('Version: ' + chalk.yellow(tiapp.version));
-    console.log('CFBundleVersion: ' + chalk.yellow(_bundleVersionIndex));
-    console.log('GUID: ' + chalk.cyan(tiapp.guid));
+    if (e.type !== 'Android') {
+        console.log(chalk.cyan("iOS:"));
+        if (cfg.apple_id != "null") console.log('\t', 'Apple ID:', chalk.cyan(cfg.apple_id));
+        if (cfg.team_id != "null") console.log('\t', 'Team ID:', chalk.cyan(cfg.team_id));
+        if (cfg.team_name != "null") console.log('\t', 'Team Name:', chalk.cyan(cfg.team_name));
+        console.log('\t', 'CFBundleVersion:', chalk.yellow(CFBundleVersion));
+    }
+
+    if (e.type !== 'iOS') {
+        console.log(chalk.cyan("Android:"));
+        console.log('\t', 'android:versionCode:', chalk.yellow(versionCode));
+    }
+
     console.log('\n');
 };
 
@@ -222,7 +238,9 @@ function uploadBetaTestIPA(opts){
     /*
     @ status app
     */
-    localStatus();
+    localStatus({
+        type: 'iOS'
+    });
 
     if( opts.skip_build ){
 
@@ -645,7 +663,9 @@ exports.send = function(opts){
         /*
         @ status app
         */
-        localStatus();
+        localStatus({
+            type: 'iOS'
+        });
 
         if( opts.skip_build ){
             console.log(chalk.yellow('Skipping Appcelerator App Store Build'));
@@ -1274,7 +1294,9 @@ exports.playsend = function(opts){
         /*
         @ status app
         */
-        localStatus();
+        localStatus({
+            type: 'Android'
+        });
 
 
         if( opts.skip_build ){
