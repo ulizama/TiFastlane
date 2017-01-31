@@ -282,7 +282,7 @@ function uploadBetaTestIPA(opts){
 
             var buildArgs = [cfg.cli == "appc"?'run':'build'];
             var buildArgsDetail = cfg.ios_build_args;
-            buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+            buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
             exec(cfg.cli, buildArgs, null, function(e){
                 _pilot();
             });
@@ -697,7 +697,7 @@ exports.send = function(opts){
                 
                 if( cfg.ios_build_args ){
                     var buildArgsDetail = cfg.ios_build_args;
-                    buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                    buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
                 }
                 else{
                     buildArgs.push('-p', 'ios', '-T', 'dist-adhoc', '-O', './dist');
@@ -1332,7 +1332,7 @@ exports.playsend = function(opts){
 
                 if( cfg.android_build_args ){
                     var buildArgsDetail = cfg.android_build_args;
-                    buildArgs = buildArgs.concat(buildArgsDetail.split(' '));
+                    buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
                 }
                 else{
                     buildArgs.push('-p', 'android', '-T', 'dist-playstore', '-O', './dist');
@@ -1352,6 +1352,31 @@ exports.playsend = function(opts){
     }
 
 };
+
+/**
+ * Split cli params to array
+ * @param  {String} str CLI paramaters
+ * @return {Array}
+ */
+function cliToArray(str) {
+    var args = [];
+    var readingPart = false;
+    var part = '';
+    for (var i = 0; i <= str.length; i++) {
+        if (str.charAt(i) === ' ' && !readingPart) {
+            args.push(part);
+            part = '';
+        } else {
+            if (str.charAt(i) === '"') {
+                readingPart = !readingPart;
+            } else {
+                part += str.charAt(i);
+            }
+        }
+    }
+    args.push(part);
+    return args;
+}
 /*
 @
 */
