@@ -34,7 +34,6 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 
 * Support for installr
 * Add [Frameit](https://github.com/fastlane/fastlane/tree/master/frameit)
-* Specification of the default certificate to use.
 
 
 ##  Collaborators
@@ -43,6 +42,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Douglas Hennrich](https://github.com/DouglasHennrich)
 * [Jeroen van Dijk](https://github.com/jvandijk)
 * [Jong Eun Lee](https://github.com/yomybaby)
+* [Hazem Khaled](https://github.com/HazemKhaled)
 
 
 ##  Thanks
@@ -51,6 +51,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.9.0 Added support for Titanium 6.0.3.GA and XCode 8.3
 * 0.8.3 You can customize the build args on setup
 * 0.8.2 Fix on PEM. Node dependencies
 * 0.8.0 BC BREAK to support Fastlane 2. Minor changes on tifast send

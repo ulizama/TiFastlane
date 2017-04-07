@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.8.3",
+  "_id": "tifastlane@0.9.0",
   "_inCache": true,
   "_installable": true,
   "_location": "/tifastlane",
@@ -49,13 +49,15 @@
     "chalk": "*",
     "commander": "*",
     "inquirer": ">1.0.0",
+    "path": "*",
+    "pinkie-promise": "*",
+    "plist": "^2.0.1",
     "sudo": "*",
     "tiapp.xml": "*",
     "underscore": "*",
     "update-notifier": "*",
     "xpath": "*",
-    "path": "*",
-    "pinkie-promise": "*"
+    "plist": "*"
   },
   "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
   "devDependencies": {},
@@ -91,8 +93,6 @@
     "type": "git",
     "url": "git+https://github.com/ulizama/TiFastlane.git"
   },
-  "scripts": {
-
-  },
-  "version": "0.8.4"
+  "scripts": {},
+  "version": "0.9.0"
 }

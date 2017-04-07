@@ -131,7 +131,7 @@ All metadata and screenshots are easily maintained from the `TiFLDelivery\APPID`
 
 **Deliveryfile**
 
-You can configure Price, Copyright, Developer Notes, etc. You can read the full [documentation here](https://github.com/KrauseFx/deliver/blob/master/Deliverfile.md).
+You can configure Price, Copyright, Developer Notes, etc. You can read the full [documentation here](https://github.com/fastlane/fastlane/blob/master/deliver/Deliverfile.md).
 
 **./metadata/[LANG]/*.txt**
 
@@ -155,3 +155,9 @@ For example:
 	tifast send -c otherconfig.cfg
 	
 This will make TiFastlane use the `otherconfig.cfg` file instead of the default `tifastlane.cfg`. All methods accept the configuration override.
+
+## XCode 8.3+ and Titanium 6.0.3+
+
+Starting from XCode 8.3 the legacy build API was removed, so the way TiFastlane used to build the app broke. We fixed this issue on TiFast 0.9, but this change could break your builds on older versions of XCode and Titanium. If you want to force TiFast to use the old way to package you can do it using the `--legacy` option:
+
+	tifast send --legacy

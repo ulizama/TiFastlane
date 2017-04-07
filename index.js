@@ -1,7 +1,9 @@
 var chalk = require('chalk')
+  , os = require('os')
   , fs = require("fs")
   , path = require("path")
   , tiappxml = require('tiapp.xml')
+  , plist = require('plist')
   , pkg = require('./package.json')
   , xpath = require('xpath')
   , _ = require('underscore')
@@ -415,10 +417,9 @@ exports.setup = function(opts){
         },
 
         {
-          type: "input",
-          name: "ios_build_args",
-          message: "Titanium build arguments for ios. (leave empty for default)",
-          default: "-p ios -T dist-adhoc -O ./dist"
+            type: "input",
+            name: "ios_build_args",
+            message: "Append build arguments for ios."
         },
 
         {
@@ -447,10 +448,9 @@ exports.setup = function(opts){
         },
         
         {
-          type: "input",
-          name: "android_build_args",
-          message: "Titanium build arguments for android. (leave empty for default)",
-          default: "-p android -T dist-playstore -O ./dist"
+            type: "input",
+            name: "android_build_args",
+            message: "Append build arguments for android."
         },
 
         {
@@ -549,6 +549,7 @@ exports.init = function(opts){
 @ export send function to CLI
 */
 exports.send = function(opts){
+
     if(!fs.existsSync(cfgfile)){
         console.log(chalk.red("==================================="));
         console.log(chalk.red('Cannot find ', cfgfile));
@@ -557,12 +558,31 @@ exports.send = function(opts){
         console.log('\n ');
         return;
     }
-    // console.log('opts: ', opts);
 
     if( opts.testflight ){
         console.log(chalk.cyan('Sending App to Beta Test'));
         return uploadBetaTestIPA(opts);
     }
+
+    //Check the ios args
+    if( cfg.ios_build_args && cfg.ios_build_args != "" ){
+        
+        var regex = new RegExp(/-p\b|-T\b|-O\b/);
+        
+        if( regex.test(cfg.ios_build_args) ){
+            console.log("\n");
+            console.log(chalk.red("==================================="));
+            console.log(chalk.red(' ERROR ON YOUR IOS BUILD ARGS '));
+            console.log(chalk.red(' Starting TiFastlane v0.9 the "ios_build_args" configuration changed how it behaves.'));
+            console.log(chalk.red(' Now you use it to append build args instead of replacing them'));
+            console.log(chalk.red(' You cannot use -p (platform), -T (target) or -O (output) when appending new args'));
+            console.log(chalk.red("==================================="));
+            console.log('\n ');
+            return;
+        }
+
+    }
+
 
     /*
     @ App Store
@@ -695,14 +715,17 @@ exports.send = function(opts){
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
                 
-                if( cfg.ios_build_args ){
-                    var buildArgsDetail = cfg.ios_build_args;
-                    buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
+                if( opts.legacy ){
+                    console.log(chalk.yellow('------- Enabling legacy mode for app build and packaging -------'));
+                    console.log(chalk.yellow('This mode only works if you are building with Titanium CLI < 6.0.2 and XCODE < 8.3'));
+                    console.log(chalk.yellow('If the build fails please disable the legacy mode'));
+                    console.log(chalk.yellow('----------------------------------------------------------------'));
+                    buildArgs.push('-p', 'ios', '-T', 'dist-adhoc','-O','./dist');
                 }
                 else{
-                    buildArgs.push('-p', 'ios', '-T', 'dist-adhoc', '-O', './dist');
+                    buildArgs.push('-p', 'ios', '-T', 'dist-appstore');
                 }
-
+                
                 if( opts.distribution_name ){
                     buildArgs.push(
                         '-R',
@@ -717,9 +740,37 @@ exports.send = function(opts){
                     );
                 }
 
+                if( cfg.ios_build_args && cfg.ios_build_args != "" ){
+                    buildArgs = buildArgs.concat(cliToArray(cfg.ios_build_args));
+                }
+
                 exec(cfg.cli, buildArgs, null, function(e){
-                    _deliver(1);
+
+                    if( opts.legacy ){
+                        _deliver(1);
+                    }
+                    else{
+                        console.log(chalk.cyan('Exporting .archive to .ipa using xcodebuild'));
+                        console.log("\n");
+
+                        var archive = findXCodeArchive(tiapp.name);
+
+                        if( !archive ){
+                            return;
+                        }
+
+                        //patch PLIST
+                        patchPLIST();
+
+                        var exporterArgs = ['-exportArchive','-archivePath',archive,'-exportPath',"./dist","-exportOptionsPlist","./build/iphone/Info.plist"];
+
+                        exec("xcodebuild", exporterArgs, null, function(e){
+                            _deliver(1);
+                        });
+                    }
+
                 });
+
             });
         }
 
@@ -1208,10 +1259,28 @@ exports.playsend = function(opts){
         return
     }
 
-
     if (!fs.existsSync(appAndroidDeliveryDir)){
         console.log(chalk.red('You need to run "tifast playinit" first'));
         return;
+    }
+
+    //Check the android args
+    if( cfg.android_build_args && cfg.android_build_args != "" ){
+        
+        var regex = new RegExp(/-p\b|-T\b|-O\b/);
+        
+        if( regex.test(cfg.android_build_args) ){
+            console.log("\n");
+            console.log(chalk.red("==================================="));
+            console.log(chalk.red(' ERROR ON YOUR ANDROID BUILD ARGS '));
+            console.log(chalk.red(' Starting TiFastlane v0.9 the "android_build_args" configuration changed how it behaves.'));
+            console.log(chalk.red(' Now you use it to append build args instead of replacing them'));
+            console.log(chalk.red(' You cannot use -p (platform), -T (target) or -O (output) when appending new args'));
+            console.log(chalk.red("==================================="));
+            console.log('\n ');
+            return;
+        }
+
     }
 
     console.log(chalk.cyan('Updating Google Play Store'));
@@ -1330,12 +1399,10 @@ exports.playsend = function(opts){
 
                 var buildArgs = [cfg.cli == "appc"?'run':'build'];
 
-                if( cfg.android_build_args ){
-                    var buildArgsDetail = cfg.android_build_args;
-                    buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
-                }
-                else{
-                    buildArgs.push('-p', 'android', '-T', 'dist-playstore', '-O', './dist');
+                buildArgs.push('-p', 'android', '-T', 'dist-playstore', '-O', './dist');
+
+                if( cfg.android_build_args && cfg.android_build_args != "" ){
+                    buildArgs = buildArgs.concat(cliToArray(cfg.android_build_args));
                 }
 
                 buildArgs.push(
@@ -1377,6 +1444,88 @@ function cliToArray(str) {
     args.push(part);
     return args;
 }
+
+/**
+ * Find XCode Archive
+ * @param  {String} App name
+ * @return {String} archive path
+ */
+function findXCodeArchive(app) {
+
+    var dir = os.homedir() + '/Library/Developer/Xcode/Archives/';
+    var archiveName = app;
+
+    if (!fs.existsSync(dir)) {
+        console.log(chalk.red('Cannot find ' + dir));
+        return;
+    }
+
+    var files = fs.readdirSync(dir).filter(file => fs.statSync(path.join(dir, file)).isDirectory());
+
+    if( files && files[0] ){
+
+        files.sort(function(a, b) {
+            return fs.statSync(path.join(dir,b)).mtime.getTime() - 
+                fs.statSync(path.join(dir,a)).mtime.getTime();
+        });
+
+        var archiveDir = path.join(dir, files[0]);
+        var archives = fs.readdirSync(archiveDir);
+
+        if( archives && archives[0] ){
+        
+            archives.sort(function(a, b) {
+                return fs.statSync(path.join(archiveDir,b)).mtime.getTime() - 
+                    fs.statSync(path.join(archiveDir,a)).mtime.getTime();
+            });
+
+            var appXcodeArchive;
+            var regex = new RegExp(archiveName,"i");
+
+            archives.forEach(function(archive) {
+                if( !appXcodeArchive && regex.test(archive) ){
+                    appXcodeArchive = archive;
+                }
+            });
+
+            if( appXcodeArchive ){
+                console.log('Using archive:', chalk.cyan(appXcodeArchive));
+                return path.join(archiveDir,appXcodeArchive);
+            }
+
+        }
+
+        console.log(chalk.red('Unable to find an app Xcode.archive'));
+        return;
+
+    }
+    else{
+        console.log(chalk.red('Unable to find any archives'));
+        return;
+    }
+
+}
+
+
+/**
+ * Patch PLIST
+ */
+function patchPLIST(){
+    
+    console.log('Validating plist');
+
+    var obj = plist.parse(fs.readFileSync('./build/iphone/Info.plist', 'utf8'));
+
+    if( !obj.method || obj.method != "dist-appstore" ){
+        console.log(chalk.cyan('Patching plist'));
+
+        obj.method = "app-store";
+
+        fs.writeFileSync( "./build/iphone/Info.plist", plist.build(obj));
+    }
+
+}
+
 /*
 @
 */

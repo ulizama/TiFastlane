@@ -57,6 +57,7 @@ program.command('send')
     .option('--automatic_release',"Should the app be automatically released once it's approved?")
     .option('--distribution_name [value]','iOS Distribution Certificate to use')
     .option('--pp_uuid [value]','Provisioning profile uuid')
+    .option('--legacy', 'Enable legacy build for Ti-CLI<6.0.2 and XCode<8.3')
 	.action(send)
     ;
 
