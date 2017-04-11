@@ -269,26 +269,10 @@ function uploadBetaTestIPA(opts){
         cleanArgs.push('-p');
         cleanArgs.push('ios');
 
-
         exec(cfg.cli, cleanArgs, null, function(e){
-            console.log(chalk.cyan('Starting Appcelerator App Store Build'));
-            console.log("\n");
-
-            console.log(chalk.yellow('You MUST select Appstore provisioning to work'));
-            console.log("\n");
-
-            // Delete IPA from Dist folder
-            if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
-                fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
-            }
-
-            var buildArgs = [cfg.cli == "appc"?'run':'build'];
-            var buildArgsDetail = cfg.ios_build_args;
-            buildArgs = buildArgs.concat(cliToArray(buildArgsDetail));
-            exec(cfg.cli, buildArgs, null, function(e){
-                _pilot();
-            });
+            buildIPA(opts, _pilot);
         });
+
     }
 };
 
@@ -705,72 +689,7 @@ exports.send = function(opts){
             cleanArgs.push('clean');
 
             exec(cfg.cli, cleanArgs, null, function(e){
-                console.log(chalk.cyan('Starting Appcelerator App Store Build'));
-                console.log("\n");
-
-                // Delete IPA from Dist folder
-                if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
-                    fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
-                }
-
-                var buildArgs = [cfg.cli == "appc"?'run':'build'];
-                
-                if( opts.legacy ){
-                    console.log(chalk.yellow('------- Enabling legacy mode for app build and packaging -------'));
-                    console.log(chalk.yellow('This mode only works if you are building with Titanium CLI < 6.0.2 and XCODE < 8.3'));
-                    console.log(chalk.yellow('If the build fails please disable the legacy mode'));
-                    console.log(chalk.yellow('----------------------------------------------------------------'));
-                    buildArgs.push('-p', 'ios', '-T', 'dist-adhoc','-O','./dist');
-                }
-                else{
-                    buildArgs.push('-p', 'ios', '-T', 'dist-appstore');
-                }
-                
-                if( opts.distribution_name ){
-                    buildArgs.push(
-                        '-R',
-                        opts.distribution_name
-                    );
-                }
-
-                if( opts.pp_uuid ){
-                    buildArgs.push(
-                        '-P',
-                        opts.pp_uuid
-                    );
-                }
-
-                if( cfg.ios_build_args && cfg.ios_build_args != "" ){
-                    buildArgs = buildArgs.concat(cliToArray(cfg.ios_build_args));
-                }
-
-                exec(cfg.cli, buildArgs, null, function(e){
-
-                    if( opts.legacy ){
-                        _deliver(1);
-                    }
-                    else{
-                        console.log(chalk.cyan('Exporting .archive to .ipa using xcodebuild'));
-                        console.log("\n");
-
-                        var archive = findXCodeArchive(tiapp.name);
-
-                        if( !archive ){
-                            return;
-                        }
-
-                        //patch PLIST
-                        patchPLIST();
-
-                        var exporterArgs = ['-exportArchive','-archivePath',archive,'-exportPath',"./dist","-exportOptionsPlist","./build/iphone/Info.plist"];
-
-                        exec("xcodebuild", exporterArgs, null, function(e){
-                            _deliver(1);
-                        });
-                    }
-
-                });
-
+                buildIPA(opts, _deliver);
             });
         }
 
@@ -1420,6 +1339,81 @@ exports.playsend = function(opts){
 
 };
 
+
+/**
+ * Build IPA
+ */
+function buildIPA(opts, callback){
+    
+    console.log(chalk.cyan('Starting Appcelerator App Store Build'));
+    console.log("\n");
+
+    // Delete IPA from Dist folder
+    if(fs.existsSync("./dist/" + tiapp.name + ".ipa")){
+        fs.unlinkSync("./dist/" + tiapp.name + ".ipa");
+    }
+
+    var buildArgs = [cfg.cli == "appc"?'run':'build'];
+    
+    if( opts.legacy ){
+        console.log(chalk.yellow('------- Enabling legacy mode for app build and packaging -------'));
+        console.log(chalk.yellow('This mode only works if you are building with Titanium CLI < 6.0.2 and XCODE < 8.3'));
+        console.log(chalk.yellow('If the build fails please disable the legacy mode'));
+        console.log(chalk.yellow('----------------------------------------------------------------'));
+        buildArgs.push('-p', 'ios', '-T', 'dist-adhoc','-O','./dist');
+    }
+    else{
+        buildArgs.push('-p', 'ios', '-T', 'dist-appstore');
+    }
+    
+    if( opts.distribution_name ){
+        buildArgs.push(
+            '-R',
+            opts.distribution_name
+        );
+    }
+
+    if( opts.pp_uuid ){
+        buildArgs.push(
+            '-P',
+            opts.pp_uuid
+        );
+    }
+
+    if( cfg.ios_build_args && cfg.ios_build_args != "" ){
+        buildArgs = buildArgs.concat(cliToArray(cfg.ios_build_args));
+    }
+
+    exec(cfg.cli, buildArgs, null, function(e){
+
+        if( opts.legacy ){
+            callback(1);
+        }
+        else{
+            console.log(chalk.cyan('Exporting .archive to .ipa using xcodebuild'));
+            console.log("\n");
+
+            var archive = findXCodeArchive(tiapp.name);
+
+            if( !archive ){
+                return;
+            }
+
+            //patch PLIST
+            createExportPLIST();
+
+            var exporterArgs = ['-exportArchive','-archivePath',archive,'-exportPath',"./dist","-exportOptionsPlist","./build/iphone/build_exporter.plist"];
+
+            exec("xcodebuild", exporterArgs, null, function(e){
+                callback(1);
+            });
+        }
+
+    });
+
+}
+
+
 /**
  * Split cli params to array
  * @param  {String} str CLI paramaters
@@ -1452,57 +1446,14 @@ function cliToArray(str) {
  */
 function findXCodeArchive(app) {
 
-    var dir = os.homedir() + '/Library/Developer/Xcode/Archives/';
-    var archiveName = app;
+    var appXcodeArchive = './build/iphone/' + app + '.xcarchive';
 
-    if (!fs.existsSync(dir)) {
-        console.log(chalk.red('Cannot find ' + dir));
+    if (!fs.existsSync(appXcodeArchive)) {
+        console.log(chalk.red('Cannot find xarchive ' + appXcodeArchive));
         return;
     }
 
-    var files = fs.readdirSync(dir).filter(file => fs.statSync(path.join(dir, file)).isDirectory());
-
-    if( files && files[0] ){
-
-        files.sort(function(a, b) {
-            return fs.statSync(path.join(dir,b)).mtime.getTime() - 
-                fs.statSync(path.join(dir,a)).mtime.getTime();
-        });
-
-        var archiveDir = path.join(dir, files[0]);
-        var archives = fs.readdirSync(archiveDir);
-
-        if( archives && archives[0] ){
-        
-            archives.sort(function(a, b) {
-                return fs.statSync(path.join(archiveDir,b)).mtime.getTime() - 
-                    fs.statSync(path.join(archiveDir,a)).mtime.getTime();
-            });
-
-            var appXcodeArchive;
-            var regex = new RegExp(archiveName,"i");
-
-            archives.forEach(function(archive) {
-                if( !appXcodeArchive && regex.test(archive) ){
-                    appXcodeArchive = archive;
-                }
-            });
-
-            if( appXcodeArchive ){
-                console.log('Using archive:', chalk.cyan(appXcodeArchive));
-                return path.join(archiveDir,appXcodeArchive);
-            }
-
-        }
-
-        console.log(chalk.red('Unable to find an app Xcode.archive'));
-        return;
-
-    }
-    else{
-        console.log(chalk.red('Unable to find any archives'));
-        return;
-    }
+    return appXcodeArchive;
 
 }
 
@@ -1510,19 +1461,15 @@ function findXCodeArchive(app) {
 /**
  * Patch PLIST
  */
-function patchPLIST(){
+function createExportPLIST(){
     
-    console.log('Validating plist');
+    console.log('Creating build export plist');
 
-    var obj = plist.parse(fs.readFileSync('./build/iphone/Info.plist', 'utf8'));
+    var plistJSON = {
+        'method': "app-store"
+    };
 
-    if( !obj.method || obj.method != "dist-appstore" ){
-        console.log(chalk.cyan('Patching plist'));
-
-        obj.method = "app-store";
-
-        fs.writeFileSync( "./build/iphone/Info.plist", plist.build(obj));
-    }
+    fs.writeFileSync( "./build/iphone/build_exporter.plist", plist.build(plistJSON));
 
 }
 
