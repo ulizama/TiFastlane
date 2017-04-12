@@ -18,6 +18,7 @@ var chalk = require('chalk')
   , deliveryDir = './TiFLDelivery'
   , pilotDir = './TiFLPilot'
   , tiapp = {}
+  , TiVersion = {}
   , cfg = {
       cli : "appc"
     , locale : "en-US"
@@ -57,6 +58,8 @@ exports.loadconfig = function( cfg_file ){
     }
 
     tiapp = tiappxml.load(infile);
+
+    TiVersion = parseVersionString(tiapp['sdk-version']);
 
     // read in our config
     cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
@@ -157,6 +160,7 @@ function localStatus(e) {
     console.log('Version:', chalk.yellow(tiapp.version));
     console.log('GUID:', chalk.cyan(tiapp.guid));
     console.log('AppId:', chalk.cyan(tiapp.id));
+    console.log('SDK Version:', 'major', chalk.cyan(TiVersion.major), 'minor', chalk.cyan(TiVersion.minor), 'patch', chalk.cyan(TiVersion.patch));
 
     if (e.type !== 'Android') {
         console.log(chalk.cyan("iOS:"));
@@ -1441,16 +1445,77 @@ function cliToArray(str) {
 
 /**
  * Find XCode Archive
- * @param  {String} App name
+ * @param  {String} app App name
  * @return {String} archive path
  */
 function findXCodeArchive(app) {
 
-    var appXcodeArchive = './build/iphone/' + app + '.xcarchive';
 
-    if (!fs.existsSync(appXcodeArchive)) {
-        console.log(chalk.red('Cannot find xarchive ' + appXcodeArchive));
-        return;
+    if( TiVersion.major <= 5 ){
+
+        //On older Titanium versions we need to look for the archive directly at the Archives path
+        var dir = os.homedir() + '/Library/Developer/Xcode/Archives/';
+        var archiveName = app;
+
+        if (!fs.existsSync(dir)) {
+            console.log(chalk.red('Cannot find ' + dir));
+            return;
+        }
+
+        var files = fs.readdirSync(dir).filter(file => fs.statSync(path.join(dir, file)).isDirectory());
+
+        if( files && files[0] ){
+
+            files.sort(function(a, b) {
+                return fs.statSync(path.join(dir,b)).mtime.getTime() - 
+                    fs.statSync(path.join(dir,a)).mtime.getTime();
+            });
+
+            var archiveDir = path.join(dir, files[0]);
+            var archives = fs.readdirSync(archiveDir);
+
+            if( archives && archives[0] ){
+            
+                archives.sort(function(a, b) {
+                    return fs.statSync(path.join(archiveDir,b)).mtime.getTime() - 
+                        fs.statSync(path.join(archiveDir,a)).mtime.getTime();
+                });
+
+                var appXcodeArchive;
+                var regex = new RegExp(archiveName,"i");
+
+                archives.forEach(function(archive) {
+                    if( !appXcodeArchive && regex.test(archive) ){
+                        appXcodeArchive = archive;
+                    }
+                });
+
+                if( appXcodeArchive ){
+                    console.log('Using archive:', chalk.cyan(appXcodeArchive));
+                    return path.join(archiveDir,appXcodeArchive);
+                }
+
+            }
+
+            console.log(chalk.red('Unable to find an app Xcode.archive'));
+            return;
+
+        }
+        else{
+            console.log(chalk.red('Unable to find any archives'));
+            return;
+        }
+
+    }
+    else{
+
+        var appXcodeArchive = './build/iphone/' + app + '.xcarchive';
+
+        if (!fs.existsSync(appXcodeArchive)) {
+            console.log(chalk.red('Cannot find xarchive ' + appXcodeArchive));
+            return;
+        }
+
     }
 
     return appXcodeArchive;
@@ -1471,6 +1536,24 @@ function createExportPLIST(){
 
     fs.writeFileSync( "./build/iphone/build_exporter.plist", plist.build(plistJSON));
 
+}
+
+
+/**
+ * Parse a version string
+ */
+function parseVersionString (str) {
+    if (typeof(str) != 'string') { return false; }
+    var x = str.split('.');
+    // parse from string or default to 0 if can't parse
+    var maj = parseInt(x[0]) || 0;
+    var min = parseInt(x[1]) || 0;
+    var pat = parseInt(x[2]) || 0;
+    return {
+        major: maj,
+        minor: min,
+        patch: pat
+    }
 }
 
 /*
