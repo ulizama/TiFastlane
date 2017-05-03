@@ -763,6 +763,11 @@ exports.register = function(opts){
     exec(fastlaneBinary, produceArgs, null,
         function(e) {
 
+            if( opts.skip_profiles ){
+                //Skip generating provisioning profiles
+                return;
+            }
+
             //We have the app created, now let's build the provisioning profiles with fastlane.sigh
             var platforms = ['development','adhoc','appstore'];
 
@@ -1300,8 +1305,10 @@ exports.playsend = function(opts){
             console.log(chalk.yellow('First things first. Clean project to ensure build'));
             console.log("\n");
 
-            // Bump version code
-            bumpBundleVersionAndroid();
+            if( opts.bump_build_version ){
+                // Bump version code
+                bumpBundleVersionAndroid();
+            }
 
             var cleanArgs = [];
 
