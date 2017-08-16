@@ -221,7 +221,7 @@ function uploadBetaTestIPA(opts){
         ];
 
         if( opts.skip_waiting_for_build_processing ){
-            initArgs.push(
+          pilotArgs.push(
                 '--skip_waiting_for_build_processing'
             );
         }
@@ -628,13 +628,13 @@ exports.send = function(opts){
         }
         
         if(cfg.team_name != "null"){
-          pilotArgs.push('-r');
-          pilotArgs.push(cfg.team_name);
+          initArgs.push('-r');
+          initArgs.push(cfg.team_name);
         }
 
         if(cfg.team_id != "null"){
-          pilotArgs.push('-q');
-          pilotArgs.push(cfg.team_id);
+          initArgs.push('-q');
+          initArgs.push(cfg.team_id);
         }
 
         exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
