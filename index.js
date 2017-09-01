@@ -788,45 +788,78 @@ exports.register = function(opts){
 
             platforms.forEach(function (p) {
 
-                console.log( chalk.cyan('Creating Provision Profile on environment: ' + p) );
+                if( opts.match ){
 
-                var sighArgs = [
-                    'sigh',
-                    '-u', cfg.apple_id,
-                    '-a', tiapp.id,
-                    '-o', certDir
-                ];
+                    console.log( chalk.cyan('Running fastlane match on environment: ' + p) );
 
-                if( cfg.team_id != "null" ){
-                    sighArgs.push('--team_id');
-                    sighArgs.push(cfg.team_id);
-                }
+                    var matchArgs = [
+                        'match',
+                        p,
+                        '-u', cfg.apple_id,
+                        '-a', tiapp.id
+                    ];
 
-                if( cfg.team_name != "null" ){
-                    sighArgs.push('--team_name');
-                    sighArgs.push(cfg.team_name);
-                }
-
-                if( opts.skip_install ){
-                    sighArgs.push('--skip_install');
-                }
-
-                if( opts.skip_fetch_profiles ){
-                    sighArgs.push('--skip_fetch_profiles');
-                }
-
-                if( p == 'development' ){
-                    sighArgs.push('--development');
-                }
-                else if( p == 'adhoc' ){
-                    sighArgs.push('--adhoc');
-                }
-
-                exec(fastlaneBinary, sighArgs, null,
-                    function(e) {
-                        //Done
+                    if( cfg.team_id != "null" ){
+                        matchArgs.push('--team_id');
+                        matchArgs.push(cfg.team_id);
                     }
-                );
+
+                    if( cfg.team_name != "null" ){
+                        matchArgs.push('--team_name');
+                        matchArgs.push(cfg.team_name);
+                    }
+
+                    exec(fastlaneBinary, matchArgs, null,
+                        function(e) {
+                            //Done
+                        }
+                    );
+
+                }
+                else{
+
+                    console.log( chalk.cyan('Creating Provision Profile on environment: ' + p) );
+
+                    var sighArgs = [
+                        'sigh',
+                        '-u', cfg.apple_id,
+                        '-a', tiapp.id,
+                        '-o', certDir
+                    ];
+
+                    if( cfg.team_id != "null" ){
+                        sighArgs.push('--team_id');
+                        sighArgs.push(cfg.team_id);
+                    }
+
+                    if( cfg.team_name != "null" ){
+                        sighArgs.push('--team_name');
+                        sighArgs.push(cfg.team_name);
+                    }
+
+                    if( opts.skip_install ){
+                        sighArgs.push('--skip_install');
+                    }
+
+                    if( opts.skip_fetch_profiles ){
+                        sighArgs.push('--skip_fetch_profiles');
+                    }
+
+                    if( p == 'development' ){
+                        sighArgs.push('--development');
+                    }
+                    else if( p == 'adhoc' ){
+                        sighArgs.push('--adhoc');
+                    }
+
+                    exec(fastlaneBinary, sighArgs, null,
+                        function(e) {
+                            //Done
+                        }
+                    );
+
+                }
+
             });
 
         }

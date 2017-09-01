@@ -51,6 +51,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.9.4 Fixed pilot bug. Now you can use `match` to manage your provisioning profiles
 * 0.9.3 Added option to skip creating provisiong profiles on `register`. Now Android build version bump has to be manually requested on `playsend`
 * 0.9.0 Added support for Titanium 6.0.3.GA and XCode 8.3 [More Information](https://github.com/ulizama/TiFastlane/blob/master/docs/IOS.md#xcode-83-and-titanium-603)
 * 0.8.3 You can customize the build args on setup

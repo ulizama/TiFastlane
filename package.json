@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.9.3",
+  "_id": "tifastlane@0.9.4",
   "_inCache": true,
   "_installable": true,
   "_location": "/tifastlane",
@@ -59,7 +59,7 @@
     "xpath": "*",
     "plist": "*"
   },
-  "description": "iOS Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store.",
+  "description": "iOS and Android Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store, and your app listing on the Play Store.",
   "devDependencies": {},
   "directories": {
     "lib": "./lib"
@@ -73,7 +73,8 @@
     "cli",
     "fastlane",
     "ios",
-    "titanium"
+    "titanium",
+    "android"
   ],
   "license": "Apache Public License v2",
   "main": "index.js",
@@ -94,5 +95,5 @@
     "url": "git+https://github.com/ulizama/TiFastlane.git"
   },
   "scripts": {},
-  "version": "0.9.3"
+  "version": "0.9.4"
 }

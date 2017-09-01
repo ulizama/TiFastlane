@@ -77,9 +77,10 @@ program.command('register [platform]')
     .description('Register app and create provisioning profiles. You can target a specific platform: "appstore", "development", "adhoc" or leave empty for all')
     .option('-c, --config [value]', "Use another config file found in the root")
     .option('-i, --skip_itc', 'Skip the creation of the app on iTunes Connect')
-    .option('-sp, --skip_profiles', 'Skip the creation of Provisioning Profiles')
-    .option('-si, --skip_install', 'Skip installation of new provisioning profiles')
-    .option('-sf, --skip_fetch_profiles', 'Skips the verification of existing profiles which is useful if you have thousands of profiles')
+    .option('-m, --match', 'Use fastlane match to generate the profiles')
+    .option('-sp, --skip_profiles', '[sigh] Skip the creation of Provisioning Profiles')
+    .option('-si, --skip_install', '[sigh] Skip installation of new provisioning profiles')
+    .option('-sf, --skip_fetch_profiles', '[sigh] Skips the verification of existing profiles which is useful if you have thousands of profiles')
     .action(register)
     ;
 
