@@ -1383,7 +1383,7 @@ exports.playsend = function(opts){
             console.log(chalk.yellow('First things first. Clean project to ensure build'));
             console.log("\n");
 
-            if( opts.bump_build_version ) {
+            if( opts.bump_build_version ){
                 // Bump version code
                 bumpBundleVersionAndroid();
             }
