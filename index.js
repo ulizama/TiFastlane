@@ -451,7 +451,7 @@ exports.setup = function(opts){
         {
             type: "input",
             name: "android_app_id",
-            message: "(Option) Refine Application ID for android"
+            message: "Optional Application ID to use for Android, if empty it will use the default one"
         },
 
         {
