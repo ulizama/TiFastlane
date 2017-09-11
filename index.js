@@ -57,12 +57,16 @@ exports.loadconfig = function( cfg_file ){
         process.exit();
     }
 
+    // read in our config
+    cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
+
+    if( cfg.android_app_id != "null" ){
+        manageAppID();
+    }
+
     tiapp = tiappxml.load(infile);
 
     TiVersion = parseVersionString(tiapp['sdk-version']);
-
-    // read in our config
-    cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
 
     /*
     @ Path Directories
@@ -172,6 +176,7 @@ function localStatus(e) {
 
     if (e.type !== 'iOS') {
         console.log(chalk.cyan("Android:"));
+        if (cfg.android_app_id != "null") console.log('\t', 'Android AppID:', chalk.cyan(cfg.android_app_id));
         console.log('\t', 'android:versionCode:', chalk.yellow(versionCode));
     }
 
@@ -335,6 +340,7 @@ function dealWithResults(json){
     cfg.fastlane_binary = ( json.fastlane_binary ) ? json.fastlane_binary : 'fastlane';
     cfg.ios_build_args = (json.ios_build_args) ? json.ios_build_args : null;
     cfg.android_build_args = (json.android_build_args) ? json.android_build_args : null;
+    cfg.android_app_id = (json.android_app_id) ? json.android_app_id : null;
 
     var cfgFile = templates.cfgFile;
     cfgFile = cfgFile.replace("[CLI]", cfg.cli).replace("[LOCALE]", cfg.locale).
@@ -345,7 +351,8 @@ function dealWithResults(json){
     replace('[GOOGLE_KEYSTORE_ALIAS]', cfg.google_keystore_alias).
     replace('[FASTLANE_BINARY]', cfg.fastlane_binary).
     replace('[IOS_BUILD_ARGS]',cfg.ios_build_args).
-    replace('[ANDROID_BUILD_ARGS]',cfg.android_build_args);
+    replace('[ANDROID_BUILD_ARGS]',cfg.android_build_args).
+    replace('[ANDROID_APPLICATION_ID]',cfg.android_app_id);
     fs.writeFileSync( "./tifastlane.cfg", cfgFile);
 
     console.log('\n ');
@@ -439,6 +446,12 @@ exports.setup = function(opts){
             type: "input",
             name: "android_build_args",
             message: "Append build arguments for android."
+        },
+
+        {
+            type: "input",
+            name: "android_app_id",
+            message: "Optional Application ID to use for Android, if empty it will use the default one"
         },
 
         {
@@ -1151,6 +1164,38 @@ function bumpBundleVersionAndroid(){
   fs.writeFileSync('tiapp.xml', tiapp);
 };
 
+function manageAppID(osType){
+    var tiappXml = fs.readFileSync('tiapp.xml', {
+        encoding: 'utf-8'
+    });
+
+    // clean org.id
+    var _orgId;
+    tiappXml = tiappXml.replace(/(<org.id>)([^< ]+)(<\/org\.id>)/mg, function (match, before, orgId, after) {
+        if (!_orgId) _orgId = orgId;
+        return before + after;
+    });
+    tiappXml = tiappXml.replace(/(<org.id><\/org\.id>)/mg, '');
+
+    if (osType == 'android' && cfg.android_app_id) {
+        tiappXml = tiappXml.replace(/(<id>)([^< ]+)(<\/id>)/mg, function (match, before, appId, after) {
+            console.log(chalk.green('Refine Application ID to: ' + cfg.android_app_id));
+
+            return before + cfg.android_app_id + '</id><org.id>' + appId + '</org.id>' + after.slice(5);    // </id> length is 5
+        });
+    } else {
+        tiappXml = tiappXml.replace(/(<id>)([^< ]+)(<\/id>)/mg, function (match, before, appId, after) {
+            if (_orgId && _orgId != appId) appId = _orgId;
+
+            console.log(chalk.green('Rollback Application ID to: ' + appId));
+
+            return before + appId + after;
+        });
+    }
+
+    fs.writeFileSync('tiapp.xml', tiappXml);
+};
+
 /*
 @ export playinit function to CLI
 */
@@ -1186,7 +1231,7 @@ exports.playinit = function(opts){
         'supply',
         'init',
         '--json_key', "../../../" + cfg.google_play_json_key,
-        '--package_name', tiapp.id
+        '--package_name', cfg.android_app_id || tiapp.id
     ];
 
     exec(fastlaneBinary, initArgs, { cwd: appAndroidDeliveryDir }, function(e){
@@ -1256,7 +1301,7 @@ exports.playsend = function(opts){
         var initArgs = [
             'supply',
             '--json_key', "../../../" + cfg.google_play_json_key,
-            '--package_name', tiapp.id
+            '--package_name', cfg.android_app_id || tiapp.id
         ];
 
         if( sendapk ){
@@ -1374,7 +1419,15 @@ exports.playsend = function(opts){
                     '-L', cfg.google_keystore_alias
                 );
 
+                if( cfg.android_app_id != "null" ){
+                    manageAppID('android');
+                }
+
                 exec(cfg.cli, buildArgs, null, function(e){
+                    if( cfg.android_app_id != "null" ){
+                        manageAppID();
+                    }
+
                     _supply(1);
                 });
             });
