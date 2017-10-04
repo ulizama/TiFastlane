@@ -1477,36 +1477,57 @@ function buildIPA(opts, callback){
         );
     }
 
-    if( cfg.ios_build_args && cfg.ios_build_args != "" ){
+    if( cfg.ios_build_args && cfg.ios_build_args != "" && cfg.ios_build_args != "null" ){
         buildArgs = buildArgs.concat(cliToArray(cfg.ios_build_args));
     }
 
-    exec(cfg.cli, buildArgs, null, function(e){
+    if( TiVersion.major <= 5 ){
 
-        if( opts.legacy ){
-            callback(1);
-        }
-        else{
-            console.log(chalk.cyan('Exporting .archive to .ipa using xcodebuild'));
-            console.log("\n");
+        exec(cfg.cli, buildArgs, null, function(e){
 
-            var archive = findXCodeArchive(tiapp.name);
+            if( opts.legacy ){
+                callback(1);
+            }
+            else{
+                console.log(chalk.cyan('Exporting .archive to .ipa using xcodebuild'));
+                console.log("\n");
 
-            if( !archive ){
-                return;
+                var archive = findXCodeArchive(tiapp.name);
+
+                if( !archive ){
+                    return;
+                }
+
+                //patch PLIST
+                createExportPLIST();
+
+                var exporterArgs = ['-exportArchive','-archivePath',archive,'-exportPath',"./dist","-exportOptionsPlist","./build/iphone/build_exporter.plist"];
+
+                exec("xcodebuild", exporterArgs, null, function(e){
+                    callback(1);
+                });
             }
 
-            //patch PLIST
-            createExportPLIST();
+        });
 
-            var exporterArgs = ['-exportArchive','-archivePath',archive,'-exportPath',"./dist","-exportOptionsPlist","./build/iphone/build_exporter.plist"];
+    }
+    else{
 
-            exec("xcodebuild", exporterArgs, null, function(e){
-                callback(1);
-            });
-        }
+        //New Build Method added on SDK 6.*
+        buildArgs.push(
+            '--export-ipa'
+        );
 
-    });
+        buildArgs.push(
+            '--output-dir',
+            './dist'
+        );
+
+        exec(cfg.cli, buildArgs, null, function(e){
+            callback(1);
+        });        
+
+    }
 
 }
 
