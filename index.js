@@ -645,11 +645,6 @@ exports.send = function(opts){
           initArgs.push(cfg.team_name);
         }
 
-        if(cfg.team_id != "null"){
-          initArgs.push('-k');
-          initArgs.push(cfg.team_id);
-        }
-
         exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDeliver Done\n'));
         });
