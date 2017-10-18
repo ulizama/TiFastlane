@@ -646,7 +646,7 @@ exports.send = function(opts){
         }
 
         if(cfg.team_id != "null"){
-          initArgs.push('-q');
+          initArgs.push('-k');
           initArgs.push(cfg.team_id);
         }
 
