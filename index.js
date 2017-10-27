@@ -641,13 +641,8 @@ exports.send = function(opts){
         }
         
         if(cfg.team_name != "null"){
-          initArgs.push('-r');
+          initArgs.push('-e');
           initArgs.push(cfg.team_name);
-        }
-
-        if(cfg.team_id != "null"){
-          initArgs.push('-q');
-          initArgs.push(cfg.team_id);
         }
 
         exec(fastlaneBinary, initArgs, { cwd: appDeliveryDir }, function(e){
