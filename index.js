@@ -1226,7 +1226,7 @@ exports.playinit = function(opts){
         'supply',
         'init',
         '--json_key', "../../../" + cfg.google_play_json_key,
-        '--package_name', cfg.android_app_id || tiapp.id
+        '--package_name', cfg.android_app_id != "null" ? cfg.android_app_id : tiapp.id
     ];
 
     exec(fastlaneBinary, initArgs, { cwd: appAndroidDeliveryDir }, function(e){
@@ -1296,7 +1296,7 @@ exports.playsend = function(opts){
         var initArgs = [
             'supply',
             '--json_key', "../../../" + cfg.google_play_json_key,
-            '--package_name', cfg.android_app_id || tiapp.id
+            '--package_name', cfg.android_app_id != "null" ? cfg.android_app_id : tiapp.id
         ];
 
         if( sendapk ){
