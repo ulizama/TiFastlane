@@ -3,7 +3,10 @@
 - Open the [Google Play Console](https://play.google.com/apps/publish/)
 - Select **Settings** tab, followed by the **API access** tab
 - Click the **Create Service Account** button and follow the **Google Developers Console** link in the dialog
-- Click **Add credentials** and select **Service account**
+- Click the **Create Service account** button at the top of the developers console screen
+- Provide a name for the service account
+- Click **Select a role** and choose **Project > Service Account Actor**
+- Check the **Furnish a new private key** checkbox
 - Select **JSON** as the Key type and click **Create**
 - Save the JSON file into **the root of your Titanium App project directory** and name it `GooglePlayKey.json` (you can choose to name it differently), and close the dialog
 - Back on the Google Play developer console, click **Done** to close the dialog
