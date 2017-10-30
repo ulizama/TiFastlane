@@ -51,6 +51,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.10.3 Set default `cfg.android_app_id = "null"` for old tifastlane.cfg
 * 0.10.2 Fixed deliver error related `apple_watch_app_icon`
 * 0.10.0 Support for Titanium SDK 6.* new build method
 * 0.9.5 Add option to set a different App ID for Android build
