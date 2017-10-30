@@ -10,7 +10,7 @@
     ]
   ],
   "_from": "tifastlane@*",
-  "_id": "tifastlane@0.10.3",
+  "_id": "tifastlane@0.10.4",
   "_inCache": true,
   "_installable": true,
   "_location": "/tifastlane",
@@ -95,5 +95,5 @@
     "url": "git+https://github.com/ulizama/TiFastlane.git"
   },
   "scripts": {},
-  "version": "0.10.3"
+  "version": "0.10.4"
 }
