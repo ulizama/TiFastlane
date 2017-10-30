@@ -60,6 +60,9 @@ exports.loadconfig = function( cfg_file ){
     // read in our config
     cfg = JSON.parse(fs.readFileSync(cfgfile, "utf-8"));
 
+    // for old tifastlane.cfg
+    if (!cfg.android_app_id) cfg.android_app_id = "null";
+
     if( cfg.android_app_id != "null" ){
         manageAppID();
     }
