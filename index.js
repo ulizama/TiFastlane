@@ -238,11 +238,6 @@ function uploadBetaTestIPA(opts){
           pilotArgs.push('-r');
           pilotArgs.push(cfg.team_name);
         }
-
-        if(cfg.team_id != "null"){
-          pilotArgs.push('-q');
-          pilotArgs.push(cfg.team_id);
-        }
         
         exec(fastlaneBinary, pilotArgs, { cwd: appDeliveryDir }, function(e){
             console.log(chalk.green('\nDone\n'));
