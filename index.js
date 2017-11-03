@@ -1474,8 +1474,7 @@ function buildIPA(opts, callback){
         buildArgs = buildArgs.concat(cliToArray(cfg.ios_build_args));
     }
 
-    if( TiVersion.major <= 5 ){
-
+    if( TiVersion.major <= 5 || (TiVersion.major === 6 && TiVersion.minor < 1) ){
         exec(cfg.cli, buildArgs, null, function(e){
 
             if( opts.legacy ){
@@ -1492,7 +1491,9 @@ function buildIPA(opts, callback){
                 }
 
                 //patch PLIST
-                createExportPLIST();
+                console.log(chalk.yellow('If you use Xcode 9, please run \'tifast send\' command with --pp_uuid option. If not, building IPA file will be failed.'))
+                createExportPLIST(tiapp.id, opts.pp_uuid);
+                
 
                 var exporterArgs = ['-exportArchive','-archivePath',archive,'-exportPath',"./dist","-exportOptionsPlist","./build/iphone/build_exporter.plist"];
 
@@ -1633,13 +1634,19 @@ function findXCodeArchive(app) {
 /**
  * Patch PLIST
  */
-function createExportPLIST(){
+function createExportPLIST(appid, pp_uuid){
     
     console.log('Creating build export plist');
 
     var plistJSON = {
         'method': "app-store"
     };
+    
+    // for xcode 9 build. exportPLIST have to have a provisioningProfiles
+    if (appid && pp_uuid) {
+      plistJSON.provisioningProfiles = {};
+      plistJSON.provisioningProfiles[appid] = pp_uuid;
+    }
 
     fs.writeFileSync( "./build/iphone/build_exporter.plist", plist.build(plistJSON));
 
