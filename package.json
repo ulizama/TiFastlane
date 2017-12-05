@@ -1,40 +1,4 @@
 {
-  "_args": [
-    [
-      "tifastlane",
-      ""
-    ],
-    [
-      "tifastlane",
-      ""
-    ]
-  ],
-  "_from": "tifastlane@*",
-  "_id": "tifastlane@0.10.6",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/tifastlane",
-  "_nodeVersion": "0.12.7",
-  "_npmUser": {
-    "email": "uriel@baboon.international",
-    "name": "ulizama"
-  },
-  "_npmVersion": "2.11.3",
-  "_phantomChildren": {},
-  "_requested": {
-    "name": "tifastlane",
-    "raw": "tifastlane",
-    "rawSpec": "",
-    "scope": null,
-    "spec": "*",
-    "type": "range"
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_shrinkwrap": null,
-  "_spec": "tifastlane",
-  "_where": "",
   "author": {
     "name": "Uriel Lizama"
   },
@@ -46,18 +10,18 @@
     "url": "https://github.com/ulizama/TiFastlane/issues"
   },
   "dependencies": {
-    "chalk": "*",
-    "commander": "*",
-    "inquirer": ">1.0.0",
-    "path": "*",
-    "pinkie-promise": "*",
+    "chalk": "^2.3.0",
+    "commander": "^2.12.2",
+    "inquirer": "^3.3.0",
+    "path": "^0.12.7",
+    "pinkie-promise": "^2.0.1",
     "plist": "^2.0.1",
-    "sudo": "*",
-    "tiapp.xml": "*",
-    "underscore": "*",
-    "update-notifier": "*",
-    "xpath": "*",
-    "plist": "*"
+    "sudo": "^1.0.3",
+    "tiapp.xml": "^0.2.2",
+    "underscore": "^1.8.3",
+    "update-notifier": "^2.3.0",
+    "xpath": "^0.0.27",
+    "plist": "^2.1.0"
   },
   "description": "iOS and Android Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store, and your app listing on the Play Store.",
   "devDependencies": {},
@@ -86,6 +50,10 @@
     {
       "name": "douglas",
       "email": "douglas_b_h@hotmail.com"
+    },
+    {
+      "name": "Dongwoo Gim",
+      "email": "gimdongwoo@gmail.com"
     }
   ],
   "name": "tifastlane",
@@ -95,5 +63,5 @@
     "url": "git+https://github.com/ulizama/TiFastlane.git"
   },
   "scripts": {},
-  "version": "0.10.6"
+  "version": "0.10.7"
 }
