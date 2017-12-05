@@ -43,6 +43,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jeroen van Dijk](https://github.com/jvandijk)
 * [Jong Eun Lee](https://github.com/yomybaby)
 * [Hazem Khaled](https://github.com/HazemKhaled)
+* [Dongwoo Gim](https://github.com/gimdongwoo)
 
 
 ##  Thanks
@@ -51,6 +52,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * [Jason Kneen](https://github.com/jasonkneen) for creating some awesome CLI tools from which I'm basing this one
 
 ## Changelog
+* 0.10.7 Fix dependencies version for Node 4 #58
 * 0.10.6 Support Ti 6.0.x and Xcode 9 #56
 * 0.10.5 Fixed pilot bug. string type `team_id` is incorrect. It need integer type. Because `team_name` only need #55
 * 0.10.4 Set default `cfg.android_app_id = "null"` for old tifastlane.cfg #54
