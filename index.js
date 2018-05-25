@@ -1142,6 +1142,21 @@ exports.pilot = function(opts){
         pilotArgs.push(cfg.beta_app_feedback_email);
     }
 
+    if(cfg.distribute_external){
+        pilotArgs.push('--distribute_external');
+        pilotArgs.push(cfg.distribute_external);
+    }
+
+    if(cfg.changelog){
+        pilotArgs.push('--changelog');
+        pilotArgs.push(cfg.changelog);
+    }
+
+    if(cfg.groups){
+        pilotArgs.push('-g');
+        pilotArgs.push(cfg.groups);
+    }
+
     exec(fastlaneBinary, pilotArgs, null, function(e){
         console.log(chalk.cyan('\nPilot ' + opts.command + ' completed\n'));
     });
