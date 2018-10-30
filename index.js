@@ -1107,7 +1107,7 @@ exports.pilot = function(opts){
 
         default:
             pilotArgs.push('upload');
-            pilotArgs.push('ipa');
+            pilotArgs.push('-i');
             pilotArgs.push('./dist/' + tiapp.name + '.ipa');
 
             if(opts.skip_submission){
@@ -1130,6 +1130,31 @@ exports.pilot = function(opts){
     if(cfg.team_id != "null"){
       pilotArgs.push('-q');
       pilotArgs.push(cfg.team_id);
+    }
+
+    if(cfg.beta_app_description){
+        pilotArgs.push('--beta_app_description');
+        pilotArgs.push(cfg.beta_app_description);
+    }
+
+    if(cfg.beta_app_feedback_email){
+        pilotArgs.push('--beta_app_feedback_email');
+        pilotArgs.push(cfg.beta_app_feedback_email);
+    }
+
+    if(cfg.distribute_external){
+        pilotArgs.push('--distribute_external');
+        pilotArgs.push(cfg.distribute_external);
+    }
+
+    if(cfg.changelog){
+        pilotArgs.push('--changelog');
+        pilotArgs.push(cfg.changelog);
+    }
+
+    if(cfg.groups){
+        pilotArgs.push('-g');
+        pilotArgs.push(cfg.groups);
     }
 
     exec(fastlaneBinary, pilotArgs, null, function(e){
