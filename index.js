@@ -258,10 +258,12 @@ function uploadBetaTestIPA(opts){
 
     }else{
 
-        /*
-        @ Update +1 to BundleVersion( compiler version )
-        */
-        bumpBundleVersion();
+        if (opts.bump_bundle_version) {
+            /*
+            @ Update +1 to BundleVersion( compiler version )
+            */
+            bumpBundleVersion();
+        }
 
         console.log(chalk.yellow('First things first. Clean project to ensure build'));
         console.log("\n");
