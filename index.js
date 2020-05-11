@@ -1336,9 +1336,15 @@ exports.playsend = function(opts){
                 );
             }
 
-            initArgs.push(
-                '--apk', '../../../dist/' + tiapp.name + '.apk'
-            );
+            if( opts.aab) {
+                initArgs.push(
+                    '--aab', '../../../dist/' + tiapp.name + '.aab'
+                );
+            } else {
+                initArgs.push(
+                    '--apk', '../../../dist/' + tiapp.name + '.apk'
+                );
+            }
         }
         else{
             initArgs.push(
