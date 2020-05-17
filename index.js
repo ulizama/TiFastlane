@@ -1336,9 +1336,15 @@ exports.playsend = function(opts){
                 );
             }
 
-            initArgs.push(
-                '--apk', '../../../dist/' + tiapp.name + '.apk'
-            );
+            if( opts.aab) {
+                initArgs.push(
+                    '--aab', '../../../dist/' + tiapp.name + '.aab'
+                );
+            } else {
+                initArgs.push(
+                    '--apk', '../../../dist/' + tiapp.name + '.apk'
+                );
+            }
         }
         else{
             initArgs.push(
@@ -1356,6 +1362,12 @@ exports.playsend = function(opts){
         if( opts.skip_upload_images ){
             initArgs.push(
                 '--skip_upload_images'
+            );
+        }
+
+        if( opts.validate_only ){
+            initArgs.push(
+                '--validate_only'
             );
         }
 
