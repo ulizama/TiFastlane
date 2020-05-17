@@ -169,6 +169,7 @@ program.command('playsend')
     .option('-a, --track [value]', 'The Track to upload the Application to: production, beta, alpha or rollout')
     .option('-r, --rollout [value]', 'The percentage of the rollout')
     .option('--aab', 'Send the AAB instead of the APK')
+    .option('--validate_only', 'Whether to upload and validate but not publish immediately')
     .action(playsend)
     ;
 
