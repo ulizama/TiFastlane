@@ -1365,6 +1365,12 @@ exports.playsend = function(opts){
             );
         }
 
+        if( opts.validate_only ){
+            initArgs.push(
+                '--validate_only'
+            );
+        }
+
         if( opts.skip_upload_screenshots ){
             initArgs.push(
                 '--skip_upload_screenshots'
