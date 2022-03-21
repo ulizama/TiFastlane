@@ -15,12 +15,12 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 ### Current tools from [Fastlane](https://github.com/fastlane/fastlane) available:
 <p align="center">
 
-  &bull; <a href="https://github.com/fastlane/fastlane/tree/master/deliver">deliver</a> &bull;
-  <a href="https://github.com/fastlane/fastlane/tree/master/pem">pem</a> &bull;
-  <a href="https://github.com/fastlane/fastlane/tree/master/sigh">sigh</a> &bull;
-  <a href="https://github.com/fastlane/fastlane/tree/master/produce">produce</a> &bull;
-  <a href="https://github.com/fastlane/fastlane/tree/master/pilot">pilot</a> &bull;
-  <a href="https://github.com/fastlane/fastlane/tree/master/supply">supply</a> &bull;
+  &bull; <a href="https://docs.fastlane.tools/actions/deliver/">deliver</a> &bull;
+  <a href="https://docs.fastlane.tools/actions/pem/">pem</a> &bull;
+  <a href="https://docs.fastlane.tools/actions/sigh/">sigh</a> &bull;
+  <a href="https://docs.fastlane.tools/actions/produce/">produce</a> &bull;
+  <a href="https://docs.fastlane.tools/actions/pilot/">pilot</a> &bull;
+  <a href="https://docs.fastlane.tools/actions/supply/">supply</a> &bull;
 </p>
 
 ## Documentation
@@ -33,7 +33,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 ## TODO
 
 * Support for installr
-* Add [Frameit](https://github.com/fastlane/fastlane/tree/master/frameit)
+* Add [Frameit](https://docs.fastlane.tools/actions/frameit/)
 
 
 ##  Collaborators
