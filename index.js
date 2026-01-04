@@ -253,7 +253,7 @@ function uploadBetaTestIPA(opts){
 
     if( opts.skip_build ){
 
-        console.log(chalk.yellow('Skipping Appcelerator App Store Build'));
+        console.log(chalk.yellow('Skipping Titanium App Store Build'));
         _pilot();
 
     }else{
@@ -325,7 +325,7 @@ function smartInit(){
 function dealWithResults(json){
     // console.log('json: ', json);
     // Set CLI
-    cfg.cli = ( json.cli == "appcelerator" ) ? "appc" : "ti";
+    cfg.cli = "ti";
     cfg.locale = json.locale;
     cfg.apple_id = json.apple_id;
     cfg.team_id = ( json.team_id ) ? json.team_id : null;
@@ -365,14 +365,6 @@ function dealWithResults(json){
 exports.setup = function(opts){
 
     inquirer.prompt([
-        {
-            type: "list",
-            name: "cli",
-            message: "Which CLI do you want to use?",
-            choices: [ "Appcelerator", "Titanium" ],
-            filter: function( val ) { return val.toLowerCase(); }
-        },
-
         {
             type: "list",
             name: "locale",
@@ -682,7 +674,7 @@ exports.send = function(opts){
         });
 
         if( opts.skip_build ){
-            console.log(chalk.yellow('Skipping Appcelerator App Store Build'));
+            console.log(chalk.yellow('Skipping Titanium App Store Build'));
             _deliver(1);
 
         }else{
@@ -1427,7 +1419,7 @@ exports.playsend = function(opts){
             cleanArgs.push('clean');
 
             exec(cfg.cli, cleanArgs, null, function(e){
-                console.log(chalk.cyan('Starting Appcelerator Build'));
+                console.log(chalk.cyan('Starting Titanium Build'));
                 console.log("\n");
 
                 // Delete APK from Dist folder
@@ -1472,7 +1464,7 @@ exports.playsend = function(opts){
  */
 function buildIPA(opts, callback){
     
-    console.log(chalk.cyan('Starting Appcelerator App Store Build'));
+    console.log(chalk.cyan('Starting Titanium App Store Build'));
     console.log("\n");
 
     // Delete IPA from Dist folder
