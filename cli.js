@@ -58,6 +58,7 @@ program.command('send')
     .option('--distribution_name [value]','iOS Distribution Certificate to use')
     .option('--pp_uuid [value]','Provisioning profile uuid')
     .option('--legacy', 'Enable legacy build for Ti-CLI<6.0.2 and XCode<8.3')
+    .option('--bump_bundle_version', 'Automatically bump iOS CFBundleVersion')
 	.action(send)
     ;
 
