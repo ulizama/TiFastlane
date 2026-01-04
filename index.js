@@ -1035,7 +1035,7 @@ export function downloadprofiles(opts) {
 @ export snapshot function to CLI
 */
 /*
-exports.snapshot = function(){
+export function snapshot() {
     if(!fs.existsSync(cfgfile)){
         console.log(chalk.red("==================================="));
         console.log(chalk.red('Cannot find ', cfgfile));
@@ -1058,7 +1058,7 @@ exports.snapshot = function(){
     _exec('snapshot', { cwd: appDeliveryDir }, function(e){
         console.log(chalk.green('\nSnapshot Done\n'));
     });
-};
+}
 */
 
 /*
