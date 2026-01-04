@@ -1,7 +1,11 @@
 {
   "name": "tifastlane",
-  "version": "0.11.0",
+  "version": "2.0.0",
   "description": "iOS and Android Continuous Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store, and your app listing on the Play Store.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "keywords": [
     "TiApp",
     "alloy",
@@ -46,7 +50,12 @@
   "directories": {
     "lib": "./lib"
   },
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
+  },
   "dependencies": {
     "chalk": "^2.3.0",
     "commander": "^2.12.2",
@@ -60,7 +69,10 @@
     "update-notifier": "^2.3.0",
     "xpath": "^0.0.27"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
+  },
   "optionalDependencies": {},
   "installable": true
 }

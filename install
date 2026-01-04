@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 
 /*jslint node: true */
-'use strict';
+"use strict";
 
-var exec = require('./lib/exec');
+import exec from "./lib/exec.js";
 
-console.log('--- We hope you enjoy TiFastlane as much as we do! ---');
-console.log('--- Special Thanks to KrauseFx for making all this possible with Fastlane Tools ---');
-console.log('--- Remember to follow the installation guide to make sure you have all the requirements ---\n');
+console.log("--- We hope you enjoy TiFastlane as much as we do! ---");
+console.log(
+  "--- Special Thanks to KrauseFx for making all this possible with Fastlane Tools ---",
+);
+console.log(
+  "--- Remember to follow the installation guide to make sure you have all the requirements ---\n",
+);
