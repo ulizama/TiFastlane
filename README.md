@@ -2,7 +2,7 @@
 
 Building apps for iOS and Android it's all great until you have to deal with Certificates, Provisioning Profiles and sending the app to iTunes Connect or the Play Store. Then came [fastlane.tools](https://fastlane.tools/) a collection of tools that enable Continuous Deployment of iOS and Android Apps.
 
-TiFastlane is a way to use those tools for Titanium development. Now you'll be able to do real continous deployment of your Titanium app. Sending your app for review will be a breeze:
+TiFastlane is a way to use those tools for Titanium development. Now you'll be able to do real continuous deployment of your Titanium app. Sending your app for review will be a breeze:
 
 	tifast send
 
@@ -60,7 +60,7 @@ With TiFastlane you'll be able to fully optimize the way you submit your app upd
 * 0.10.0 Support for Titanium SDK 6.* new build method
 * 0.9.5 Add option to set a different App ID for Android build
 * 0.9.4 Fixed pilot bug. Now you can use `match` to manage your provisioning profiles
-* 0.9.3 Added option to skip creating provisiong profiles on `register`. Now Android build version bump has to be manually requested on `playsend`
+* 0.9.3 Added option to skip creating provisioning profiles on `register`. Now Android build version bump has to be manually requested on `playsend`
 * 0.9.0 Added support for Titanium 6.0.3.GA and XCode 8.3 [More Information](https://github.com/ulizama/TiFastlane/blob/master/docs/IOS.md#xcode-83-and-titanium-603)
 * 0.8.3 You can customize the build args on setup
 * 0.8.2 Fix on PEM. Node dependencies

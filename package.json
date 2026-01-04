@@ -1,7 +1,7 @@
 {
   "name": "tifastlane",
   "version": "0.11.0",
-  "description": "iOS and Android Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store, and your app listing on the Play Store.",
+  "description": "iOS and Android Continuous Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store, and your app listing on the Play Store.",
   "keywords": [
     "TiApp",
     "alloy",

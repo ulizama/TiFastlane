@@ -53,7 +53,7 @@ exports.loadconfig = function( cfg_file ){
 
     if (!fs.existsSync(cfgfile)) {
         console.log(chalk.red('Cannot find ' + cfgfile));
-        console.log(chalk.yellow('Run ') + chalk.cyan('tifast setup') + chalk.yellow(' to initialize your tifast configuation.') );
+        console.log(chalk.yellow('Run ') + chalk.cyan('tifast setup') + chalk.yellow(' to initialize your tifast configuration.') );
         process.exit();
     }
 

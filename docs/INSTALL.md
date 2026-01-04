@@ -11,7 +11,7 @@ Requirements:
 
 **Xcode**
 
-Additionally to your Xcode installation, you also need the Xcode command line tools set up.
+In addition to your Xcode installation, you also need the Xcode command line tools set up.
 
     xcode-select --install
 

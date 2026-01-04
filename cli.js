@@ -34,7 +34,7 @@ program.command('setup')
 @ Init Function
 */
 program.command('init')
-	.description('Initialize of all components needed to work')
+	.description('Initialize all components needed to work')
     .option('-c, --config [value]', "Use another config file found in the root")
     .option('-s, --smart', 'If your app is already on the App Store run init with -s')
 	.action(init)
@@ -46,9 +46,9 @@ program.command('init')
 program.command('send')
 	.description('Send all available resources of App to iTunes Connect. Only one of those options are allowed')
     .option('-c, --config [value]', "Use another config file found in the root")
-	.option('-t, --testflight', 'Send App to be Beta Test on TestFlight')
+	.option('-t, --testflight', 'Send App for beta testing on TestFlight')
     .option('--skip_binary_upload', 'Skip uploading an ipa to iTunes Connect')
-    .option('--skip_screenshots', "Don't upload the screenhsots")
+    .option('--skip_screenshots', "Don't upload the screenshots")
     .option('--skip_metadata', "Don't upload the metadata (e.g. title, description), this will still upload screenshots")
     .option('--skip_build', 'Skip build of App Store IPA')
     .option('--skip_verify', 'Skip verification of metadata on send command')
@@ -108,7 +108,7 @@ program.command('downloadprofiles')
 @ Snapshot Function
 */
 // program.command('snapshot')
-// 	.description('Take ScreenShot of Simulator to generate all images')
+// 	.description('Take screenshot of Simulator to generate all images')
 //     .action(snapshot)
 //     ;
 
@@ -148,7 +148,7 @@ program.command('pilot [Command]')
 @ Google Play Init Function
 */
 program.command('playinit')
-    .description('Initalize the Google Play components')
+    .description('Initialize the Google Play components')
     .option('-c, --config [value]', "Use another config file found in the root")
     .action(playinit)
     ;
@@ -164,7 +164,7 @@ program.command('playsend')
     .option('--skip_upload_metadata', 'Whether to skip uploading metadata')
     .option('--skip_upload_images', 'Whether to skip uploading images, screenshots not included')
     .option('--skip_upload_screenshots', 'Whether to skip uploading SCREENSHOTS')
-    .option('--skip_upload_graphic_assets', 'Wether to sekip uploading all type of images, including screenshots')
+    .option('--skip_upload_graphic_assets', 'Whether to skip uploading all types of images, including screenshots')
     .option('--skip_build', 'Skip build of APK')
     .option('--bump_build_version', 'Automatically bump Android build version')
     .option('-a, --track [value]', 'The Track to upload the Application to: production, beta, alpha or rollout')

@@ -23,7 +23,7 @@ Inside your app directory, you first need to setup and configure TiFastlane:
 
 	tifast setup
 
-Make sure you enter the correct name of the P12 file Google provided and that is correctly placed in the root of your directoy, as well as entering the correct issuer email.
+Make sure you enter the correct name of the P12 file Google provided and that is correctly placed in the root of your directory, as well as entering the correct issuer email.
 
 Once your configuration is set, then you want to initialize your app:
 
@@ -35,7 +35,7 @@ And then finally when you are ready, you'll want to send your app to the Play St
 
 	tifast playsend
 
-**Is that easy!**
+**Is it that easy!**
 
 Below you will find full documentation on every step and other tools available to you.
 
@@ -51,7 +51,7 @@ Below you will find full documentation on every step and other tools available t
 
 #### CLI Help
 
-Each of TiFastlane's commands has it's own set of arguments you can use to further control. You can easily look at each avaiable argument with -h, for example:
+Each of TiFastlane's commands has its own set of arguments you can use to further control. You can easily look at each available argument with -h, for example:
 
 tifast setup -h
 
@@ -107,7 +107,7 @@ You can configure the different Title, Full Description Short Description and yo
 
 **./PlayStore/metadata/[LANG]/*.txt**
 
-In this directory you will see several text files with the contents of the metadata that is language dependant.
+In this directory you will see several text files with the contents of the metadata that is language dependent.
 
 **./PlayStore/metadata/[LANG]/images/*
 
