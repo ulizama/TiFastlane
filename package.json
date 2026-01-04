@@ -1,46 +1,29 @@
 {
-  "author": {
-    "name": "Uriel Lizama"
-  },
-  "bin": {
-    "tifast": "./cli.js",
-    "tifastlane": "./cli.js"
-  },
-  "bugs": {
-    "url": "https://github.com/ulizama/TiFastlane/issues"
-  },
-  "dependencies": {
-    "chalk": "^2.3.0",
-    "commander": "^2.12.2",
-    "inquirer": "^3.3.0",
-    "path": "^0.12.7",
-    "pinkie-promise": "^2.0.1",
-    "sudo": "^1.0.3",
-    "tiapp.xml": "^0.2.2",
-    "underscore": "^1.8.3",
-    "update-notifier": "^2.3.0",
-    "xpath": "^0.0.27",
-    "plist": "^2.1.0"
-  },
+  "name": "tifastlane",
+  "version": "0.11.0",
   "description": "iOS and Android Continuos Deployment support for Titanium using fastlane.tools. With TiFastlane you'll be able to fully optimize the way you submit your app updates and maintain your certificates and provisioning profiles on the App Store, and your app listing on the Play Store.",
-  "devDependencies": {},
-  "directories": {
-    "lib": "./lib"
-  },
-  "homepage": "https://github.com/ulizama/TiFastlane",
-  "installable": true,
   "keywords": [
     "TiApp",
     "alloy",
-    "appcelerator",
+    "tidev",
     "cli",
     "fastlane",
     "ios",
     "titanium",
     "android"
   ],
+  "homepage": "https://github.com/ulizama/TiFastlane",
+  "bugs": {
+    "url": "https://github.com/ulizama/TiFastlane/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ulizama/TiFastlane.git"
+  },
   "license": "Apache Public License v2",
-  "main": "index.js",
+  "author": {
+    "name": "Uriel Lizama"
+  },
   "maintainers": [
     {
       "name": "ulizama",
@@ -55,12 +38,29 @@
       "email": "gimdongwoo@gmail.com"
     }
   ],
-  "name": "tifastlane",
-  "optionalDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ulizama/TiFastlane.git"
+  "main": "index.js",
+  "bin": {
+    "tifast": "./cli.js",
+    "tifastlane": "./cli.js"
+  },
+  "directories": {
+    "lib": "./lib"
   },
   "scripts": {},
-  "version": "0.11.0"
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "commander": "^2.12.2",
+    "inquirer": "^3.3.0",
+    "path": "^0.12.7",
+    "pinkie-promise": "^2.0.1",
+    "plist": "^2.1.0",
+    "sudo": "^1.0.3",
+    "tiapp.xml": "^0.2.2",
+    "underscore": "^1.8.3",
+    "update-notifier": "^2.3.0",
+    "xpath": "^0.0.27"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "installable": true
 }
