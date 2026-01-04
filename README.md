@@ -1,6 +1,6 @@
 # TiFastlane [![npm version](https://badge.fury.io/js/tifastlane.svg)](http://badge.fury.io/js/tifastlane)
 
-Building apps for iOS and Android it's all great until you have to deal with Certificates, Provisioning Profiles and sending the app to iTunes Connect or the Play Store. Then came [fastlane.tools](https://fastlane.tools/) a collection of tools that enable Continuous Deployment of iOS and Android Apps.
+Building apps for iOS and Android it's all great until you have to deal with Certificates, Provisioning Profiles and sending the app to App Store Connect or the Play Store. Then came [fastlane.tools](https://fastlane.tools/) a collection of tools that enable Continuous Deployment of iOS and Android Apps.
 
 TiFastlane is a way to use those tools for Titanium development. Now you'll be able to do real continuous deployment of your Titanium app. Sending your app for review will be a breeze:
 

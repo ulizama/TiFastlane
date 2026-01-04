@@ -46,11 +46,11 @@ This will configure TiFastlane on your current project.
 
 ### Tifast Init
 
-TiFastlane needs to initialize the configuration files needed to keep iTunes Connect updated with the correct information. If the app **is not in iTunes Connect** then run to start fresh settings:
+TiFastlane needs to initialize the configuration files needed to keep App Store Connect updated with the correct information. If the app **is not in App Store Connect** then run to start fresh settings:
 
     tifast init
 
-If your app **is already on iTunes Connect**, then run the wizard which will automatically download all your current metadata and screenshots:
+If your app **is already on App Store Connect**, then run the wizard which will automatically download all your current metadata and screenshots:
 
     tifast init -s
 
@@ -74,11 +74,11 @@ SKU: "xxxxxxxxxxxxxx"
 
 ### Tifast Register
 
-Register your Titanium App ID on the Apple Developer Program and iTunes Connect, and then generate the Provisioning Profiles for App Store, Ad Hoc and Development.
+Register your Titanium App ID on the Apple Developer Program and App Store Connect, and then generate the Provisioning Profiles for App Store, Ad Hoc and Development.
 
     tifast register
 
-Everything is done behind the scenes using [produce](https://github.com/fastlane/fastlane/tree/master/produce) and [sigh](https://github.com/fastlane/fastlane/tree/master/sigh) or [match](https://github.com/fastlane/fastlane/tree/master/match) depending on your choice. If the App ID already exists on the Developer Program or iTunes Connect it will be safely skipped.
+Everything is done behind the scenes using [produce](https://github.com/fastlane/fastlane/tree/master/produce) and [sigh](https://github.com/fastlane/fastlane/tree/master/sigh) or [match](https://github.com/fastlane/fastlane/tree/master/match) depending on your choice. If the App ID already exists on the Developer Program or App Store Connect it will be safely skipped.
 
 By default provisioning profiles will be generated for all platforms, but if you wish you can target a single platform: `appstore`, `adhoc`, `development` or leave empty for all.
 
@@ -104,7 +104,7 @@ Download and install ALL valid Provisioning Profiles on the account.
 
 ### Tifast Send
 
-When you have a new version of your App that you wish to push to iTunes Connect, all you have to do is:
+When you have a new version of your App that you wish to push to App Store Connect, all you have to do is:
 
     tifast send
 
@@ -112,7 +112,7 @@ If you want to **Upload a beta version** of your app.
 
     tifast send -t
 
-You can decide what you want to send to iTunes Connect (binary, screenshots, metadata, etc). For full listing of options run:
+You can decide what you want to send to App Store Connect (binary, screenshots, metadata, etc). For full listing of options run:
 
     tifast send -h
 

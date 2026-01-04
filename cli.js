@@ -48,11 +48,11 @@ program
 program
   .command("send")
   .description(
-    "Send all available resources of App to iTunes Connect. Only one of those options are allowed",
+    "Send all available resources of App to App Store Connect. Only one of those options are allowed",
   )
   .option("-c, --config [value]", "Use another config file found in the root")
   .option("-t, --testflight", "Send App for beta testing on TestFlight")
-  .option("--skip_binary_upload", "Skip uploading an ipa to iTunes Connect")
+  .option("--skip_binary_upload", "Skip uploading an ipa to App Store Connect")
   .option("--skip_screenshots", "Don't upload the screenshots")
   .option(
     "--skip_metadata",
@@ -96,7 +96,7 @@ program
     'Register app and create provisioning profiles. You can target a specific platform: "appstore", "development", "adhoc" or leave empty for all',
   )
   .option("-c, --config [value]", "Use another config file found in the root")
-  .option("-i, --skip_itc", "Skip the creation of the app on iTunes Connect")
+  .option("-i, --skip_itc", "Skip the creation of the app on App Store Connect")
   .option("-m, --match", "Use fastlane match to generate the profiles")
   .option(
     "-sp, --skip_profiles",

@@ -746,7 +746,7 @@ export function send(opts) {
       return;
     }
 
-    console.log(chalk.cyan("Updating iTunesConnect"));
+    console.log(chalk.cyan("Updating App Store Connect"));
 
     var newFileContents = "";
 
@@ -829,7 +829,7 @@ export function register(opts) {
   console.log(
     chalk.cyan(
       "Creating app on Apple Developer Portal " +
-        (opts.skip_itc ? "Skipping iTunes Connect" : "& iTunes Connect"),
+        (opts.skip_itc ? "Skipping App Store Connect" : "& App Store Connect"),
     ),
   );
 

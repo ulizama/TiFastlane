@@ -18,7 +18,7 @@ This tool allows you to manage all important features of Apple TestFlight using 
 
 - [tifast pilot remove](#remove)
 
-`pilot` uses [spaceship.airforce](https://spaceship.airforce/) to interact with iTunes Connect.
+`pilot` uses [spaceship.airforce](https://spaceship.airforce/) to interact with App Store Connect.
 
 ### Upload
 
